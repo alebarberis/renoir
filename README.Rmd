@@ -23,7 +23,7 @@ The idea behind **renoir** is to implement a scalable, modular and open-source s
 
 
 ```{r echo=FALSE, fig.align='center', fig.cap='', out.width='75%'}
-knitr::include_graphics(path = 'articles/figures/renoir_workflow.png', error = FALSE)
+knitr::include_graphics(path = 'man/figures/renoir_workflow.png', error = FALSE)
 ```
 
 **renoir** allows for a robust estimation of the true error of a learning methodology by implementing a multiple random-sampling approach spanning different training-set sizes, and computing mean performance metrics with confidence intervals.

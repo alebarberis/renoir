@@ -10,7 +10,7 @@ The idea behind **renoir** is to implement a scalable, modular and
 open-source software for the standardised application of machine
 learning techniques to high-dimensional data.
 
-<img src="articles/figures/renoir_workflow.png" width="75%" style="display: block; margin: auto;" />
+<img src="man/figures/renoir_workflow.png" width="75%" style="display: block; margin: auto;" />
 
 **renoir** allows for a robust estimation of the true error of a
 learning methodology by implementing a multiple random-sampling approach
