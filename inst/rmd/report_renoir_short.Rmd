@@ -1,0 +1,367 @@
+---
+params:
+  object: NA
+  annotation: !r NA
+  feat.index: 0
+  initial.filtering.report: !r NA
+  repeats: 0
+  x.data.type: ''
+  best.model.strategy: 'opt'
+  yml_title: 'Report'
+  yml_subtitle: ''
+  yml_abstract: ''
+  yml_name: 'Report'
+  yml_author: ''
+  yml_affiliation: ''
+  yml_email: ''
+  yml_toc: true
+  yml_toc_depth: 2
+  yml_toc_float: false
+  tabset: false
+output:
+  html_document:
+    # toc: `r params$yml_toc`
+    # toc_depth: '`r params$yml_toc_depth`'
+    # toc_float: `r params$yml_toc_float`
+    toc: true
+    toc_depth: 2
+    toc_float: true
+title: '`r params$yml_title`'
+subtitle: '`r params$yml_subtitle`'
+abstract: '`r params$yml_abstract`'
+name: '`r params$yml_name`'
+date: '`r format(Sys.Date(), "%Y-%B-%d")`'
+author: '`r params$yml_author`'
+affiliation: '`r params$yml_affiliation`'
+email: '`r params$yml_email`'
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(renoir)
+# library(glmnet)
+# library(Matrix)
+
+library(plotly)
+library(htmltools)
+
+library(knitr)
+library(kableExtra)
+
+library(DT)
+
+```
+
+```{r datatable_setup, include = FALSE}
+# DT::datatable(data = NULL)#needed to correctly initialise datatable
+create_dt(data = NULL)#needed to correctly initialise datatable with extensions- 'Buttons' isn't working without this
+```
+
+```{r set_vars, include=FALSE}
+#Get response type
+resp.type = get_response(object = object)
+
+#Get learning method
+learning.method = get_id(object = object)
+
+#Get the learning method
+learning.method.name = get_name_learning_method(learning.method)
+
+#Get the response type
+model.type = get_name_regression_model(resp.type = resp.type)
+
+#Get the sampling strategy
+sampling.strategy = get_sampling(object = object)
+
+#Get the learning strategy
+learning.strategy = get_learning(object = object)
+
+#Get the screening strategy
+screening.strategy = get_screening(object = object)
+
+#Get the number of repeats
+repeats = params$repeats;
+if(repeats==0){repeats = unique(get_k(object = object))}
+
+#Get summary text of initial filtering
+initial.filtering.report = params$initial.filtering.report;
+if(is.na(initial.filtering.report)){
+  initial.filtering.report = get_summary(get_filter(object))
+  if(isTRUE(S4Vectors::isEmpty(initial.filtering.report))){initial.filtering.report = NA}
+} 
+
+#Get grid size
+n.grid = length(get_evaluation(object))
+
+#config
+config = get_config(object)
+
+#get configuration
+config.description = get_description_config(get_config(object))
+
+#get performance metric id
+scoring.measure = get_scoring(object)
+
+#has multiple scoring measure?
+is.multiscoring = isTRUE(length(scoring.measure)>1)
+
+#Get number of classes
+nc = get_nout(object = object)
+
+#is multi-response
+is.multi.response = if(nc>1){T}else{F}
+
+#Get tabset
+tabset = params$tabset;
+
+#Get x data type
+x.data.type = params$x.data.type
+
+#
+best.model.strategy = params$best.model.strategy
+
+#marks
+feat.index = params$feat.index
+annotation = params$annotation
+```
+
+This is an automated report of the executed analysis via `renoir` R package. The evaluated learning method is a `r learning.method.name`, which was used to build a `r model.type`.
+
+
+# Evaluation strategy
+A multiple random training-validation strategy spanning `r n.grid` different training set sizes was adopted to better estimate the performance of the methodology. For each considered training-set size, `r if(isTRUE(length(repeats)==1)){repeats}else{cat("different")}` training-validation sets were generated from the initial set of observations by `r sampling.strategy`: the training data was used to build the model, while the test set was used to assess its performance. 
+
+```{r summary_tuning, results = 'asis'}
+if(isTRUE(grepl(pattern = "tuning", x = learning.strategy))){
+  if(isFALSE(S4Vectors::isEmpty(screening.strategy)) & isFALSE(screening.strategy=="")){
+    cat(paste('A feature screening step was used within the tuning procedure to pre-select the features mostly correlated with the outcome. The feature screening was performed via', paste0(screening.strategy, ". ")))
+  }
+  
+  cat(paste0('Hyperparameters of the model were optimised via ', learning.strategy, "."), 
+      paste0("In particular, the ", config.description, ". "),
+      cat("After the hyperparameters were fixed, the final model was fitted on the entire training set and tested on the left-out data. "),
+      sep = " ")
+  cat("\n")
+}
+```
+
+The computed measures of assessment were then used to obtain an estimate of the mean performance and the related 95% confidence interval.
+
+## Best model selection
+`renoir` automatically selects an overall best model for each considered performance metric by choosing the model with the minimal (or maximal) score across all the models fitted using the training-set size showing the lowest upper (or highest lower) bound of the 95% CI.
+
+```{r summary_filtering_header, results = 'asis'}
+if(!is.na(initial.filtering.report)){
+  cat('# Pre-processing')
+  cat('\n\n')
+  cat(initial.filtering.report)
+  cat('\n\n')
+  
+  print_density(object = object, xaxis = x.data.type, header = '##')
+}
+```
+
+# Performance overview 
+The measures used to assess the performance of the fitted models across the training-set sizes are reported in this section. The performance metrics were computed on the training, testing, and whole data. The mean performance and the associated confidence interval are also reported for each training set size. Each green dot in the plots below corresponds to a trained model. The red dot represents the best model selected via an automated internal procedure (for further information see [Best model selection]).
+
+```{r summary_plots_train_data_header, results = 'asis'}
+if(tabset){cat('## Training data {.tabset}')}else{cat('## Training data')}
+```
+`r get_description_scoring(scoring.measure, set = 'train')`.
+The following plots show how the performance metrics vary with the training-set size.
+
+```{r summary_plots_train_data_config_min_load_plotly, results = 'asis'}
+cat('\n\n')
+measure = scoring.measure[1]
+if(tabset){cat( paste('###', measure, '\n' ) )}else{cat( paste('### Measure: ', measure, '\n' ) )}
+htmltools::tagList(plot(x = object, set = 'train', measure = measure, interactive = T))
+cat('\n\n')
+```
+
+
+```{r summary_plots_train_data_config_min, results = 'asis'}
+# type.measure = "mse"
+cat('\n\n')
+for(measure in scoring.measure[-1]){
+  if(tabset){cat( paste('###', measure, '\n' ) )}else{cat( paste('### Measure: ', measure, '\n' ) )}
+  print(htmltools::tagList(plot(x = object, set = 'train', measure = measure, interactive = T)))
+  cat('\n\n')
+}
+
+
+```
+
+
+```{r summary_plots_test_data_header, results = 'asis'}
+if(tabset){cat('## Testing data {.tabset}')}else{cat('## Testing data')}
+```
+`r get_description_scoring(scoring.measure, set = 'test')`, i.e. the left-out data not used during the training. The following plots show how the performance metrics vary with the training-set size.
+
+
+```{r summary_plots_test_data_config_min, results = 'asis'}
+cat('\n\n')
+for(measure in scoring.measure){
+  if(tabset){cat( paste('###', measure, '\n' ) )}else{cat( paste('### Measure: ', measure, '\n' ) )}
+  print(htmltools::tagList(plot(x = object, set = 'test', measure = measure, interactive = T)))
+  cat('\n\n')
+}
+
+```
+
+
+```{r summary_plots_full_data_header, results = 'asis'}
+if(tabset){cat('## Whole data {.tabset}')}else{cat('## Whole data')}
+```
+`r get_description_scoring(scoring.measure, set = 'full')`. The following plots show how the performance metrics vary with the training-set size.
+
+```{r summary_plots_whole_data_config_min, results = 'asis'}
+cat('\n\n')
+for(measure in scoring.measure){
+  if(tabset){cat( paste('###', measure, '\n' ) )}else{cat( paste('### Measure: ', measure, '\n' ) )}
+  print(htmltools::tagList(plot(x = object, set = 'full', measure = measure, interactive = T)))
+  cat('\n\n')
+}
+
+```
+
+## Summary table
+The performance metrics computed for each model in the different settings are reported in tabular form in this section.
+
+```{r models_summary_table, results='asis'}
+# s.opt = get_summary(object = object, best = 'opt')
+# s.1se = get_summary(object = object, best = '1se')
+# s.table = rbind(s.opt, s.1se)
+
+s.table = summary_table(object = object, best = 'opt')
+
+#select best
+s.table$best_model = s.table$best_model == TRUE & s.table$best_resample == TRUE
+
+#subset columns
+# col.to.keep = c("id", "config", "response", "sampling", "measure", "set", "training_set_size", "error", "imodel", "nfeatures", "best_model")
+col.to.keep = c("learning", "measure", "set", "training_set_size", "score", "imodel", "nfeatures", "best_model")
+
+s.table = s.table[,col.to.keep,drop=F]
+
+#rename
+colnames(s.table) = c("learning", "measure", "set", "train_size", "score", "imodel", "nfeatures", "best_model")
+
+suppressWarnings(print(htmltools::tagList(create_dt(data = s.table))))
+```
+
+```{r best_models_summary, results='asis'}
+cat("\n")
+#subset
+best.m = s.table[s.table$best_model == T,, drop=F]
+
+#Train
+best.m.sub = best.m[best.m$set == "train" ,,drop=F]
+#check if multi scoring
+if(isTRUE(is.multiscoring)){
+  #aggregate count
+  tmp = data.frame(count = rep(1L, times = nrow(best.m.sub)))
+  tmp = aggregate(x = tmp, by = best.m.sub[,c("train_size", "imodel"),drop=F], FUN = sum)
+  #check
+  if(isTRUE(any(tmp$count>1))){
+    #aggregate measures
+    tmp2 = aggregate(x = best.m.sub[,c("measure"),drop=F], by = best.m.sub[,c("train_size", "imodel"),drop=F], FUN = c)
+    #merge
+    tmp = merge(
+      x = tmp,
+      y = tmp2,
+      by = c("train_size", "imodel")
+    )
+    #check if just one model
+    if(nrow(tmp)==1){
+      cat("The same model was selected as overall best model when considering multiple performance metrics", 
+          paste0("(", paste(get_measure_names(unlist(tmp$measure)), collapse = ", "), ")"),
+          "computed over the training set.\n")
+    }else{
+      cat(nrow(tmp), "different models were selected as overall best models when considering multiple performance metrics computed over the training set.\n")
+      #subset for models selected by multiple measures
+      # tmp = tmp[tmp$count>1,,drop=F]
+      #if 1
+      
+    }
+    rm(tmp2)
+  }
+  rm(tmp)
+}
+
+#Test
+best.m.sub = best.m[best.m$set == "test" ,,drop=F]
+#check if multi scoring
+if(isTRUE(is.multiscoring)){
+  #aggregate count
+  tmp = data.frame(count = rep(1L, times = nrow(best.m.sub)))
+  tmp = aggregate(x = tmp, by = best.m.sub[,c("train_size", "imodel"),drop=F], FUN = sum)
+  #check
+  if(isTRUE(any(tmp$count>1))){
+    #aggregate measures
+    tmp2 = aggregate(x = best.m.sub[,c("measure"),drop=F], by = best.m.sub[,c("train_size", "imodel"),drop=F], FUN = c)
+    #merge
+    tmp = merge(
+      x = tmp,
+      y = tmp2,
+      by = c("train_size", "imodel")
+    )
+    #check if just one model
+    if(nrow(tmp)==1){
+      cat("The same model was selected as overall best model when considering multiple performance metrics", 
+          paste0("(", paste(get_measure_names(unlist(tmp$measure)), collapse = ", "), ")"),
+          "computed over the test set.\n")
+    }else{
+      cat(nrow(tmp), "different models were selected as overall best models when considering multiple performance metrics computed over the test set.\n")
+      #subset for models selected by multiple measures
+      # tmp = tmp[tmp$count>1,,drop=F]
+      #if 1
+      
+    }
+    rm(tmp2)
+  }
+  rm(tmp)
+}
+
+#Full
+best.m.sub = best.m[best.m$set == "full" ,,drop=F]
+#check if multi scoring
+if(isTRUE(is.multiscoring)){
+  #aggregate count
+  tmp = data.frame(count = rep(1L, times = nrow(best.m.sub)))
+  tmp = aggregate(x = tmp, by = best.m.sub[,c("train_size", "imodel"),drop=F], FUN = sum)
+  #check
+  if(isTRUE(any(tmp$count>1))){
+    #aggregate measures
+    tmp2 = aggregate(x = best.m.sub[,c("measure"),drop=F], by = best.m.sub[,c("train_size", "imodel"),drop=F], FUN = c)
+    #merge
+    tmp = merge(
+      x = tmp,
+      y = tmp2,
+      by = c("train_size", "imodel")
+    )
+    #check if just one model
+    if(nrow(tmp)==1){
+      cat("The same model was selected as overall best model when considering multiple performance metrics", 
+          paste0("(", paste(get_measure_names(unlist(tmp$measure)), collapse = ", "), ")"),
+          "computed over the whole dataset.\n")
+    }else{
+      cat(nrow(tmp), "different models were selected as overall best models when considering multiple performance metrics computed over the whole dataset.\n")
+      #subset for models selected by multiple measures
+      # tmp = tmp[tmp$count>1,,drop=F]
+      #if 1
+      
+    }
+    rm(tmp2)
+  }
+  rm(tmp)
+}
+rm(best.m, best.m.sub)
+```
+
+# Session Info
+The version number of R and packages loaded for generating the analysis.
+
+```{r session_info}
+sessionInfo()
+```

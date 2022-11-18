@@ -1,0 +1,93 @@
+template:
+  bootstrap: 5
+
+articles:
+- title: "Benchmarks"
+  desc: "Articles used to benchmark renoir evaluations with external data"
+  navbar: "Benchmarks"
+  contents:
+  - benchmark/classification
+  - benchmark/regression
+- title: "Use Case"
+  navbar: "Use Case"
+  contents:
+  - usecase/use_case
+
+reference:
+  - title: "Learning"
+    desc: "This is the main function to evaluate a learning method"
+    contents:
+    - renoir
+  - title: "List supported methods"
+    desc: "These functions list the supported strategies"
+    contents:
+    - list_supported_learning_methods
+    - list_supported_sampling_methods
+    - list_supported_performance_metrics
+    - list_supported_unsupervised_screening_methods
+    - list_supported_supervised_screening_methods
+  - title: "Unsupervised Screening"
+    desc: "These functions are used to pre-process the predictors matrix and reduce its dimensionality"
+    contents:
+    - filter
+  - title: "Random sampling"
+    desc: "These functions are used to randomly sample data from an initial population"
+  - title: "Supervised Screening"
+    desc: "These functions are used to pre-process the predictors matrix and reduce its dimensionality in a supervised manner"
+  - title: "Performance metrics"
+    desc: "These functions are used to compute the performance metrics"
+    contents:
+    - mean_absolute_error
+    - mean_absolute_percentage_error
+    - mean_squared_error
+    - root_mean_squared_error
+    - mean_squared_log_error
+    - r2_score
+    - area_under_roc_curve
+    - f1_score
+    - fbeta_score
+    - sensitivity
+    - precision
+    - classification_error_rate
+    - accuracy_score
+  - title: "Quantifying uncertainty"
+    desc: "These functions are used to compute the confidence interval for the mean performance metric"
+    contents:
+      - ci
+      - ciwm
+      - sewm
+      - uevarwm
+      # - wse
+      # - wvar
+      # - bwsvar
+      # - ubrwsvar
+      # - ubfwsvar
+  - title: "Learning"
+    desc: "These functions are used for learning"
+    contents:
+      - learn
+  - title: "Features importance"
+    desc: "These functions are used to compute the features importance"
+  - title: "Visualisation"
+    desc: "These functions are used for visualisation"
+    contents:
+      - plot
+      # - plot.Renoir
+  # - title: "Main Classes"
+  #   desc: "These are the main S4 Classes in renoir"
+  #   contents:
+  #     - Learner
+  #     - Evaluator
+  #     - Marker
+  - title: "Summary"
+    desc: "These functions are used for summarising objects"
+    contents:
+      - summary_table
+  - title: "Logging"
+    desc: "These functions are used for logging"
+    contents:
+      - log_all
+      - log_trace
+      - log_debug
+      - log_info
+

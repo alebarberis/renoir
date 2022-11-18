@@ -1,0 +1,9 @@
+pandoc: 2.14.0.3
+pkgdown: 2.0.1
+pkgdown_sha: ~
+articles:
+  classification: benchmark/classification.html
+  regression: benchmark/regression.html
+  renoir: renoir.html
+last_built: 2021-12-14T16:08Z
+

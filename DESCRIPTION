@@ -1,0 +1,108 @@
+Package: renoir
+Type: Package
+Title: REsampliNg methOds for machIne leaRning
+Version: 0.0.0.9000
+Authors@R: c(
+    person(given="Alessandro", family="Barberis", email="abarberis.sw@gmail.com", role=c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-6718-855X")), 
+    person(given="Francesca", family="Buffa", email="francesca.buffa@oncology.ox.ac.uk", role=c("aut"),
+           comment = c(ORCID = "0000-0003-0409-406X"))
+  )
+Maintainer: Alessandro Barberis <abarberis.sw@gmail.com>
+Description: This package carries out a systematic evaluation of a learning method via random sampling approach
+    spanning multiple training-set sizes.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.6.0),
+    glmnet (>= 4.1),
+    Matrix (>= 1.0-6),
+    S4Vectors
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown,
+    plotly,
+    htmltools,
+    kableExtra,
+    DT,
+    ggplot2,
+    gridExtra,
+    RankProd
+Imports: 
+    samr,
+    limma,
+    glmnet (>= 4.1),
+    pamr,
+    e1071,
+    gbm,
+    randomForest,
+    parallel,
+    doParallel,
+    foreach,
+    stats,
+    utils,
+    matrixTests,
+    graphics,
+    survival,
+    S4Vectors,
+    matrixStats
+RoxygenNote: 7.1.2
+VignetteBuilder: knitr
+Collate: 
+    'accuracy.R'
+    'best_model_selection.R'
+    'checkInput.R'
+    'class_ClassificationReport.R'
+    'classes_generics.R'
+    'class_Tested.R'
+    'class_TestedList.R'
+    'class_Evaluated.R'
+    'class_EvaluatedList.R'
+    'class_Trained.R'
+    'class_TrainedList.R'
+    'class_Screened.R'
+    'class_Logger.R'
+    'class_Trainer.R'
+    'class_Tuned.R'
+    'class_Marked.R'
+    'class_MarkedList.R'
+    'class_Marker.R'
+    'class_Recorder.R'
+    'utils.R'
+    'class_Sampler.R'
+    'performance.R'
+    'confidence.R'
+    'class_Quantifier.R'
+    'class_Scorer.R'
+    'class_TunedList.R'
+    'class_Selector.R'
+    'class_ScorerList.R'
+    'class_Forecaster.R'
+    'class_ForecasterList.R'
+    'class_Looper.R'
+    'class_Tester.R'
+    'glmnet.R'
+    'class_Resampler.R'
+    'class_Screener.R'
+    'class_ScreenerList.R'
+    'class_Tuner.R'
+    'class_Learner.R'
+    'class_LearnerList.R'
+    'class_Evaluator.R'
+    'class_Filtered.R'
+    'class_Filter.R'
+    'class_FilterList.R'
+    'class_Renoir.R'
+    'class_TesterList.R'
+    'interactive.R'
+    'limma.R'
+    'plot.R'
+    'print.R'
+    'recruit.R'
+    'renoir_nearest_shrunken_centroid.R'
+    'report.R'
+    'sam.R'
+    'screening.R'
+    'stat_tests.R'
+    'update.R'

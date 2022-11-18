@@ -1,0 +1,339 @@
+---
+params:
+  object: NA
+  annotation: !r NA
+  feat.index: 0
+  initial.filtering.report: !r NA
+  repeats: 0
+  x.data.type: ''
+  best.model.strategy: 'opt'
+  train.size: !r NA
+  model.index: !r NA
+  x: !r NULL
+  y: !r NULL
+  weights: !r NULL
+  offset: !r NULL
+  newx: !r NULL
+  newy: !r NULL
+  newweights: !r NULL
+  newoffset: !r NULL
+  yml_title: 'Report'
+  yml_subtitle: ''
+  yml_abstract: ''
+  yml_name: 'Report'
+  yml_author: ''
+  yml_affiliation: ''
+  yml_email: ''
+  yml_toc: true
+  yml_toc_depth: 3
+  yml_toc_float: false
+  tabset: false
+output:
+  html_document:
+    # toc: `r params$yml_toc`
+    # toc_depth: '`r params$yml_toc_depth`'
+    # toc_float: `r params$yml_toc_float`
+    toc: true
+    toc_depth: 3
+    toc_float: true
+title: '`r params$yml_title`'
+subtitle: '`r params$yml_subtitle`'
+abstract: '`r params$yml_abstract`'
+name: '`r params$yml_name`'
+date: '`r format(Sys.Date(), "%Y-%B-%d")`'
+author: '`r params$yml_author`'
+affiliation: '`r params$yml_affiliation`'
+email: '`r params$yml_email`'
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(renoir)
+# library(glmnet)
+# library(Matrix)
+
+library(plotly)
+library(htmltools)
+
+library(knitr)
+library(kableExtra)
+
+library(DT)
+
+```
+
+```{r datatable_setup, include = FALSE}
+create_dt(data = NULL)#needed to correctly initialise datatable with extensions- 'Buttons' isn't working without this
+```
+
+```{r set_vars, include=FALSE}
+#Get response type
+resp.type = get_response(object = object)
+
+#Get learning method
+learning.method = get_id(object = object)
+
+#Get the learning method
+learning.method.name = get_name_learning_method(learning.method)
+
+#Get the response type
+model.type = get_name_regression_model(resp.type = resp.type)
+
+#Get the sampling strategy
+sampling.strategy = get_sampling(object = object)
+
+#Get the learning strategy
+learning.strategy = get_learning(object = object)
+
+#Get the screening strategy
+screening.strategy = get_screening(object = object)
+
+#Get the number of repeats
+repeats = params$repeats;
+if(repeats==0){repeats = unique(get_k(object = object))}
+
+#Get summary text of initial filtering
+initial.filtering.report = params$initial.filtering.report;
+if(is.na(initial.filtering.report)){
+  initial.filtering.report = get_summary(get_filter(object))
+  if(isTRUE(S4Vectors::isEmpty(initial.filtering.report))){initial.filtering.report = NA}
+} 
+
+#Get grid size
+n.grid = length(get_evaluation(object))
+
+#config
+config = get_config(object)
+
+#get configuration
+config.description = get_description_config(get_config(object))
+
+#get accuracy measure id
+scoring.measure = get_scoring(object)
+
+#has multiple scoring measure?
+is.multiscoring = isTRUE(length(scoring.measure)>1)
+
+#Get number of classes
+nc = get_nout(object = object)
+
+#is multi-response
+is.multi.response = if(nc>1){T}else{F}
+
+#Get tabset
+tabset = params$tabset;
+
+#Get x data type
+x.data.type = params$x.data.type
+
+#
+best.model.strategy = params$best.model.strategy
+
+#marks
+feat.index = params$feat.index
+annotation = params$annotation
+
+#get evaluated object
+#object = subset_list(object = get_evaluation(object), n = train.size)
+
+train.size = params$train.size
+model.index = params$model.index
+
+has.olddata = isTRUE(!is.null(params$x))
+has.newdata = isTRUE(!is.null(params$newx))
+
+#check names
+x = params$x
+if(has.olddata){colnames(x) = colnames(x, do.NULL = F, prefix = "V")}
+# if(has.olddata){colnames(params$x) = colnames(params$x, do.NULL = F, prefix = "V")}
+if(has.newdata){colnames(params$newx) = colnames(params$newx, do.NULL = F, prefix = "V")}
+```
+
+This is an automated report of the executed analysis via `renoir` R package. The evaluated model is a `r learning.method.name`.
+
+# Evaluation strategy
+The model was assessed on the training, testing, and whole data by computing different performance metrics. `r if(has.newdata){cat("The model was also externally validated in an independent cohort.")}`
+
+# Performance overview 
+The measures used to assess the performance of the model are reported in this section.  
+
+## Internal data
+The performance metrics were computed on the training, testing, and whole data.
+
+### Summary table
+The performance metrics computed in the different settings are reported in tabular form in this section.
+
+```{r models_summary_table, results='asis'}
+# s.opt = get_summary(object = object, best = 'opt')
+# s.1se = get_summary(object = object, best = '1se')
+# s.table = rbind(s.opt, s.1se)
+
+s.table = summary_table(object = object, best = 'opt')
+
+#select best
+# s.table$best_model = s.table$best_model == TRUE & s.table$best_resample == TRUE
+
+#subset columns
+# col.to.keep = c("id", "config", "response", "sampling", "measure", "set", "training_set_size", "error", "imodel", "nfeatures", "best_model")
+col.to.keep = c("learning", "measure", "set", "training_set_size", "score", "imodel", "nfeatures")
+
+s.table = s.table[,col.to.keep,drop=F]
+
+#rename
+colnames(s.table) = c("learning", "measure", "set", "train_size", "score", "imodel", "nfeatures")
+
+#select model
+keep = s.table$train_size == train.size & s.table$imodel == model.index
+s.table = s.table[keep,,drop=F]
+
+suppressWarnings(print(htmltools::tagList(create_dt(data = s.table))))
+cat('\n\n')
+```
+
+
+```{r model_performance_plot, results = 'asis'}
+#get model
+model = get_model(object = object, index = model.index, n = train.size)
+#get features
+feats = features(object = model)
+#get indices of observations used to trained the model
+obs = get_sample(object = object, index = model.index, n = train.size)
+```
+
+### Training data {.tabset}
+
+```{r model_performance_plot_train_set, results = 'asis'}
+if(has.olddata){
+  
+  # if(isFALSE(tabset)){cat(paste("</div>"))}
+  if(isFALSE(tabset)){cat(paste("### {.unlisted .unnumbered .toc-ignore}"))}
+  
+  print_report_model_accuracy(
+    object = report_model_accuracy(
+      object       = model,
+      # newx         = subset_features(object = params$x, which = unique(unlist(feats))),
+      # newx         = subset_features(object = x, which = unique(unlist(feats))),
+      newx         = x,
+      newy         = params$y,
+      weights      = params$weights,
+      newoffset    = params$offset,
+      set          = c("train", "test", "full", "new")[1],
+      observations = obs,
+      resp.type    = get_response(object)
+      # ,logger
+    ),
+    header = "####"
+  )
+
+  cat("\n\n\n")
+} else {"Data not provided.\n"}
+
+```
+
+
+### Testing data {.tabset}
+
+```{r model_performance_plot_test_set, results = 'asis'}
+if(has.olddata){
+  
+  if(isFALSE(tabset)){cat(paste("### {.unlisted .unnumbered .toc-ignore}"))}
+  
+  print_report_model_accuracy(
+    object = report_model_accuracy(
+      object       = model,
+      # newx         = subset_features(object = params$x, which = unique(unlist(feats))),
+      # newx         = subset_features(object = x, which = unique(unlist(feats))),
+      newx         = x,
+      newy         = params$y,
+      weights      = params$weights,
+      newoffset    = params$offset,
+      set          = c("train", "test", "full", "new")[2],
+      observations = obs,
+      resp.type    = get_response(object)
+      # ,logger
+    ),
+    header = "####"
+  )
+  
+  cat("\n\n\n")
+} else {"Data not provided.\n"}
+
+```
+
+### Full data {.tabset}
+
+```{r model_performance_plot_full_set, results = 'asis'}
+if(has.olddata){
+  
+  if(isFALSE(tabset)){cat(paste("### {.unlisted .unnumbered .toc-ignore}"))}
+  
+  print_report_model_accuracy(
+    object = report_model_accuracy(
+      object       = model,
+      # newx         = subset_features(object = params$x, which = unique(unlist(feats))),
+      # newx         = subset_features(object = x, which = unique(unlist(feats))),
+      newx         = x,
+      newy         = params$y,
+      weights      = params$weights,
+      newoffset    = params$offset,
+      set          = c("train", "test", "full", "new")[3],
+      observations = obs,
+      resp.type    = get_response(object)
+      # ,logger
+    ),
+    header = "####"
+  )
+  
+  cat("\n\n\n")
+} else {"Data not provided.\n"}
+
+```
+
+
+
+`r if(has.newdata){cat("## Performance on external dataset")}`
+
+```{r model_performance_on_new_data, results = 'asis'}
+if(has.newdata){
+  tmp = report_model_accuracy(
+  object       = model, 
+  newx         = params$newx, 
+  newy         = params$newy, 
+  weights      = params$newweights, 
+  newoffset    = params$newoffset, 
+  set          = c("train", "test", "full", "new")[4], 
+  observations = NULL, 
+  resp.type    = get_response(object)
+  # ,logger
+  )
+  
+  print_report_model_accuracy(object = tmp, header = "###")
+}
+```
+
+# Features
+The model features are reported in this section. Each feature has an associated stability value, which was computed during the `renoir` evaluation process as the average number of times the feature was recruited across all the models built when considering the training set size used of the current model. 
+
+```{r feat_stability, results = 'asis'}
+stability = get_stability(object = subset_list(object = get_evaluation(object), n = train.size))
+#as data frame
+stability = do.call(what = cbind, args = stability)
+#if only one response, call column stability
+if(isTRUE(ncol(stability)==1)){colnames(stability) = "stability"}
+#annotate
+stability = get_annotated_marks(x = stability, annotation = annotation, feat.index = feat.index)
+#print  
+suppressWarnings(print(htmltools::tagList(create_dt(data = stability))))
+#clean
+rm(stability)
+cat('\n\n')
+```
+
+
+# Session Info
+The version number of R and packages loaded for generating the analysis.
+
+```{r session_info}
+sessionInfo()
+```

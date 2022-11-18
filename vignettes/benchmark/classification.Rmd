@@ -1,0 +1,2130 @@
+---
+title: "Classification"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+    # toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Classification}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This article is used to benchmark the evaluations obtained by **renoir** for classification problems against external results.
+
+## Data
+Different public datasets already used in classification problems are considered:
+
+* The breast cancer data from the University of Wisconsin Hospitals
+* The heart-disease data from the Cleveland Clinic Foundation
+<!-- * The census income data from the 1994 census bureau database -->
+
+Data was retrieved from the [UC Irvine Machine Learning Repository website](https://archive-beta.ics.uci.edu).
+
+## Setup
+
+Firstly, we load `renoir` and other needed packages:
+
+```{r setup, message=FALSE}
+library(renoir)
+library(plotly)
+library(htmltools)
+```
+
+### Learning Methods
+Now we retrieve the ids of all the supported learners. A list of supported methods is available through the `?list_supported_learning_methods` function call.
+
+```{r learning_methods}
+#list methods
+learning.methods = list_supported_learning_methods()
+
+#print in table
+knitr::kable(x = learning.methods)
+```
+
+We can extract the ids by selecting the `id` column.
+
+```{r learning_method_ids}
+#learning method ids
+learning.methods.ids = learning.methods$id
+```
+
+From the table, we can also see the default hyperparameters of the methods. We create here our default values, and define a function to dispatch them depending on the `id` in input:
+
+```{r setup_hyperparameter}
+#get hyperparameters
+get_hp = function(id, y){
+
+  #Generalised Linear Models with Penalisation
+  lambda = 10^seq(3, -2, length=100)
+  # alpha = seq(0.1, 0.9, length = 9)
+  alpha = seq(0.1, 0.9, length = 5)
+  gamma = c(0, 0.25, 0.5, 0.75, 1)
+  
+  #Random Forest
+  ntree = c(10, 50, 100, 250, 500)
+  
+  #Generalised Boosted Regression Modelling
+  eta = c(0.3, 0.1, 0.01, 0.001)
+  
+  #Support Vector Machines
+  cost      = 2^seq(from = -5, to = 15, length.out = 5)
+  svm.gamma = 2^seq(from = -15, to = 3, length.out = 4)
+  degree    = seq(from = 1, to = 3, length.out = 3)
+  #Note that for classification nu must be
+  #nu * length(y)/2 <= min(table(y)). So instead of
+  #fixing it as
+  # nu        = seq(from = 0.1, to = 0.6, length.out = 5)
+  #we do
+  nu.to = floor((min(table(y)) * 2/length(y)) * 10) / 10
+  nu = seq(from = 0.1, to = nu.to, length.out = 5)
+  
+  #kNN
+  k = seq(from = 1, to = 9, length.out = 5)
+
+  #Nearest Shrunken Centroid
+  threshold = seq(0, 2, length.out = 30)
+
+  #hyperparameters
+  out = switch(
+    id,
+    'lasso'              = list(lambda = lambda),
+    'ridge'              = list(lambda = lambda),
+    'elasticnet'         = list(lambda = lambda, alpha = alpha),
+    'relaxed_lasso'      = list(lambda = lambda, gamma = gamma),
+    'relaxed_ridge'      = list(lambda = lambda, gamma = gamma),
+    'relaxed_elasticnet' = list(lambda = lambda, gamma = gamma, alpha = alpha),
+    'randomForest'       = list(ntree = ntree),
+    'gbm'                = list(eta = eta, ntree = ntree),
+    'linear_SVM'         = list(cost = cost),
+    'polynomial_SVM'     = list(cost = cost, gamma = svm.gamma, degree = degree),
+    'radial_SVM'         = list(cost = cost, gamma = svm.gamma),
+    'sigmoid_SVM'        = list(cost = cost, gamma = svm.gamma),
+    'linear_NuSVM'       = list(nu = nu),
+    'polynomial_NuSVM'   = list(nu = nu, gamma = svm.gamma, degree = degree),
+    'radial_NuSVM'       = list(nu = nu, gamma = svm.gamma),
+    'sigmoid_NuSVM'      = list(nu = nu, gamma = svm.gamma),
+    'gknn'               = list(k = k),
+    'nsc'                = list(threshold = threshold)
+  )
+
+  return(out)
+}
+```
+
+### Performance metrics
+A list of supported scoring metrics is available through the `?list_supported_performance_metrics` function call.
+
+```{r performance_metrics_for_binomial_response}
+#list metrics
+performance.metrics = list_supported_performance_metrics(resp.type = "binomial")
+
+#print in table
+knitr::kable(x = performance.metrics)
+```
+
+For this benchmark we want to select accuracy and precision, as these are the reported measure on the website.
+
+```{r performance_metrics_ids}
+#metric for tuning
+performance.metric.id.tuning = "acc"
+
+#metrics for evaluation
+performance.metric.ids.evaluation = c("acc", "precision")
+
+```
+
+### Sampling Methods
+
+A list of supported sampling methods is available through the `?list_supported_sampling_methods` function call.
+
+```{r sampling_methods}
+#list methods
+sampling.methods = list_supported_sampling_methods()
+
+#print in table
+knitr::kable(x = sampling.methods)
+```
+
+We decided to select the common scenario of a stratified 10-fold cross-validation for the tuning of hyperparameters, and repeated random sampling for the evaluation of the methodology.
+
+```{r sampling_method_ids}
+#sampling for tuning
+sampling.method.id.tuning = "cv"
+
+#sampling for evaluation
+sampling.method.id.evaluation = "random"
+```
+
+
+## Benchmark
+We can now run our analyses.
+
+### Breast Cancer Data
+The Breast Cancer database from the University of Wisconsin Hospitals was retrieved from the [UC Irvine Machine Learning Repository website](https://archive-beta.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+original).
+
+#### Load data
+We load the data.
+
+```{r load_bcwo}
+#load data
+load(file = file.path("..", "..", "data-raw", "benchmark", "classification", "bcwo", "data", "bcwo_data.rda"))
+
+#set response type
+resp.type = "binomial"
+```
+
+#### Setup
+
+##### Tuner
+Now we can create a tuner performing a `grid.search` via 10-fold cross-validation.
+
+```{r setup_tuner}
+#tuner
+tuner = Tuner(
+  id = "grid.search",
+  sampler = Sampler(
+    method = sampling.method.id.tuning,
+    k = 10L,
+    n = integer(),
+    strata = y
+  ),
+  looper   = Looper(cores = 1L),
+  logger   = Logger(verbose = T, level = "INFO")
+)
+```
+
+##### Learner
+We can now create the related `?Learner` objects.
+
+```{r setup_learners}
+#container
+learners = list()
+
+#loop
+for(learning.method.id in learning.methods.ids){
+  #manual setup
+  learners[[learning.method.id]] = Learner(
+    tuner      = tuner,
+    trainer    = Trainer(id = learning.method.id),
+    forecaster = Forecaster(id = learning.method.id),
+    scorer     = ScorerList(Scorer(id = performance.metric.id.tuning)),
+    selector   = Selector(id = learning.method.id),
+    recorder   = Recorder(id = learning.method.id),
+    marker     = Marker(id = learning.method.id),
+    logger     = Logger(level = "ALL")
+  )
+}
+```
+
+##### Evaluator
+Finally, we need to set up the `?Evaluator`.
+
+```{r setup_evaluator}
+#Evaluator
+evaluator = Evaluator(
+  #Sampling strategy: stratified random sampling without replacement
+  sampler = Sampler(               
+    method = "random",             
+    k = 10L,                       
+    strata = y,                    
+    N = as.integer(length(y))      
+  ),
+
+  #Performance metric
+  scorer  = ScorerList(
+    Scorer(id = performance.metric.ids.evaluation[1]),
+    Scorer(id = performance.metric.ids.evaluation[2])
+  )
+)
+```
+
+#### Analysis
+Let's create a directory to store the results.
+
+```{r bcwo_tmpdir_setup, eval=F, include=FALSE}
+#define path (e.g. "mydir/classification/breast_cancer")
+outdir = file.path("mydir", "classification", "breast_cancer")
+
+#create if not existing
+if(!dir.exists(outdir)){dir.create(path = outdir, showWarnings = F, recursive = T)}
+```
+
+
+```{r bcwo_dir_setup, eval=T, include=T}
+
+#define path
+outdir = file.path("..", "..", "data-raw", "benchmark", "classification", "bcwo", "analysis")
+
+#create if not existing
+if(!dir.exists(outdir)){dir.create(path = outdir, showWarnings = F, recursive = T)}
+```
+
+Before running the analysis, we want to set a seed for the random number generation (RNG). In fact, different R sessions have different seeds created from current time and process ID by default, and consequently different simulation results. By fixing a seed we ensure we will be able to reproduce the results. We can specify a seed by calling `?set.seed`.
+
+In the code below, we set a seed before running the analysis for each considered learning method. 
+
+```{r renoir_bcwo, eval=FALSE}
+#container list
+resl = list()
+
+#loop
+for(learning.method.id in learning.methods.ids){
+  
+  #Each analysis can take hours, so we save data 
+  #for future faster load
+  
+  #path to file
+  fp.obj = file.path(outdir, paste0(learning.method.id,".rds"))
+  fp.sum = file.path(outdir, paste0("st_",learning.method.id,".rds"))
+  
+  #check if exists
+  if(file.exists(fp.sum)){
+    #load
+    cat(paste0("Reading ", learning.method.id, "..."), sep = "")
+    resl[[learning.method.id]] = readRDS(file = fp.sum)
+    cat("DONE", sep = "\n")
+  } else {
+  
+    cat(paste("Learning method:", learning.method.id), sep = "\n")
+    
+    #Set a seed for RNG
+    set.seed(
+      #A seed
+      seed = 5381L,                   #a randomly chosen integer value
+      #The kind of RNG to use
+      kind = "Mersenne-Twister",      #we make explicit the current R default value
+      #The kind of Normal generation
+      normal.kind = "Inversion"       #we make explicit the current R default value
+    )
+    
+    resl[[learning.method.id]] = renoir(
+      # filter,
+  
+      #Training set size
+      npoints = 5,
+      # ngrid,
+      nmin = round(nrow(x)/2),
+  
+      #Loop
+      looper = Looper(),
+  
+      #Store
+      filename = "renoir",
+      outdir   = NULL,
+      restore  = TRUE,
+  
+      #Learn
+      learner   = learners[[learning.method.id]],
+  
+      #Evaluate
+      evaluator = evaluator,
+  
+      #Log
+      logger    = Logger(level = "ALL", verbose = T),
+  
+      #Data for training
+      hyperparameters = get_hp(id = learning.method.id, y = y),
+      x         = x,
+      y         = y,
+      weights   = NULL,
+      offset    = NULL,
+      resp.type = resp.type,
+  
+      #Free space
+      rm.call = FALSE,
+      rm.fit  = FALSE,
+  
+      #Group results
+      grouping = TRUE,
+  
+      #No screening
+      screening = NULL,
+      
+      #Remove call from trainer to reduce space
+      keep.call = F
+    )
+    
+    #save obj
+    saveRDS(object = resl[[learning.method.id]], file = fp.obj)
+    
+    #create summary table
+    resl[[learning.method.id]] = renoir:::summary_table.RenoirList(resl[[learning.method.id]], key = c("id", "config"))
+    
+    #save summary table
+    saveRDS(object = resl[[learning.method.id]], file = fp.sum)
+    
+    cat("\n\n", sep = "\n")
+  }
+}
+
+#create summary table
+resl = do.call(what = rbind, args = c(resl, make.row.names = F, stringsAsFactors = F))
+```
+
+
+
+#### Performance
+Let's now plot the performance metrics for the `opt` and `1se` configurations, considering the train, test, and full set of data.
+
+```{r bcwo_plot_dir_setup, eval=T, include=FALSE}
+#define path
+outdir = file.path("..", "..", "data-raw", "benchmark", "classification", "bcwo", "analysis", "plots")
+
+#create if not existing
+if(!dir.exists(outdir)){dir.create(path = outdir, showWarnings = F, recursive = T)}
+```
+
+##### Precision
+We consider the precision.
+
+###### Reference
+This is the precision reported in the [UC Irvine Machine Learning Repository website](https://archive-beta.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+original) that we use as reference.
+
+```{r include_bcwo_precision_plot, echo=FALSE, fig.align='center', fig.cap='', out.width='90%'}
+knitr::include_graphics(path = file.path("..", "..", "man", "figures", "bcwo_precision.png"), error = FALSE)
+```
+
+###### Train
+This is the precision score for the `opt` configuration when considering the train set.
+
+```{r plot_precision_multi_opt_train_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F],
+  measure     = "precision", 
+  set         = "train", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r plot_precision_multi_opt_train, eval=TRUE, include=FALSE, echo = TRUE, results = 'asis'}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+#path to file
+fp = file.path(outdir, "plot_precision_opt_train.rda")
+
+if(file.exists(fp)){
+  #load objects
+  load(file = fp)
+} else {
+  #static plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "precision",
+    set = "train",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "precision", 
+    set = "train", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+<!-- # ```{r print_plot_precision_multi_opt_train1, eval=TRUE, include=FALSE, echo = TRUE, results = 'asis'} -->
+<!-- # print(htmltools::tagList(p2)) -->
+<!-- # ``` -->
+
+```{r print_plot_precision_multi_opt_train, eval=TRUE, results = 'asis', echo = FALSE}
+# print(htmltools::tagList(p2))
+```
+
+```{r print_plot_precision_multi_opt_train2, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the precision score for the `1se` configuration when considering the train set.
+
+```{r plot_precision_multi_1se_train_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "precision", 
+  set         = "train", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r plot_precision_multi_1se_train, eval=TRUE, include=FALSE, echo = TRUE, results = 'asis'}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_1se_train.rda")
+
+if(file.exists(fp)){
+  #load objects
+  load(file = fp)
+} else {
+  #static plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "precision",
+    set = "train",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "precision", 
+    set = "train", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+htmltools::tagList(p2)
+```
+
+```{r print_plot_precision_multi_1se_train, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+###### Test
+This is the precision score for the `opt` configuration when considering the test set.
+
+```{r plot_precision_multi_opt_test_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "precision", 
+  set         = "test", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r plot_precision_multi_opt_test, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_opt_test.rda")
+
+if(file.exists(fp)){
+  #load objects
+  load(file = fp)
+} else {
+  #static plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "precision",
+    set = "test",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F], 
+    measure = "precision", 
+    set = "test", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_precision_multi_opt_test, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the precision score for the `1se` configuration when considering the test set.
+
+```{r plot_precision_multi_1se_test_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "precision", 
+  set         = "test", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r plot_precision_multi_1se_test, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_1se_test.rda")
+
+if(file.exists(fp)){
+  #load objects
+  load(file = fp)
+} else {
+  #static plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "precision",
+    set = "test",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "precision", 
+    set = "test", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_precision_multi_1se_test, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+###### Full
+
+This is the precision score for the `opt` configuration when considering the full set.
+
+```{r plot_precision_multi_opt_full_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "precision", 
+  set         = "full", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r plot_precision_multi_opt_full, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_opt_full.rda")
+
+if(file.exists(fp)){
+  #load objects
+  load(file = fp)
+} else {
+  #static plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "precision",
+    set = "full",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F], 
+    measure = "precision", 
+    set = "full", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_precision_multi_opt_full, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the precision score for the `1se` configuration when considering the full set.
+
+```{r plot_precision_multi_1se_full_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "precision", 
+  set         = "full", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r plot_precision_multi_1se_full, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_1se_full.rda")
+
+if(file.exists(fp)){
+  #load objects
+  load(file = fp)
+} else {
+  #static plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "precision",
+    set = "full",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "precision", 
+    set = "full", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_precision_multi_1se_full, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+##### Accuracy
+We consider here the accuracy score.
+
+###### Reference
+This is the accuracy reported in the [UC Irvine Machine Learning Repository website](https://archive-beta.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+original) that we use as reference.
+
+```{r include_bcwo_accuracy_plot, echo=FALSE, fig.align='center', fig.cap='', out.width='90%'}
+knitr::include_graphics(path = file.path("..", "..", "man", "figures", "bcwo_accuracy.png"), error = FALSE)
+```
+
+###### Train
+This is the accuracy score for the `opt` configuration when considering the train set.
+
+```{r plot_accuracy_multi_opt_train_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "acc", 
+  set         = "train", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r plot_accuracy_multi_opt_train, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_opt_train.rda")
+
+if(file.exists(fp)){
+  #load objects
+  load(file = fp)
+} else {
+  #static plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc",
+    set = "train",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F], 
+    measure = "acc", 
+    set = "train", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_accuracy_multi_opt_train, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the accuracy score for the `1se` configuration when considering the train set.
+
+```{r plot_accuracy_multi_1se_train_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "acc", 
+  set         = "train", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r plot_accuracy_multi_1se_train, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_1se_train.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "acc",
+    set = "train",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "acc", 
+    set = "train", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_accuracy_multi_1se_train, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+###### Test
+This is the accuracy score for the `opt` configuration when considering the test set.
+
+```{r plot_accuracy_multi_opt_test_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "acc", 
+  set         = "test", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r plot_accuracy_multi_opt_test, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_opt_test.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc",
+    set = "test",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F], 
+    measure = "acc", 
+    set = "test", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_accuracy_multi_opt_test, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the accuracy score for the `1se` configuration when considering the test set.
+
+```{r plot_accuracy_multi_1se_test_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "acc", 
+  set         = "test", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r plot_accuracy_multi_1se_test, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_1se_test.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "acc",
+    set = "test",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "acc", 
+    set = "test", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_accuracy_multi_1se_test, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+###### Full
+
+This is the accuracy score for the `opt` configuration when considering the full set.
+
+```{r plot_accuracy_multi_opt_full_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "acc", 
+  set         = "full", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r plot_accuracy_multi_opt_full, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_opt_full.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc",
+    set = "full",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F], 
+    measure = "acc", 
+    set = "full", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_accuracy_multi_opt_full, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the accuracy score for the `1se` configuration when considering the full set.
+
+```{r plot_accuracy_multi_1se_full_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "acc", 
+  set         = "full", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r plot_accuracy_multi_1se_full, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_1se_full.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "acc",
+    set = "full",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "acc", 
+    set = "full", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r print_plot_accuracy_multi_1se_full, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+
+### Heart-Disease Data
+The heart-disease database from the Cleveland Clinic Foundation was retrieved from the [UC Irvine Machine Learning Repository website](https://archive-beta.ics.uci.edu/ml/datasets/heart+disease).
+
+#### Load data
+We load the data.
+
+```{r load_hdpc}
+#load data
+load(file = file.path("..", "..", "data-raw", "benchmark", "classification", "heart_disease", "data", "hdpc_data.rda"))
+
+#set response type
+resp.type = "binomial"
+```
+
+#### Setup
+
+##### Tuner
+Now we can create a tuner performing a `grid.search` via 10-fold cross-validation.
+
+```{r hdpc_setup_tuner}
+#tuner
+tuner = Tuner(
+  id = "grid.search",
+  sampler = Sampler(
+    method = sampling.method.id.tuning,
+    k = 10L,
+    n = integer(),
+    strata = y
+  ),
+  looper   = Looper(cores = 1L),
+  logger   = Logger(verbose = T, level = "INFO")
+)
+```
+
+##### Learner
+We can now create the related `?Learner` objects.
+
+```{r hdpc_setup_learners}
+#container
+learners = list()
+
+#loop
+for(learning.method.id in learning.methods.ids){
+  #manual setup
+  learners[[learning.method.id]] = Learner(
+    tuner      = tuner,
+    trainer    = Trainer(id = learning.method.id),
+    forecaster = Forecaster(id = learning.method.id),
+    scorer     = ScorerList(Scorer(id = performance.metric.id.tuning)),
+    selector   = Selector(id = learning.method.id),
+    recorder   = Recorder(id = learning.method.id, logger = Logger(level = "ALL", verbose = T)),
+    marker     = Marker(id = learning.method.id, logger = Logger(level = "ALL", verbose = T)),
+    logger     = Logger(level = "ALL")
+  )
+}
+```
+
+##### Evaluator
+Finally, we need to set up the `?Evaluator`.
+
+```{r hdpc_setup_evaluator}
+#Evaluator
+evaluator = Evaluator(
+  #Sampling strategy: stratified random sampling without replacement
+  sampler = Sampler(               
+    method = "random",             
+    k = 10L,                       
+    strata = y,                    
+    N = as.integer(length(y))      
+  ),
+
+  #Performance metric
+  scorer  = ScorerList(
+    Scorer(id = performance.metric.ids.evaluation[1]),
+    Scorer(id = performance.metric.ids.evaluation[2])
+  )
+)
+```
+
+#### Analysis
+Let's create a directory to store the results.
+
+```{r hdpc_tmpdir_setup, eval=F, include=FALSE}
+#define path (e.g. "mydir/classification/heart_disease")
+outdir = file.path("mydir", "classification", "heart_disease")
+
+#create if not existing
+if(!dir.exists(outdir)){dir.create(path = outdir, showWarnings = F, recursive = T)}
+```
+
+```{r hdpc_dir_setup, eval=T, include=T}
+#define path
+outdir = file.path("..", "..", "data-raw", "benchmark", "classification", "heart_disease", "analysis")
+
+#create if not existing
+if(!dir.exists(outdir)){dir.create(path = outdir, showWarnings = F, recursive = T)}
+```
+
+Before running the analysis, we want to set a seed for the random number generation (RNG). In fact, different R sessions have different seeds created from current time and process ID by default, and consequently different simulation results. By fixing a seed we ensure we will be able to reproduce the results. We can specify a seed by calling `?set.seed`.
+
+In the code below, we set a seed before running the analysis for each considered learning method. 
+
+```{r renoir_hdpc, eval=FALSE}
+#container list
+resl = list()
+
+#loop
+for(learning.method.id in learning.methods.ids){
+  
+  #Each analysis can take hours, so we save data 
+  #for future faster load
+  
+  #path to file
+  fp.obj = file.path(outdir, paste0(learning.method.id,".rds"))#fit object
+  fp.sum = file.path(outdir, paste0("st_",learning.method.id,".rds"))#summary table
+  
+  #check if exists
+  if(file.exists(fp.sum)){
+    #load
+    cat(paste0("Reading ", learning.method.id, "..."), sep = "")
+    resl[[learning.method.id]] = readRDS(file = fp.sum)
+    cat("DONE", sep = "\n")
+  } else {
+  
+    cat(paste("Learning method:", learning.method.id), sep = "\n")
+    
+    #Set a seed for RNG
+    set.seed(
+      #A seed
+      seed = 5381L,                   #a randomly chosen integer value
+      #The kind of RNG to use
+      kind = "Mersenne-Twister",      #we make explicit the current R default value
+      #The kind of Normal generation
+      normal.kind = "Inversion"       #we make explicit the current R default value
+    )
+    
+    resl[[learning.method.id]] = renoir(
+      # filter,
+  
+      #Training set size
+      npoints = 5,
+      # ngrid,
+      nmin = round(nrow(x)/2),
+  
+      #Loop
+      looper = Looper(),
+  
+      #Store
+      filename = "renoir",
+      outdir   = NULL,
+      restore  = TRUE,
+  
+      #Learn
+      learner   = learners[[learning.method.id]],
+  
+      #Evaluate
+      evaluator = evaluator,
+  
+      #Log
+      logger    = Logger(level = "ALL", verbose = T),
+  
+      #Data for training
+      hyperparameters = get_hp(id = learning.method.id, y = y),
+      x         = x,
+      y         = y,
+      weights   = NULL,
+      offset    = NULL,
+      resp.type = resp.type,
+  
+      #space
+      rm.call = FALSE,
+      rm.fit  = FALSE,
+  
+      #Group results
+      grouping = TRUE,
+  
+      #No screening
+      screening = NULL,
+      
+      #Remove call from trainer to reduce space
+      keep.call = F
+    )
+    
+    #save
+    saveRDS(object = resl[[learning.method.id]], file = fp.obj)
+    
+    #create summary table
+    resl[[learning.method.id]] = renoir:::summary_table.RenoirList(resl[[learning.method.id]], key = c("id", "config"))
+    
+    #save summary table
+    saveRDS(object = resl[[learning.method.id]], file = fp.sum)
+    
+    cat("\n\n", sep= "\n")
+  }
+}
+
+#create summary table
+resl = do.call(what = rbind, args = c(resl, make.row.names = F, stringsAsFactors = F))
+
+```
+
+
+
+#### Performance
+Let's now plot the performance metrics for the `opt` and `1se` configurations, considering the train, test, and full set of data.
+
+```{r hdpc_plot_dir_setup, eval=T, include=FALSE}
+#define path
+outdir = file.path("..", "..", "data-raw", "benchmark", "classification", "heart_disease", "analysis", "plots")
+
+#create if not existing
+if(!dir.exists(outdir)){dir.create(path = outdir, showWarnings = F, recursive = T)}
+```
+
+##### Precision
+We consider the precision.
+
+###### Reference
+This is the precision reported in the [UC Irvine Machine Learning Repository website](https://archive-beta.ics.uci.edu/ml/datasets/heart+disease) that we use as reference.
+
+```{r include_hdpc_precision_plot, echo=FALSE, fig.align='center', fig.cap='', out.width='90%'}
+knitr::include_graphics(path = file.path("..", "..", "man", "figures", "hdpc_precision.png"), error = FALSE)
+```
+
+###### Train
+This is the precision score for the `opt` configuration when considering the train set.
+
+```{r hdpc_plot_precision_multi_opt_train_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "precision", 
+  set         = "train", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r hdpc_plot_precision_multi_opt_train, eval=TRUE, include=FALSE, echo = TRUE, results = 'asis'}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+# fp = file.path(outdir, "plot_precision_opt_train.rds")
+fp = file.path(outdir, "plot_precision_opt_train.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "precision",
+    set = "train",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F], 
+    measure = "precision", 
+    set = "train", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+<!-- # ```{r print_plot_precision_multi_opt_train1, eval=TRUE, include=FALSE, echo = TRUE, results = 'asis'} -->
+<!-- # print(htmltools::tagList(p2)) -->
+<!-- # ``` -->
+
+```{r hdpc_print_plot_precision_multi_opt_train, eval=TRUE, results = 'asis', echo = FALSE}
+# print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_precision_multi_opt_train2, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the precision score for the `1se` configuration when considering the train set.
+
+```{r hdpc_plot_precision_multi_1se_train_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "precision", 
+  set         = "train", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r hdpc_plot_precision_multi_1se_train, eval=TRUE, include=FALSE, echo = TRUE, results = 'asis'}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_1se_train.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "precision",
+    set = "train",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "precision", 
+    set = "train", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+htmltools::tagList(p2)
+```
+
+```{r hdpc_print_plot_precision_multi_1se_train, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+###### Test
+This is the precision score for the `opt` configuration when considering the test set.
+
+```{r hdpc_plot_precision_multi_opt_test_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "precision", 
+  set         = "test", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r hdpc_plot_precision_multi_opt_test, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_opt_test.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "precision",
+    set = "test",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F], 
+    measure = "precision", 
+    set = "test", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_precision_multi_opt_test, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the precision score for the `1se` configuration when considering the test set.
+
+```{r hdpc_plot_precision_multi_1se_test_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "precision", 
+  set         = "test", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r hdpc_plot_precision_multi_1se_test, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_1se_test.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "precision",
+    set = "test",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "precision", 
+    set = "test", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_precision_multi_1se_test, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+###### Full
+
+This is the precision score for the `opt` configuration when considering the full set.
+
+```{r hdpc_plot_precision_multi_opt_full_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "precision", 
+  set         = "full", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r hdpc_plot_precision_multi_opt_full, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_opt_full.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "precision",
+    set = "full",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F], 
+    measure = "precision", 
+    set = "full", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_precision_multi_opt_full, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the precision score for the `1se` configuration when considering the full set.
+
+```{r hdpc_plot_precision_multi_1se_full_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "precision", 
+  set         = "full", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r hdpc_plot_precision_multi_1se_full, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_precision_1se_full.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "precision",
+    set = "full",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "precision", 
+    set = "full", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_precision_multi_1se_full, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+##### Accuracy
+We consider here the accuracy score.
+
+###### Reference
+This is the accuracy reported in the [UC Irvine Machine Learning Repository website](https://archive-beta.ics.uci.edu/ml/datasets/heart+disease) that we use as reference.
+
+```{r include_hdpc_accuracy_plot, echo=FALSE, fig.align='center', fig.cap='', out.width='90%'}
+knitr::include_graphics(path = file.path("..", "..", "man", "figures", "hdpc_accuracy.png"), error = FALSE)
+```
+
+###### Train
+This is the accuracy score for the `opt` configuration when considering the train set.
+
+```{r hdpc_plot_accuracy_multi_opt_train_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "acc", 
+  set         = "train", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r hdpc_plot_accuracy_multi_opt_train, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_opt_train.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc",
+    set = "train",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc", 
+    set = "train", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_accuracy_multi_opt_train, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the accuracy score for the `1se` configuration when considering the train set.
+
+```{r hdpc_plot_accuracy_multi_1se_train_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "acc", 
+  set         = "train", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r hdpc_plot_accuracy_multi_1se_train, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_1se_train.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "acc",
+    set = "train",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "acc", 
+    set = "train", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_accuracy_multi_1se_train, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+###### Test
+This is the accuracy score for the `opt` configuration when considering the test set.
+
+```{r hdpc_plot_accuracy_multi_opt_test_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "acc", 
+  set         = "test", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r hdpc_plot_accuracy_multi_opt_test, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_opt_test.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc",
+    set = "test",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc", 
+    set = "test", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_accuracy_multi_opt_test, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the accuracy score for the `1se` configuration when considering the test set.
+
+```{r hdpc_plot_accuracy_multi_1se_test_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "acc", 
+  set         = "test", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r hdpc_plot_accuracy_multi_1se_test, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_1se_test.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "acc",
+    set = "test",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "acc", 
+    set = "test", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_accuracy_multi_1se_test, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+###### Full
+
+This is the accuracy score for the `opt` configuration when considering the full set.
+
+```{r hdpc_plot_accuracy_multi_opt_full_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "opt",,drop=F], #select opt config
+  measure     = "acc", 
+  set         = "full", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+
+```{r hdpc_plot_accuracy_multi_opt_full, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_opt_full.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc",
+    set = "full",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "opt",,drop=F],
+    measure = "acc", 
+    set = "full", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_accuracy_multi_opt_full, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
+
+This is the accuracy score for the `1se` configuration when considering the full set.
+
+```{r hdpc_plot_accuracy_multi_1se_full_code_to_show, eval=FALSE}
+#plot
+renoir:::plot.RenoirSummaryTable(
+  x = resl[resl$config == "1se",,drop=F], #select 1se config 
+  measure     = "acc", 
+  set         = "full", 
+  interactive = T, 
+  add.boxplot = F,
+  add.scores  = F,
+  add.best    = F,
+  key         = c("id", "config")
+  )
+```
+
+```{r hdpc_plot_accuracy_multi_1se_full, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_accuracy_1se_full.rda")
+
+if(file.exists(fp)){
+  # p1 = readRDS(file = fp)
+  load(file = fp)
+} else {
+  #plot
+  p1 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F],
+    measure = "acc",
+    set = "full",
+    interactive = F,
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #interactive plot
+  p2 = renoir:::plot.RenoirSummaryTable(
+    x = resl[resl$config == "1se",,drop=F], 
+    measure = "acc", 
+    set = "full", 
+    interactive = T, 
+    add.boxplot = F,
+    add.scores = F,
+    add.best = F,
+    key = c("id", "config")
+  )
+  #save objects
+  save(p1, p2, file = fp)
+  
+}
+
+#plot
+print(htmltools::tagList(p2))
+```
+
+```{r hdpc_print_plot_accuracy_multi_1se_full, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(p2)
+```
