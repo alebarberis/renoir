@@ -48,11 +48,14 @@ Regression and classification problems for binomial data are currently supported
 if (!require("devtools")) {
   install.packages("devtools")
 }
-devtools::install_github("alexb-84-dev/renoir", dependencies = TRUE, build_vignettes = FALSE)
+devtools::install_github(
+  repo = "alebarberis/renoir", 
+  dependencies = TRUE, 
+  build_vignettes = FALSE
+)
 ```
 
 
 ## Getting started
-If you are just getting started with **renoir** we recommend starting with [Getting Started](renoir.html) section of the site.
-`vignette("renoir")`
+If you are just getting started with **renoir** we recommend starting with [Getting Started](articles/renoir.html) section of the site.
 

@@ -106,5 +106,6 @@ Collate:
     'screening.R'
     'stat_tests.R'
     'update.R'
-URL: https://github.com/alebarberis/renoir
+URL: https://github.com/alebarberis/renoir,
+    https://alebarberis.github.io/renoir/
 BugReports: https://github.com/alebarberis/renoir/issues

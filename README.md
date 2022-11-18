@@ -41,18 +41,21 @@ supported.
 
 ## Installation
 
--   Install latest development version from GitHub (requires
-    [devtools](https://github.com/hadley/devtools) package):
+- Install latest development version from GitHub (requires
+  [devtools](https://github.com/hadley/devtools) package):
 
 ``` r
 if (!require("devtools")) {
   install.packages("devtools")
 }
-devtools::install_github("alexb-84-dev/renoir", dependencies = TRUE, build_vignettes = FALSE)
+devtools::install_github(
+  repo = "alebarberis/renoir", 
+  dependencies = TRUE, 
+  build_vignettes = FALSE
+)
 ```
 
 ## Getting started
 
 If you are just getting started with **renoir** we recommend starting
-with [Getting Started](renoir.html) section of the site.
-`vignette("renoir")`
+with [Getting Started](articles/renoir.html) section of the site.
