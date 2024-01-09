@@ -176,10 +176,10 @@ learner <- Learner(
     resp.type = "binomial"),
   
   #Select one model from a list
-  selector   = Selector(id = "lasso")
+  selector   = Selector(id = "lasso"),
   
   #Record features presence in a model
-  recorder   = Recorder(id = "lasso")
+  recorder   = Recorder(id = "lasso"),
   
   #Assign a mark to each feature
   marker     = Marker(id = "lasso")
