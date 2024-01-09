@@ -57,5 +57,12 @@ devtools::install_github(
 
 
 ## Getting started
-If you are just getting started with **renoir** we recommend starting with [Getting Started](articles/renoir.html) section of the site.
+If you are just getting started with **renoir**, we recommend looking at the [Getting Started](articles/renoir.html) section of the site.
 
+## Citing
+The **renoir** software package itself can be cited as:
+
+Barberis, A., Aerts, H., Buffa, F.M., *Robustness and reproducibility for AI learning in biomedical sciences: RENOIR*, Scientific Reports (2024)
+
+## Credits
+**renoir** was conceived by Dr Alessandro Barberis and Professor Francesca M. Buffa. A.B. developed the software under the supervision of F.M.B. **renoir** is maintained by Alessandro Barberis ([@alebarberis](https://github.com/alebarberis)).
