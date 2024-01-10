@@ -1,9 +1,14 @@
-pandoc: 2.14.0.3
-pkgdown: 2.0.1
+pandoc: 3.1.1
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   classification: benchmark/classification.html
   regression: benchmark/regression.html
   renoir: renoir.html
-last_built: 2021-12-14T16:08Z
+  use_case: usecase/use_case.html
+  use_case_breast: usecase/use_case_breast.html
+last_built: 2024-01-09T14:34Z
+urls:
+  reference: https://alebarberis.github.io/renoir/reference
+  article: https://alebarberis.github.io/renoir/articles
 
