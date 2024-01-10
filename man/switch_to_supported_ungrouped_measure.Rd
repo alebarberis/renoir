@@ -13,3 +13,4 @@ measure name
 Utility function used to switch accuracy measure when
 \code{grouped = FALSE}
 }
+\keyword{internal}

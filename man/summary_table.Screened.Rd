@@ -30,3 +30,4 @@ This function produces a summary table of an object of class \linkS4class{Screen
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

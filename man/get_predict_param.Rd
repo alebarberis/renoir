@@ -13,3 +13,4 @@ if no parameter was found in input data
 \description{
 Get parameters for predict method from Trained object
 }
+\keyword{internal}

@@ -53,3 +53,4 @@ a \code{data.frame} with 4 columns
 \description{
 Format score
 }
+\keyword{internal}

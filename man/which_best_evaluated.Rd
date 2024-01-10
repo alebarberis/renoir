@@ -30,3 +30,4 @@ The selection is performed by looking at the optimal confidence interval
 (defined as the confidence interval with minimum upper confidence limit,
 or maximum lower confidence limit, depending on the considered accuracy measure)
 }
+\keyword{internal}

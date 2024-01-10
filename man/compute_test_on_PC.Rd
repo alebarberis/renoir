@@ -29,3 +29,4 @@ non adjusted p-value
 Computes wilcoxon or Kruskal-Wallis test for the given groups
 on the selected principal components
 }
+\keyword{internal}

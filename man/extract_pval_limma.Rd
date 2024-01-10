@@ -24,3 +24,4 @@ the adjusted p-values of the test
 \description{
 Extract adjusted p-value from limma result
 }
+\keyword{internal}

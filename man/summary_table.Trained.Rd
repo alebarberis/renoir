@@ -31,3 +31,4 @@ This function produces a summary table of an object of class \linkS4class{Traine
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

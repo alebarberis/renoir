@@ -38,3 +38,4 @@ A vector containing the sample sizes.
 \description{
 Get Sample Size Grid
 }
+\keyword{internal}

@@ -23,3 +23,4 @@ Computes the rank product of the features importance to summarise
 the results obtained by using from different configuration and accuracy measures.
 Note that \code{AUC} measure is not considered.
 }
+\keyword{internal}

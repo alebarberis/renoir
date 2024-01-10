@@ -52,7 +52,9 @@ sscore = summarise_as_single_score(x = x, features = colnames(x)[1:5], method = 
 sscore = summarise_as_single_score(x = x, features = colnames(x)[1:5], method = "ssgsea")
 sscore = summarise_as_single_score(x = x, features = colnames(x)[1:5], method = "plage")
 }
+
 }
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

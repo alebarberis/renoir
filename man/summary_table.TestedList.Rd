@@ -40,3 +40,4 @@ This function produces a summary of an object of class \linkS4class{TestedList}.
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

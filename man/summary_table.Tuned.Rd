@@ -35,3 +35,4 @@ This function produces a summary table of an object of class \linkS4class{Tuned}
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

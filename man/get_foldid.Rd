@@ -18,3 +18,4 @@ a vector containing the fold ids
 Helper function that, given a list of indices as returned by
 resample, reshapes the data to obtain a vector containing the fold ids.
 }
+\keyword{internal}

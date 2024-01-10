@@ -31,3 +31,4 @@ This function produces a summary table of an object of class \linkS4class{Filter
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

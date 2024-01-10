@@ -27,3 +27,4 @@ The default value is `TRUE.}
 Common interface to run a for loop sequentially or in parallel.
 The core of the loop is defined by the function \code{fun}.
 }
+\keyword{internal}

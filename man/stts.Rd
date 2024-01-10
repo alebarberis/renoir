@@ -28,3 +28,4 @@ of a \code{data.frame} so that each column is reported as
 "colname: element1<sep.el>element2<sep.el>...". The different strings are then pasted together,
 separated by the \code{sep.col} parameter.
 }
+\keyword{internal}
