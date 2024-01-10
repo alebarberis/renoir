@@ -1015,6 +1015,8 @@ confusion_matrix_outcomes <- function(true, pred, confusion = NULL, positive = 0
 #'@return A classification metric
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 classification_metric <- function(true, pred, confusion = NULL, positive = 1, metric){
 
   #get confusion matrix outcomes
@@ -1268,6 +1270,28 @@ precision = positive_predictive_value <- function(
   return(out)
 }
 
+#'Jaccard Score
+#'
+#'@description This function computes the threat score
+#'
+#'@inheritParams multiresponse_classification_metric
+#'@param ... further arguments to \code{\link{multiresponse_classification_metric}}
+#'
+#'@inherit multiresponse_classification_metric return
+#'
+#'@details The threat score is defined as:
+#'
+#'\deqn{threat score = Jaccard index = critical success index = \frac{TP}{TP + FN + FP}}
+#'
+#'@author Alessandro Barberis
+threat_score = critical_success_index = jaccard_index <- function(
+    true, pred, weights = NULL, multi, ...
+){
+  #Compute score
+  out = multiresponse_classification_metric(true = true, pred = pred, weights = weights, multi = multi, metric = "CSI", ...)
+  #return
+  return(out)
+}
 
 #'Classification Error Rate
 #'
@@ -1585,7 +1609,16 @@ list_supported_performance_metrics <- function(resp.type = NULL){
 
 
 
-
+#'Classification report
+#'
+#'@param true a vector (or a matrix) of observed values. If a matrix is provided,
+#'a multi-response is assumed
+#'@param pred a vector (or a matrix) of predicted values
+#'@param confusion confusion matrix
+#'
+#'@return An object of class `ClassificationReport`.
+#'
+#'@keywords internal
 #'@examples
 #'\dontrun{
 #'true = c(0, 1, 2, 2, 0)
@@ -1647,8 +1680,17 @@ classification_report <- function(true, pred, confusion = NULL){
 
 }
 
+#'Classification report for binomial data
+#'
+#'@param true a vector (or a matrix) of observed values. If a matrix is provided,
+#'a multi-response is assumed
+#'@param pred a vector (or a matrix) of predicted values
 #'@param confusion confusion matrix
 #'@param positive index of 'positive' class
+#'
+#'@return An object of class `BinaryClassificationReport`.
+#'
+#'@keywords internal
 classification_report_binomial <- function(true, pred, confusion = NULL, positive = 1){
 
   metrics = c(

@@ -33,6 +33,8 @@ methods::setClass(
 #'@return a \linkS4class{FilterList} object
 #'
 #' @export
+#'
+#' @rdname FilterList-class
 FilterList <- function(...){
 
   obj = new("FilterList", S4Vectors::SimpleList(...))
@@ -43,6 +45,7 @@ FilterList <- function(...){
 
 }
 
+#'@keywords internal
 create_FilterList <- function(){
 
   #get available filters
@@ -58,6 +61,7 @@ create_FilterList <- function(){
   return(out)
 }
 
+#'@rdname filter
 methods::setMethod(
   f = "filter",
   signature = "FilterList",

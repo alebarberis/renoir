@@ -57,6 +57,8 @@ methods::setClass(
 #'@export
 #'
 #'@author Alessandro Barberis
+#'
+#'@rdname Learner-class
 methods::setMethod(
   f = "Learner",
   signature = methods::signature(id = "missing"),
@@ -114,6 +116,8 @@ methods::setMethod(
 #'@export
 #'
 #'@author Alessandro Barberis
+#'
+#'@rdname Learner-class
 methods::setMethod(
   f = "Learner",
   signature = methods::signature(id = "character"),
@@ -223,6 +227,7 @@ methods::setMethod(
 })
 
 
+#'@keywords internal
 is_valid_learner_object <- function(object) {
   errors <- character()
 
@@ -255,6 +260,7 @@ is_valid_learner_object <- function(object) {
   if (length(errors) == 0) TRUE else errors
 }
 
+#'@rdname Learner-class
 is.Learner <- function(object){
   out = !is.na(match("Learner", table = class(object)))
   return(out)
@@ -291,7 +297,7 @@ methods::setMethod(f = "get_id",        signature = "Learner", definition = func
 #' of learning. See the documentation of the particular method for
 #' further details.
 #'
-#' @name learn
+#' @rdname learn
 #'
 #'@seealso
 #'\code{\link{tune}},
@@ -339,7 +345,7 @@ methods::setMethod(
 })
 
 
-
+#'@keywords internal
 get_sample_learnedlist <- function(learner, logger, observations, ..., iloop){
 
   #--------------------------------------------------------------------------------------------#
@@ -360,6 +366,7 @@ get_sample_learnedlist <- function(learner, logger, observations, ..., iloop){
   return(list(indices = iloop, learned = learned))
 }
 
+#'@keywords internal
 check_sampler_for_training <- function(object){
   N = get_N(object)
   n = get_n(object)
@@ -372,6 +379,7 @@ check_sampler_for_training <- function(object){
   }
 }
 
+#'@keywords internal
 check_sampler_for_single_sample <- function(object){
   N = get_N(object)
   n = get_n(object)

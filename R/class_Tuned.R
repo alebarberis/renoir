@@ -62,6 +62,8 @@ methods::setClass(
 #' @param trained a list containing the models trained during the resampling
 #' @param validated a list containing the validation of the trained models
 #' @param stability a list containing the features stability
+#'
+#'@rdname Tuned-class
 Tuned <- function(
   model     = Trained(),
   config    = character(),
@@ -126,7 +128,7 @@ methods::setMethod(f = "set_trained",   signature = "Tuned", definition = functi
 methods::setMethod(f = "set_validated", signature = "Tuned", definition = function(object, value){methods::slot(object = object, name = 'validated') = value; return(object) })
 methods::setMethod(f = "set_config",    signature = "Tuned", definition = function(object, value){methods::slot(object = object, name = 'config') = value; return(object) })
 
-
+#'@keywords internal
 methods::setMethod(
   f = "clean",
   signature = "Tuned",
@@ -255,6 +257,8 @@ summary_table.Tuned <- function(object){
 #'
 #'@author Alessandro Barberis
 #'@export
+#'
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = methods::signature(object = "Tuned"),

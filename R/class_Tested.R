@@ -56,6 +56,8 @@ methods::setMethod(f = "get_1se",     signature = "Tested", definition = functio
 #' @param 1se index of least complex model associated to performance within 1SE from the optimal
 #'
 #' @author Alessandro Barberis
+#'
+#'@rdname Tested-class
 Tested <- function(
   set     = character(),
   measure = character(),
@@ -162,6 +164,8 @@ summary_table.Tested <- function(object, best = c("opt", "1se")){
 #@inherit summary_table.Tested return
 #
 #'@author Alessandro Barberis
+#'
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = methods::signature(object = "Tested"),

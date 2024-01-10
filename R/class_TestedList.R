@@ -24,6 +24,8 @@ methods::setClass(
 #' TestedList Constructor
 #' Constructor for the S4 \linkS4class{TestedList} object.
 #' @param ... a comma-separated list of S4 \linkS4class{TestedList} objects.
+#'
+#'@rdname TestedList-class
 TestedList <- function(...){
 
   obj = new("TestedList", S4Vectors::SimpleList(...))
@@ -136,6 +138,8 @@ summary_table.TestedList <- function(object, best){
 #@inherit summary_table.TestedList return
 #
 #@author Alessandro Barberis
+#'
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = methods::signature(object = "TestedList"),

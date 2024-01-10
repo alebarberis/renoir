@@ -56,6 +56,8 @@ methods::setClass(
 #' @author Alessandro Barberis
 #'
 #' @export
+#'
+#' @rdname Logger-class
 Logger <- function(
   path    = character(),
   con     = NULL,
@@ -145,6 +147,7 @@ get_log_levels = function(
 
 }
 
+#'@keywords internal
 log_level_name_fixed_length <- function(level){
   out = switch(
     level,
@@ -328,6 +331,7 @@ methods::setMethod(
   }
 )
 
+#'@keywords internal
 get_log_line <- function(line = c("long.line.1", "long.line.2", "long.line.3",
                                   "short.line.1", "short.line.2", "short.line.3")){
   line = match.arg(line);

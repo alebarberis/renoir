@@ -19,6 +19,7 @@ methods::setClass(
 )
 
 #'@export
+#'@rdname Screened-class
 Screened <- function(
   method = character(),
   n      = numeric(),
@@ -184,6 +185,7 @@ summary_table.Screened <- function(object){
 #'
 #'@author Alessandro Barberis
 #'@export
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = methods::signature(object = "Screened"),

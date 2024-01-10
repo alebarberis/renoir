@@ -14,6 +14,8 @@ NULL
 #' @slot elementMetadata  \linkS4class{DataFrame} storing the element-wise metadata,
 #' with a row for each element and a column for each metadata available. Default is \code{NULL}
 #' @slot metadata \code{list} storing the global metadata annotating the object as a whole
+#'
+#' @keywords internal
 methods::setClass(
   Class = "EvaluatedList",
   contains = "SimpleList"
@@ -40,11 +42,13 @@ methods::setMethod(f = "get_performance",  signature = "EvaluatedList", definiti
 
 methods::setMethod(f = "get_learning",     signature = "EvaluatedList", definition = function(object){ unique(sapply(X = object, FUN = get_learning))})
 methods::setMethod(f = "get_screening",    signature = "EvaluatedList", definition = function(object){ unique(sapply(X = object, FUN = get_screening))})
+
 #'EvaluatedList Constructor
 #'
 #'Constructor for the S4 EvaluatedList object.
 #'
 #'Constructor for the S4 \linkS4class{EvaluatedList} object.
+#' @keywords internal
 EvaluatedList <- function(...){
 
   obj = new("EvaluatedList", S4Vectors::SimpleList(...))
@@ -54,6 +58,7 @@ EvaluatedList <- function(...){
   obj
 
 }
+
 
 methods::setMethod(
   f = "subset_list",
@@ -75,9 +80,14 @@ methods::setMethod(
   }
 )
 
+#'Create EvaluatedList Object
+#'
 #'@param ... list of \linkS4class{Evaluated} objects
 #'@param grouping logical, whether to group \linkS4class{Evaluated} objects
 #'by common id/config/response/sampling
+#'@return An object of class \linkS4class{EvaluatedList}
+#'
+#'@keywords internal
 create_EvaluatedList <- function(..., grouping = T){
 
   out = c(...)
@@ -135,6 +145,7 @@ create_EvaluatedList <- function(..., grouping = T){
 }
 
 #'Which is the best training set size
+#'
 #'@description Select best \linkS4class{Evaluated} object from a list.
 #'The selection is performed by looking at the optimal confidence interval
 #'(defined as the confidence interval with minimum upper confidence limit,
@@ -283,8 +294,10 @@ methods::setMethod(
 
 )
 
-
-
+#'Stability
+#'@param object an object of class \linkS4class{EvaluatedList}
+#'
+#'@rdname stability
 methods::setMethod(
   f = "stability",
   signature = methods::signature(object = "EvaluatedList"),
@@ -300,7 +313,12 @@ methods::setMethod(
     return(stability)
   })
 
-
+#'Compute feature importance
+#'
+#'@inheritParams compute_importance
+#'@param ... further arguments to `compute_importance`
+#'
+#'@rdname importance
 methods::setMethod(
   f = "importance",
   signature = methods::signature(object = "EvaluatedList"),
@@ -345,8 +363,21 @@ methods::setMethod(
     return(out)
   })
 
-
-
+#'Compute feature importance
+#'
+#'@param object an object of class \linkS4class{EvaluatedList}
+#'@param marker an object of class \linkS4class{Marker}
+#'@param scorer an object of class \linkS4class{Scorer}
+#'@param set the data set to consider (\code{train}, \code{test} or \code{full})
+#'@param measure the performance metric to consider
+#'@param logger an object of class \linkS4class{Logger}
+#'@param features (optional) vector containing the predictors to consider
+#'@param epsilon small number to avoid division by zero
+#'@param ... not currently used
+#'
+#'@return The computed importance for each feature.
+#'
+#'@keywords internal
 compute_importance <- function(object, marker, scorer, set, measure, logger = Logger(verbose = F), features, epsilon = 1, ...){
 
   logger = open_con(logger)
@@ -474,6 +505,8 @@ compute_importance_weights <- function(err, optimum, epsilon = 1){
 #'\code{\link{summary_table.Trained}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 summary_table.EvaluatedList <- function(object, key, best = c("opt", "1se"), ...){
 
   #--------------------------------------------------------------------------------------------#
@@ -493,15 +526,18 @@ summary_table.EvaluatedList <- function(object, key, best = c("opt", "1se"), ...
   return(out)
 }
 
-#'Get the Summary of an EvaluatedList Object
-#'
+
 #@describeIn summary_table Summary of an object of class \linkS4class{EvaluatedList}
 #
 #@inheritParams summary_table.EvaluatedList
 #
 #@inherit summary_table.EvaluatedList return
 #
+#'Get the Summary of an EvaluatedList Object
+#'
 #'@author Alessandro Barberis
+#'
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = methods::signature(object = "EvaluatedList"),
@@ -525,6 +561,8 @@ methods::setMethod(
 #'@return A character vector.
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 identify_primary_key_from_EvaluatedList <- function(object){
 
   #--------------------------------------------------------------------------------------------#
@@ -599,6 +637,7 @@ identify_primary_key_from_EvaluatedList <- function(object){
 #'
 #' @return a \linkS4class{Trained} object
 #' @author Alessandro Barberis
+#' @rdname get_model
 methods::setMethod(
   f = "get_model",
   signature = "EvaluatedList",
@@ -612,6 +651,13 @@ methods::setMethod(
   }
 )
 
+
+#'@param object \linkS4class{EvaluatedList} object
+#'@param index index of sample in the \linkS4class{Evaluated} object
+#'@param n integer, the sample size. Used to select the \linkS4class{Evaluated} object
+#'from the \linkS4class{EvaluatedList}
+#'
+#' @rdname get_sample
 methods::setMethod(
   f = "get_sample",
   signature = c("EvaluatedList", "numeric"),

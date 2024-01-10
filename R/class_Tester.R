@@ -29,6 +29,8 @@ methods::setClass(
 #' @param scorer a \linkS4class{ScorerList}
 #' @param looper a \linkS4class{Looper}
 #' @param logger a \linkS4class{Logger}
+#'
+#'@rdname Tester-class
 Tester <- function(
   forecaster,
   scorer,
@@ -103,6 +105,9 @@ check_prediction_type <- function(forecaster, scorer){
 
 }
 
+
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "TrainedList", tester = "Tester"),
@@ -124,6 +129,8 @@ methods::setMethod(
     return(out)
 })
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "Trained", tester = "Tester", forecaster = "missing", scorer = "missing", indices = "missing"),
@@ -155,6 +162,8 @@ methods::setMethod(
 )
 
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "Trained", tester = "missing", forecaster = "Forecaster", scorer = "Scorer", indices = "missing"),
@@ -232,6 +241,8 @@ methods::setMethod(
 )
 
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "Trained", tester = "missing", forecaster = "Forecaster", scorer = "ANY", indices = "numeric"),
@@ -260,6 +271,8 @@ methods::setMethod(
   }
 )
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "Trained", tester = "missing", forecaster = "Forecaster", scorer = "ScorerList", indices = "missing"),
@@ -361,6 +374,8 @@ methods::setMethod(
   }
 )
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "TrainedList", tester = "missing", forecaster = "Forecaster", scorer = "ScorerList", indices = "missing"),
@@ -387,6 +402,8 @@ methods::setMethod(
   }
 )
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "TrainedList", tester = "missing", forecaster = "Forecaster", scorer = "Scorer", indices = "missing"),
@@ -434,6 +451,8 @@ methods::setMethod(
 #'}
 #'@param ... further arguments to scorer function
 #'@return list of 2 elements containing a score estimate and its standard error
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "TrainedList", tester = "Tester", forecaster = "missing", scorer = "missing", indices = "list"),
@@ -468,6 +487,8 @@ methods::setMethod(
 
 
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "TrainedList", tester = "missing", forecaster = "Forecaster", scorer = "Scorer", indices = "list"),
@@ -579,6 +600,8 @@ methods::setMethod(
   }
 )
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "TrainedList", tester = "missing", forecaster = "Forecaster", scorer = "ScorerList", indices = "list"),
@@ -713,7 +736,8 @@ methods::setMethod(
 )
 
 
-
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "ANY", tester = "Tester", forecaster = "missing", scorer = "missing"),
@@ -742,6 +766,8 @@ methods::setMethod(
 )
 
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "TunedList", tester = "missing", forecaster = "Forecaster", scorer = "Scorer", indices = "list"),
@@ -843,6 +869,8 @@ methods::setMethod(
 )
 
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "TunedList", tester = "missing", forecaster = "Forecaster", scorer = "ScorerList", indices = "list"),
@@ -969,6 +997,8 @@ methods::setMethod(
 
 
 
+#'
+#'@rdname test
 methods::setMethod(
   f = "test",
   signature = methods::signature(models = "list", tester = "missing", forecaster = "Forecaster", scorer = "Scorer", indices = "list"),

@@ -18,7 +18,7 @@ methods::setClass(
   )
 )
 
-
+#'@keywords internal
 Filtered <- function(
   method     = character(),
   filtered   = matrix(),
@@ -94,6 +94,8 @@ summary_table.Filtered <- function(object){
 #'
 #'@author Alessandro Barberis
 #'@export
+#'
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = "Filtered",

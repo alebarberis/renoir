@@ -91,6 +91,8 @@ methods::setClass(
 #'
 #' @author Alessandro Barberis
 #' @export
+#'
+#'@rdname Tuner-class
 Tuner <- function(
   id           = "grid.search",
   tuner,
@@ -1007,7 +1009,6 @@ update_tuning_hyperparameters <- function(hyperparameters, tuner){
 }
 
 
-#'@param rm elements to remove from screening before checking
 check_tuning_hyperparameters <- function(hyperparameters, trainer){
 # check_tuning_hyperparameters <- function(hyperparameters, trainer, screener){
 
@@ -1249,182 +1250,3 @@ create_hyperparameters_grid_glmnet <- function(hyperparameters, learning.method)
   return(grid)
 }
 
-
-
-
-
-
-#'@param indices vector of indices to subset newx, newoffset, newy
-test_resample = function(trained, tester, newx, newoffset, newy, weights = NULL, type, looper, logger, indices, screened = NULL, ...){
-
-    #--------------------------------------------------------------------------------------------#
-    #logger
-    if(missing(logger)){logger = get_logger(tester)}
-
-    logger = open_con(logger)
-
-    #-------------------------------------------------------------------------------------------#
-    #scorer
-    scorer = get_scorer(tester)
-
-    #--------------------------------------------------------------------------------------------#
-    #compute prediction list
-    log_trace(object = logger, message = paste("Computing prediction"), sep = "\n", add.level = TRUE, add.time = TRUE)
-    predlist = get_resample_predlist(
-      trainedlist = trained,
-      newx        = newx,
-      type        = type,
-      newoffset   = newoffset,
-      looper      = looper,
-      logger      = logger,
-      indices     = indices,
-      screened    = screened,
-      ...)
-
-    #--------------------------------------------------------------------------------------------#
-    #subset y
-    newy    = lapply(X = indices, FUN = subset_observations_def, x = newy)
-    weights = lapply(X = indices, FUN = subset_observations_def, x = weights)
-
-    #--------------------------------------------------------------------------------------------#
-    #Compute score estimate and standard error
-    log_trace(object = logger, message = paste(i, "Computing estimate of test error and related standard error..."), sep = "", add.level = TRUE, add.time = TRUE)
-    #loop over config
-    score.estimate = summary_score(scorer = scorer, true = newy, pred = predlist, weights = weights)
-    log_trace(object = logger, message = "DONE", sep = "\n", add.level = F, add.time = F)
-
-    #--------------------------------------------------------------------------------------------#
-    #
-    close_con(logger)
-
-    #--------------------------------------------------------------------------------------------#
-    return(out)
-
-}
-
-
-get_sample_trainedlist1 <- function(trainer, screener, logger, hyperparameters, indices, ...){
-
-  #--------------------------------------------------------------------------------------------#
-  #Set logger
-  logger = open_con(logger)
-
-  #--------------------------------------------------------------------------------------------#
-  #subset observations
-  # print_log(object = logger, message = paste(Sys.time(), "Subset observations..."), sep = "")
-  trainer  = subset_observations(object = trainer,  which = indices)
-  # print_log(object = logger, message = "DONE", sep = "\n")
-
-  #--------------------------------------------------------------------------------------------#
-  learning.method = get_learning_method(trainer)
-
-  #--------------------------------------------------------------------------------------------#
-  #Hyperparameter space
-  hyperparameter.space = create_hyperparameters_grid(hyperparameters = hyperparameters, learning.method = learning.method)
-
-
-  #check if screening
-  feat.screening = hyperparameter.space$screening
-
-  #
-  screened = NULL
-
-  if(!is.null(feat.screening)){
-    #get screening space
-    feat.screening = unique(feat.screening);
-
-    #
-    len.screening = length(feat.screening)
-
-    #subset
-    hyperparameter.subspace = hyperparameter.space[,-match("screening", colnames(hyperparameter.space)),drop=F]
-    #remove duplicate
-    hyperparameter.subspace = unique(hyperparameter.subspace)
-
-    #TO SAVE SPACE IN MEMORY AVOID PUTTING X IN SCREENER
-    # screener.i = subset_observations(object = screener, which = indices)
-    #
-    # log_debug(object = logger, message = "Screening", sep = "\n", add.level = TRUE, add.time = TRUE)
-    # #screening (will select biggest maxvars by default)
-    # screened = screen(object = screener.i)
-    # # screened = screen(object = screener.i, x = t(get_x(trainer.i)), y = get_y(trainer.i), weights = get_weights(trainer.i))
-    #
-    # #clean
-    # rm(screener.i)
-
-    log_debug(object = logger, message = "Screening", sep = "\n", add.level = TRUE, add.time = TRUE)
-    screened = screen(object = screener, x = t(get_x(trainer)), y = get_y(trainer), weights = get_weights(trainer))
-
-    fitlist = TrainedList()
-
-    for(j in seq(len.screening)){
-
-      #max features to keep
-      maxvar = feat.screening[j]
-
-      log_debug(object = logger, message = paste0("Screening (n = ", maxvar, ")"), sep = "\n", add.level = TRUE, add.time = TRUE)
-
-      #update screened
-      screened.j = get_index(screened)[1:maxvar]
-
-      #keep most significant features
-      trainer.j = subset_features(object = trainer, which = screened.j)
-
-      #Loop over configurations
-      for(ic in seq(n.config)){
-        #get config to test
-        config = as.list(hyperparameter.subspace[ic,,drop=F])
-
-        #train
-        # log_debug(object = logger, message = paste("Training", j), sep = "\n", add.level = TRUE, add.time = TRUE)
-        log_debug(object = logger, message = paste0("Training (config ", ic, ")"), sep = "\n", add.level = TRUE, add.time = TRUE)
-        trained = do.call(what = train, args = c(list(object = trainer.j), config, list(...)))
-
-        #update config
-        # trained = add_config_element(trained, value = list(nvar = maxvar, feat.index = screened.j))
-        # trained = add_config_element(trained, value = list(nvar = maxvar))
-        trained = add_screened_nvar_to_config(trained, value = maxvar)
-      }
-
-      #store
-      fitlist = c(fitlist, trained)
-
-      #clean
-      rm(trainer.j, screened.j, trained)
-    }
-
-    # fitlist = unlist(fitlist)
-
-    #clean
-    # rm(screened)
-
-
-  } else {
-
-    #out
-    fitlist = TrainedList()
-
-    #get number of configurations
-    n.config = nrow(hyperparameter.space)
-
-    #Loop over configurations
-    for(ic in seq(n.config)){
-
-      #get config to test
-      config = as.list(hyperparameter.space[ic,,drop=F])
-
-      #get config to test
-      log_debug(object = logger, message = "Training", sep = "\n", add.level = TRUE, add.time = TRUE)
-      fitlist = c(fitlist, do.call(what = train, args = c(list(object = trainer), config, list(...))))
-
-    }
-  }
-
-  #--------------------------------------------------------------------------------------------#
-  #close
-  close_con(logger)
-
-  #--------------------------------------------------------------------------------------------#
-  #store
-  return(list(indices = indices, fitlist = fitlist, screened = screened))
-}

@@ -29,6 +29,7 @@ methods::setClass(
 #' Constructor for the S4 TrainedList object.
 #'
 #' Constructor for the S4 \linkS4class{TrainedList} object.
+#'@rdname TrainedList-class
 TrainedList <- function(...){
 
   obj = new("TrainedList", S4Vectors::SimpleList(...))
@@ -49,23 +50,7 @@ methods::setMethod(f = "del_screened_nvar_from_config", signature = "TrainedList
 methods::setMethod(f = "get_screened_nvar_from_config", signature = "TrainedList", definition = function(object){TrainedList(lapply(X = object, FUN = get_screened_nvar_from_config))})
 
 
-#'
-#' @rdname  predict-methods
-#' @aliases predict
-#'
-#' @param  object     object of type \linkS4class{TrainedList}.
-#'
-#' @export
-methods::setMethod(
-  f = "predict",
-  signature = "TrainedList",
-  definition = function(object, ...){
 
-    out = lapply(X = object, FUN = predict, ...)
-
-    return(out)
-  }
-)
 
 
 methods::setMethod(

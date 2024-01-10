@@ -62,6 +62,7 @@ methods::setClass(
 #' @export
 #'
 #' @author Alessandro Barberis
+#'@rdname Trainer-class
 Trainer <- function(
   id,
   trainer,
@@ -120,6 +121,9 @@ methods::setMethod(f = "get_logger",     signature = "Trainer", definition = fun
 #'runs multiple configurations (i.e. multiple sets of hyper-parameters).
 #'
 #'@author Alessandro Barberis
+#'
+#'
+#'@rdname train
 methods::setMethod(
   f = "train",
   signature = methods::signature(trainer ="Trainer"),
@@ -248,15 +252,27 @@ methods::setMethod(
   }
 )
 
-
+#'Train the model
+#'
+#'@inheritParams train,Trainer,ANY-method
+#'@inherit train,Trainer,ANY-method return
+#'
+#'@keywords internal
+#'
+#'@rdname train
 methods::setMethod(
   f = "train",
   signature = methods::signature(trainer ="Trainer", features = "missing"),
   definition = function(trainer, features, ...){train(trainer = trainer, features = NULL, ...)}
 )
 
+#'Train the model
+#'
+#'@inheritParams train,Trainer,ANY-method
 #'@return Results are merged into one \linkS4class{TrainedList} object
 #'@keywords internal
+#'
+#'@rdname train
 methods::setMethod(
   f = "train",
   signature = methods::signature(trainer ="Trainer", features = "list"),
@@ -444,8 +460,23 @@ check_provided_trainer_function <- function(trainer){
   }
 }
 
-
-
+#'Generalized k-Nearest Neighbors Classification or Regression
+#'
+#'@param x the input matrix, where rows are observations and columns are variables
+#'@param y the response variable. Its number of rows must match the number of rows of \code{x}
+#'@param weights priors of the observations
+#'@param offset used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting
+#'@param resp.type the response type
+#'@param observations indices of observations to keep
+#'@param features indices of predictors to keep
+#'@param ... further arguments to \code{\link[e1071]{gknn}}
+#'@param k number of neighbours considered
+#'
+#'@return An object of class \linkS4class{Trained}
+#'
+#'@author Alessandro Barberis
+#'
+#'@export
 renoir_gknn <- function(
   x,
   y = NULL,
@@ -547,14 +578,28 @@ renoir_gknn <- function(
   return(out)
 }
 
-
-#Support Vector Machine
+#'Support Vector Machine
+#'
+#'@param x the input matrix, where rows are observations and columns are variables
+#'@param y the response variable. Its number of rows must match the number of rows of \code{x}
+#'@param weights priors of the observations
+#'@param offset used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting
+#'@param resp.type the response type
+#'@param observations indices of observations to keep
+#'@param features indices of predictors to keep
+#'@param ... further arguments to \code{\link[e1071]{svm}}
 #'@param cost cost of costraint violation (must be >0)
-#'@param nu re-parametrization of \param{cost} which controls the
+#'@param nu re-parametrization of \code{cost} which controls the
 #'number of support vectors and the margin errors.
 #'It must be in range (0, 1]. Note that for classification nu must be
 #'nu * length(y)/2 <= min(table(y))
 #'@inheritParams e1071::svm
+#'
+#'@return An object of class \linkS4class{Trained}
+#'
+#'@author Alessandro Barberis
+#'
+#'@export
 renoir_svm <- function(
   x,
   y = NULL,
@@ -856,16 +901,32 @@ renoir_sigmoid_NuSVM <- function(x, y, weights = NULL, offset = NULL, clean, kee
 }
 
 
-#Generalized Boosted Regression Modeling (GBM)
-#@param distribution either a character string specifying the name of the distribution to use or
-#a list with a component name specifying the distribution and any additional parameters needed.
-#If not specified, it is set by \code{resp.type}
+#'Generalized Boosted Regression Modeling (GBM)
+#'
+#'@param x the input matrix, where rows are observations and columns are variables
+#'@param y the response variable. Its number of rows must match the number of rows of \code{x}
+#'@param weights priors of the observations
+#'@param offset used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting
+#'@param resp.type the response type
+#'@param observations indices of observations to keep
+#'@param features indices of predictors to keep
+#'@param ... further arguments to \code{\link[gbm]{gbm.fit}}
+#'@param distribution either a character string specifying the name of the distribution to use or
+#'a list with a component name specifying the distribution and any additional parameters needed.
+#'If not specified, it is set by \code{resp.type}
 #'@param ntree the total number of trees to fit. This is equivalent to the
 #'number of iterations and the number of basis functions in the additive expansion.
 #'@param eta The shrinkage parameter applied to each tree in the expansion.
 #'Also known as the learning rate or step-size reduction; 0.001 to 0.1 usually work,
 #'but a smaller learning rate typically requires more trees. Default is 0.1.
 #'@param keep.data logical, whether or not to keep the data and an index of the data stored with the object.
+#'@inheritParams gbm::gbm.fit
+#'
+#'@return An object of class \linkS4class{Trained}
+#'
+#'@author Alessandro Barberis
+#'
+#'@export
 renoir_gbm <- function(
   x,
   y = NULL,
@@ -991,10 +1052,10 @@ renoir_gbm <- function(
 
 
 #Extreme Gradient Boosting
-#'@param alpha L1 regularization term on weights
-#'@param lambda L2 regularization term on weights
-#'@param eta control the learning rate (range is 0 < eta < 1)
-#'@param ... further arguments to \code{\link{xgb.train}} \code{params}
+#@param alpha L1 regularization term on weights
+#@param lambda L2 regularization term on weights
+#@param eta control the learning rate (range is 0 < eta < 1)
+#@param ... further arguments to \code{\link{xgb.train}} \code{params}
 renoir_xgboost = function(
   x,
   y = NULL,
@@ -1158,6 +1219,24 @@ renoir_xgblinear <- function(x, y, weights = NULL, offset = NULL, clean, keep.ca
   return(out)
 }
 
+
+#'Random Forest
+#'
+#'@param x the input matrix, where rows are observations and columns are variables
+#'@param y the response variable. Its number of rows must match the number of rows of \code{x}
+#'@param weights priors of the observations
+#'@param offset used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting
+#'@param resp.type the response type
+#'@param observations indices of observations to keep
+#'@param features indices of predictors to keep
+#'@param ... further arguments to \code{\link[randomForest]{randomForest}}
+#'@inheritParams randomForest::randomForest
+#'
+#'@return An object of class \linkS4class{Trained}
+#'
+#'@author Alessandro Barberis
+#'
+#'@export
 renoir_random_forest = function(
   x,
   y = NULL,
@@ -1228,8 +1307,24 @@ renoir_random_forest = function(
   return(out)
 }
 
-
-#param gamma dummy variable, not used in training but set in config
+#'GLM with elastic-net
+#'
+#'@param x the input matrix, where rows are observations and columns are variables
+#'@param y the response variable. Its number of rows must match the number of rows of \code{x}
+#'@param weights priors of the observations
+#'@param offset used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting
+#'@param resp.type the response type
+#'@param observations indices of observations to keep
+#'@param features indices of predictors to keep
+#'@param gamma dummy variable, not used in training but set in config
+#'@param ... further arguments to \code{\link[glmnet]{glmnet}}
+#'@inheritParams glmnet::glmnet
+#'
+#'@return An object of class \linkS4class{Trained}
+#'
+#'@author Alessandro Barberis
+#'
+#'@export
 renoir_glmnet = function(
   x, y, weights = NULL, offset = NULL, clean, keep.call,
   alpha = 1,
@@ -1636,8 +1731,11 @@ renoir_split_glmnet <- function(object){
   return(out)
 }
 
+#'Subset glmnet object
 #'@param object a glmnet fit
 #'@param i lambda
+#'@return Modified object.
+#'@keywords internal
 renoir_subset_glmnet <- function(object, i){
 
   #check if is multi response

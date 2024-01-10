@@ -50,6 +50,7 @@ methods::setClass(
 #' @export
 #'
 #' @author Alessandro Barberis
+#'@rdname Screener-class
 Screener <- function(
   id,
   screener,
@@ -174,7 +175,7 @@ check_provided_screener_function <- function(screener){
 #@return the p-value of the selected test
 #'@return a \linkS4class{Screened} object
 #'@author Alessandro Barberis
-#'@keywords internal
+#'@export
 default_screener <- function(
   x, y, weights = NULL, alternative="two.sided", method = "pearson", conf.level=0.95,
   resp.type = c("gaussian", "mgaussian", "binomial", "multinomial", "poisson", "cox"),
@@ -341,7 +342,7 @@ get_name_screener_by_id <- function(id, short = F){
 #'
 #'@author Alessandro Barberis
 #'
-#'@keywords internal
+#'@export
 ebayes_screener <- function(
   #common formals
   x, y, weights = NULL,
@@ -655,7 +656,7 @@ ebayes_screener <- function(
 #@return the p-value of the selected test
 #'@return a \linkS4class{Screened} object
 #'@author Alessandro Barberis
-#'@keywords internal
+#'@export
 permutation_screener <- function(
   x, y, weights = NULL,
   resp.type = c("gaussian", "mgaussian", "binomial", "multinomial", "poisson", "cox"),
@@ -904,7 +905,7 @@ permutation_screener <- function(
 #'@return The significance of the screening test for each feature after the
 #'application of the selected strategy.
 #'
-#'@keywords internal
+#'@export
 #'
 #'@author Alessandro Barberis
 multiresponse_screener <- function(screened, multi = c("max", "average", "sum", "raw"), coef = NULL){
@@ -980,6 +981,7 @@ multiresponse_screener <- function(screened, multi = c("max", "average", "sum", 
 #'@param ... further arguments to \code{screener} function
 #'@return a \linkS4class{Screened} object
 #'@author Alessandro Barberis
+#'@rdname screen
 methods::setMethod(
   f = "screen",
   signature = methods::signature(screener ="Screener"),

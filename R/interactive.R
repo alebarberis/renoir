@@ -203,6 +203,8 @@ plotly.density <- function(data,
 #'\code{\link{plotly_multi_evaluation}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 plotly_evaluation <- function(data, tooltip = c("imodel", "screened", "nfeatures", "configuration"), ...){
 
   #--------------------------------------------------------------------------------------------#
@@ -307,6 +309,8 @@ plotly_evaluation <- function(data, tooltip = c("imodel", "screened", "nfeatures
 #'\code{\link{plotly_multi_evaluation}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 plotly_single_evaluation <- function(
   #data
   data,
@@ -491,6 +495,8 @@ plotly_single_evaluation <- function(
 #'\code{\link{plotly_single_evaluation}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 plotly_multi_evaluation <- function(
 
   #data

@@ -26,6 +26,9 @@ methods::setGeneric(name = "get_id",         def = function(object) standardGene
 methods::setGeneric(name = "get_trainer",    def = function(object) standardGeneric("get_trainer"))
 
 # methods::setGeneric(name = "train",          def = function(trainer, object, hyperparameters, indices, ...) standardGeneric("train"))
+
+#'@name train
+#'@rdname train
 methods::setGeneric(name = "train",          def = function(trainer, features, ...) standardGeneric("train"))
 
 #-----------------------------------------------------------------------------------#
@@ -50,6 +53,8 @@ methods::setGeneric(name = "set_learning_method", function(object, value) standa
 #Screener
 methods::setGeneric(name = "get_screener", def = function(object) standardGeneric("get_screener"))
 
+#'@name screen
+#'@rdname screen
 methods::setGeneric(name = "screen",       def = function(screener, ...) standardGeneric("screen"))
 
 #-----------------------------------------------------------------------------------#
@@ -71,18 +76,31 @@ methods::setGeneric(name = "get_optimum", function(object) standardGeneric("get_
 
 methods::setGeneric(name = "update_scorer", function(object,...) standardGeneric("update_scorer"))
 
+#'@name mean_score
+#'@rdname mean_score
 methods::setGeneric(name = "mean_score",     function(scorer, true, pred, weights, ...) standardGeneric("mean_score"))
+
+#'@name se_score
+#'@rdname se_score
 methods::setGeneric(name = "se_score",       function(scorer, true, pred, weights, ...) standardGeneric("se_score"))
+
+#'@name summary_score
+#'@rdname summary_score
 methods::setGeneric(name = "summary_score",  function(scorer, true, pred, weights, ...) standardGeneric("summary_score"))
 
 methods::setGeneric(name = "select_optimal_score",     function(scorer, measures, ...) standardGeneric("select_optimal_score"))
 
+#'@name score
+#'@rdname score
 methods::setGeneric(name = "score",    function(scorer, true, pred, weights, ...) standardGeneric("score"))
 
 #-----------------------------------------------------------------------------------#
 #Quantifier
 methods::setGeneric(name = "get_quantifier",  function(object) standardGeneric("get_quantifier"))
 # methods::setGeneric(name = "quantify",    function(quantifier, x, weights, ...) standardGeneric("quantify"))
+
+#'@name quantify
+#'@rdname quantify
 methods::setGeneric(name = "quantify",    function(quantifier, ...) standardGeneric("quantify"))
 
 #-----------------------------------------------------------------------------------#
@@ -91,6 +109,9 @@ methods::setGeneric(name = "get_forecaster",      function(object) standardGener
 methods::setGeneric(name = "get_prediction_type", function(object, ...) standardGeneric("get_prediction_type"))
 
 # methods::setGeneric(name = "forecast", function(forecaster, trained, models, ...) standardGeneric("forecast"))
+
+#'@name forecast
+#'@rdname forecast
 methods::setGeneric(name = "forecast", function(forecaster, models, ...) standardGeneric("forecast"))
 #-----------------------------------------------------------------------------------#
 #ForecasterList
@@ -101,10 +122,16 @@ methods::setGeneric(name = "subset_forecaster",   function(object, by, ...) stan
 #Tester
 # methods::setGeneric(name = "test",     function(trained, tester, newx, newoffset, newy, weights, indices, ...) standardGeneric("test"))
 # methods::setGeneric(name = "test",     function(trained, tester, forecaster, scorer, indices, ...) standardGeneric("test"))
+
+#'@name test
+#'@rdname test
 methods::setGeneric(name = "test",     function(models, tester, forecaster, scorer, indices, ...) standardGeneric("test"))
 
 #-----------------------------------------------------------------------------------#
 #Selector
+
+#'@name select
+#'@rdname select
 methods::setGeneric(name = "select", function(selector, models, merr, sderr, scorer, ...) standardGeneric("select"))
 
 #-----------------------------------------------------------------------------------#
@@ -124,6 +151,9 @@ methods::setGeneric(name = "tune",     function(tuner, ...) standardGeneric("tun
 
 #-----------------------------------------------------------------------------------#
 #Tuned
+
+#'@name get_model
+#'@rdname get_model
 methods::setGeneric(name = "get_model",             function(object, ...) standardGeneric("get_model"))
 # methods::setGeneric(name = "get_mean_error",        function(object, ...) standardGeneric("get_mean_error"))
 # methods::setGeneric(name = "get_sd_error",          function(object) standardGeneric("get_sd_error"))
@@ -158,6 +188,8 @@ methods::setGeneric(name = "set_tuner",       def = function(object, value) stan
 
 # methods::setGeneric(name = "learn",     function(learner, hyperparameters, sampler, ...) standardGeneric("learn"))
 
+#'@name learn
+#'@rdname learn
 methods::setGeneric(name = "learn",     function(learner, hyperparameters, ...) standardGeneric("learn"))
 
 # methods::setGeneric(name = "evaluate",  function(models, learner, hyperparameters, sampler, forecaster, scorer, ...) standardGeneric("evaluate"))
@@ -186,6 +218,8 @@ methods::setGeneric("subset_list", function(object, ...) standardGeneric("subset
 
 #-----------------------------------------------------------------------------------#
 #Evaluator
+#'@name evaluate
+#'@rdname evaluate
 methods::setGeneric(name = "evaluate",  function(models, learner, evaluator, npoints, ...) standardGeneric("evaluate"))
 
 #-----------------------------------------------------------------------------------#
@@ -204,6 +238,8 @@ methods::setGeneric(name = "get_performance",  def = function(object) standardGe
 methods::setGeneric(name = "get_learning",     def = function(object) standardGeneric("get_learning"))
 methods::setGeneric(name = "get_screening",    def = function(object) standardGeneric("get_screening"))
 
+#'@name get_sample
+#'@rdname get_sample
 methods::setGeneric(name = "get_sample", def = function(object, index, ...) standardGeneric("get_sample"))
 
 methods::setGeneric(name = "set_models",   def = function(object, value) standardGeneric("set_models"))
@@ -216,15 +252,24 @@ methods::setGeneric(name = "which_best",     def = function(object, set, measure
 #Filter
 methods::setGeneric(name = "get_filter", def = function(object) standardGeneric("get_filter"))
 
+#'@name filter
+#'@rdname filter
 methods::setGeneric(name = "filter",   function(filter, ...) standardGeneric("filter"))
 
 
 #-----------------------------------------------------------------------------------#
 #Recorder
+#'@name record
+#'@rdname record
 methods::setGeneric(name = "record",   function(object, recorder, ...) standardGeneric("record"))
 methods::setGeneric(name = "get_recorder",   def = function(object) standardGeneric("get_recorder"))
 
+#'@name features
+#'@rdname features
 methods::setGeneric(name = "features",  def = function(object, recorder, ...) standardGeneric("features"))
+
+#'@name nfeatures
+#'@rdname nfeatures
 methods::setGeneric(name = "nfeatures", def = function(object, recorder, ...) standardGeneric("nfeatures"))
 
 #-----------------------------------------------------------------------------------#
@@ -232,6 +277,8 @@ methods::setGeneric(name = "nfeatures", def = function(object, recorder, ...) st
 methods::setGeneric(name = "get_function", def = function(object) standardGeneric("get_function"))
 methods::setGeneric(name = "get_marker",   def = function(object) standardGeneric("get_marker"))
 
+#'@name mark
+#'@rdname mark
 methods::setGeneric(name = "mark",   function(object, ...) standardGeneric("mark"))
 
 
@@ -246,9 +293,17 @@ methods::setGeneric(name = "get_scoring",    def = function(object) standardGene
 
 #-----------------------------------------------------------------------------------#
 # methods::setGeneric(name = "renoir",    function(filter, learner, evaluator, ...) standardGeneric("renoir"))
+
+#'@name stability
+#'@rdname stability
 methods::setGeneric(name = "stability",    function(object, ...) standardGeneric("stability"))
+
+#'@name importance
+#'@rdname importance
 methods::setGeneric(name = "importance",   function(object, ...) standardGeneric("importance"))
 
+#'@name summary_table
+#'@rdname summary_table
 methods::setGeneric(name = "summary_table",   function(object, ...) standardGeneric("summary_table"))
 
 #-----------------------------------------------------------------------------------#
@@ -406,10 +461,14 @@ methods::setGeneric(name = "clean",    function(object, ...) standardGeneric("cl
 
 
 
-methods::setGeneric(name = "assess",   function(object, ...) standardGeneric("assess"))
+# methods::setGeneric(name = "assess",   function(object, ...) standardGeneric("assess"))
 # methods::setGeneric(name = "filter",   function(object, ...) standardGeneric("filter"))
 # methods::setGeneric(name = "sample",   function(object, ...) standardGeneric("sample"))
+
+#'@name resample
+#'@rdname resample
 methods::setGeneric(name = "resample", function(object, ...) standardGeneric("resample"))
+
 methods::setGeneric(name = "loop", function(looper, ...) standardGeneric("loop"))
 # methods::setGeneric(name = "learn",    function(object, train.size, ...) standardGeneric("learn"))
 # methods::setGeneric(name = "learn",    function(object, ...) standardGeneric("learn"))

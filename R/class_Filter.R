@@ -55,6 +55,8 @@ methods::setClass(
 #' @export
 #'
 #' @author Alessandro Barberis
+#'
+#' @rdname Filter-class
 Filter <- function(
   id,
   filter,
@@ -96,12 +98,13 @@ methods::setMethod(f = "get_filter",     signature = "Filter", definition = func
 methods::setMethod(f = "get_parameters", signature = "Filter", definition = function(object){methods::slot(object = object, name = 'parameters')})
 methods::setMethod(f = "get_logger",     signature = "Filter", definition = function(object){methods::slot(object = object, name = 'logger')})
 
-
+#'@keywords internal
 supported_filtering_methods <- function(){
   out = c('na', 'intensity', 'variability')
   return(out)
 }
 
+#'@keywords internal
 get_filter_function <-function(id) {
   out = switch(
     id,
@@ -112,6 +115,7 @@ get_filter_function <-function(id) {
   return(out)
 }
 
+#'@keywords internal
 check_provided_filter_function <- function(f){
 
   if(missing(f)){
@@ -162,6 +166,8 @@ check_provided_filter_function <- function(f){
 #'\code{\link{filter_by_intensity}},
 #'\code{\link{filter_by_variability}}
 #'
+#'@rdname filter
+#'
 #'@export
 #'
 #'@author Alessandro Barberis
@@ -204,7 +210,7 @@ methods::setMethod(
   return(out)
 })
 
-
+#'@keywords internal
 filter_def <- function(
   x,
   methods = c('na', 'intensity', 'variability'),
@@ -334,7 +340,7 @@ filter_def <- function(
 #'
 #'@author Alessandro Barberis
 #'
-#'@keywords internal
+#'@export
 filter_by_na <- function(x, threshold = 0.5, logger){
 
   #-----------------------------------------------------------------------------------#
@@ -446,7 +452,7 @@ filter_by_na <- function(x, threshold = 0.5, logger){
 #'
 #'@author Alessandro Barberis
 #'
-#'@keywords internal
+#'@export
 filter_by_intensity <- function(x, threshold = 0.25, logger){
   #-----------------------------------------------------------------------------------#
   #Check input
@@ -573,7 +579,7 @@ filter_by_intensity <- function(x, threshold = 0.25, logger){
 #'
 #'@author Alessandro Barberis
 #'
-#'@keywords internal
+#'@export
 filter_by_variability <- function(x, threshold = 0.25, logger, method = c("sd", "IQR", "mad")){
   #-----------------------------------------------------------------------------------#
   #Check input
@@ -664,7 +670,7 @@ filter_by_variability <- function(x, threshold = 0.25, logger, method = c("sd", 
   })#END tryCatch
 }
 
-
+#'@keywords internal
 get_var_measure_name <- function(var.measure = c('sd', 'IQR', 'mad')){
   out = switch(
     var.measure,
@@ -677,7 +683,7 @@ get_var_measure_name <- function(var.measure = c('sd', 'IQR', 'mad')){
 }
 
 
-
+#'@keywords internal
 supported_unsupervised_screening_methods <- function(){
 
   #methods

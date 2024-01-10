@@ -23,9 +23,9 @@ methods::setClass(
 
 #'ForecasterList Constructor
 #'
-#' @title Constructor for the S4 ForecasterList object.
-#'
 #'Constructor for the S4 \linkS4class{ForecasterList} object.
+#'
+#'@rdname ForecasterList-class
 ForecasterList <- function(...){
 
   obj = new("ForecasterList", S4Vectors::SimpleList(...))
@@ -47,12 +47,18 @@ methods::setMethod(f = "get_id", signature = "ForecasterList", definition = func
 #'@param by the learning method to match. If missing, the \code{object} is returned
 #'as it is. In case of no match \code{NULL} is returned.
 #'@return a \linkS4class{Forecaster} object
+#'
+#'@keywords internal
+#'@rdname select_forecaster
 methods::setMethod(
   f = "select_forecaster",
   signature = methods::signature(object = "ForecasterList", by = "character"),
   definition = function(object, by){select_by_id(object, by)}
 )
 
+#'
+#'@keywords internal
+#'@rdname select_forecaster
 methods::setMethod(
   f = "select_forecaster",
   signature = methods::signature(object ="ForecasterList", by = "Trained"),
@@ -75,6 +81,8 @@ methods::setMethod(
 #'@param by the learning method to match. If missing, the \code{object} is returned
 #'as it is. In case of no match \code{NULL} is returned.
 #'@return a \linkS4class{ForecasterList} object
+#'
+#'@keywords internal
 methods::setMethod(
   f = "subset_forecaster",
   signature = methods::signature(object = "ForecasterList", by = "character"),
@@ -91,6 +99,8 @@ methods::setMethod(
   }
 )
 
+#'
+#'@keywords internal
 methods::setMethod(
   f = "get_selector",
   signature = "ForecasterList",
@@ -119,6 +129,8 @@ methods::setMethod(
 #'If \code{learning.method} is missing or multiple values are provided then the
 #'output is a vector containing the matching prediction types, one for each
 #'learning method in \code{learning.method}.
+#'
+#'@keywords internal
 methods::setMethod(
   f = "get_prediction_type",
   signature = "ForecasterList",
@@ -138,10 +150,17 @@ methods::setMethod(
 )
 
 
-#Coerce to ForecasterList
-#
-#@description Function to coerce a \linkS4class{Forecaster} to a \linkS4class{ForecasterList}
-#@return a \linkS4class{ForecasterList}
+#'Coerce to ForecasterList
+#'
+#'@description Function to coerce a \linkS4class{Forecaster} to a \linkS4class{ForecasterList}
+#'
+#'@param from a \linkS4class{Forecaster}
+#'
+#'@return a \linkS4class{ForecasterList}
+#'
+#'@keywords internal
+#'
+#'@name setAs,Forecaster-method
 methods::setAs(
   from = "Forecaster",
   to = "ForecasterList",
@@ -150,7 +169,7 @@ methods::setAs(
 )
 
 
-
+#'@rdname forecast
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "ForecasterList", models = "Trained"),
@@ -168,7 +187,7 @@ methods::setMethod(
   }
 )
 
-
+#'@rdname forecast
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "ForecasterList", models = "TrainedList"),

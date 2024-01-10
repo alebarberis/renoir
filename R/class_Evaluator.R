@@ -13,7 +13,10 @@ NULL
 #' @slot looper a \linkS4class{Looper} object
 #' @slot scorer a \linkS4class{ScorerList} object
 #' @slot logger a \linkS4class{Logger} object
+#'
 #' @author Alessandro Barberis
+#'
+#' @export
 methods::setClass(
   Class = "Evaluator",
   slots = c(
@@ -65,6 +68,8 @@ methods::setClass(
 #'
 #' @author Alessandro Barberis
 #' @export
+#'
+#'@rdname Evaluator-class
 Evaluator <- function(
   sampler = Sampler(method = "random", k = 1L),
   looper  = Looper(),
@@ -94,6 +99,15 @@ methods::setMethod(f = "set_sampler", signature = "Evaluator", definition = func
 
 
 #'Evaluate Learning Method
+#'
+#'@param learner an object of class \linkS4class{Learner}
+#'@param evaluator an object of class \linkS4class{Evaluator}
+#'@param logger an object of class \linkS4class{logger}
+#'@param x the input matrix, where rows are observations and columns are variables.
+#'@param y the response variable. Its number of rows must match the number of rows of \code{x}.
+#'@param weights (optional) vector of observation weights
+#'@param offset vector containing an offset, used for linear models. Default is \code{NULL}.
+#'@param resp.type the response type
 #'@param observations (optional) index of samples to use for training.
 #'If missing, observations will be sampled by using the \linkS4class{Sampler}
 #'in \linkS4class{Evaluator}. This is an helper argument, and shouldn't be used
@@ -101,6 +115,14 @@ methods::setMethod(f = "set_sampler", signature = "Evaluator", definition = func
 #'object are still retrieved from \linkS4class{Sampler} in \linkS4class{Evaluator} even if
 #'\code{observation} is provided.
 #If missing, 70% of samples will be used for training
+#'@param filename (optional) name without extension for the output file
+#'@param outdir path to the output directory
+#'@param rm.call logical, whether to remove the call from the models. Helpful if object size is expected to be big
+#'@param rm.fit logical, whether to remove the model fits used for tuning the hyperparameters . Helpful if object size is expected to be big
+#'object can be huge.
+#'@param ... further arguments to `learn` function
+#'
+#'@rdname evaluate
 methods::setMethod(
   f = "evaluate",
   # signature = methods::signature(models = "missing", learner = "Learner", hyperparameters = "ANY", sampler = "Sampler"),
@@ -315,6 +337,8 @@ methods::setMethod(
   })
 
 
+#'@param models an object of class \linkS4class{TrainedList}
+#'@rdname evaluate
 methods::setMethod(
   f = "evaluate",
   #signature = methods::signature(models = "TrainedList", learner = "Learner", hyperparameters = "ANY", sampler = "Sampler"),
@@ -472,6 +496,8 @@ methods::setMethod(
     return(out)
   })
 
+#'@param models an object of class \linkS4class{TunedList}
+#'@rdname evaluate
 methods::setMethod(
   f = "evaluate",
   signature = methods::signature(models = "TunedList", learner = "Learner", evaluator = "Evaluator", npoints = "missing"),
@@ -525,6 +551,7 @@ methods::setMethod(
 #'@param rm.fit logical, whether to remove the model fits used for tuning the hyperparameters . Helpful if object size is expected to be big
 #'object can be huge.
 #'
+#'@rdname evaluate
 methods::setMethod(
   f = "evaluate",
   # signature = methods::signature(models = "missing", learner = "Learner", hyperparameters = "ANY", sampler = "Sampler"),
@@ -634,6 +661,7 @@ methods::setMethod(
 })
 
 
+#'@keywords internal
 get_sample_evaluated = function(iloop, logger, learner, evaluator, ngrid, outdir, filename, restore = T, ...){
   #--------------------------------------------------------------------------------------------#
   #Set logger
@@ -705,6 +733,8 @@ get_sample_evaluated = function(iloop, logger, learner, evaluator, ngrid, outdir
 
 #'Evaluate Learning Methods
 #'@param looper a \linkS4class{Looper} to loop over the learning methods to evaluate
+#'
+#'@rdname evaluate
 methods::setMethod(
   f = "evaluate",
   # signature = methods::signature(models = "missing", learner = "Learner", hyperparameters = "ANY", sampler = "Sampler"),
@@ -811,6 +841,7 @@ methods::setMethod(
 
 
 #Loop over learners
+#'@keywords internal
 get_ievaluated <- function(iloop, logger, learners, evaluator, ...){
 
   #--------------------------------------------------------------------------------------------#
@@ -839,6 +870,9 @@ get_ievaluated <- function(iloop, logger, learners, evaluator, ...){
 #@param observations indices indicating a subset of original data
 #@param samples list of integer, indicating the subset of \code{observations} used for training
 #@param auto.select logical, whether auto select best model
+#'@param models an object of class \linkS4class{TrainedList}
+#'
+#'@rdname evaluate
 methods::setMethod(
   f = "evaluate",
   #signature = methods::signature(models = "TrainedList", learner = "Learner", hyperparameters = "ANY", sampler = "Sampler"),

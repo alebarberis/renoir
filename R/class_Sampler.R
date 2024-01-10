@@ -60,6 +60,8 @@ methods::setClass(
 #'@author Alessandro Barberis
 #'
 #' @export
+#'
+#' @rdname Sampler-class
 Sampler <- function(
   method  = c("random", "bootstrap", "cv"),
   # N       = 100L,
@@ -703,7 +705,13 @@ get_training_set_size_grid <- function(
   return(grid)
 }
 
-
+#'Get Sample Size Grid
+#'
+#'@inheritParams Sampler
+#'@param nmin integer, desired minimum number of observations (minimum sample size)
+#'@param npoints integer, the desired number of sample sizes
+#'
+#'@return A vector containing the sample sizes.
 get_size_grid <- function(
   method = c("random", "bootstrap", "cv"),
   N,
@@ -724,8 +732,7 @@ get_size_grid <- function(
   return(out)
 }
 
-#'@param N integer, population size
-#'@param nmin integer, desired minimum number of observations (minimum sample size)
+
 #@param nmax maximum number of observations
 get_sample_size_grid <- function(
   N,

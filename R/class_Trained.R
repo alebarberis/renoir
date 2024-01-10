@@ -26,6 +26,8 @@ methods::setClass(
 #' Constructor for the S4 Trained object.
 #'
 #' Constructor for the S4 \linkS4class{Trained} object.
+#'
+#'@rdname Trained-class
 Trained <- function(
   fit             = NULL,
   config          = list(),
@@ -156,124 +158,10 @@ methods::setMethod(
 #   return(object)
 # }
 #
-# #'
-# #' @rdname  predict-methods
-# #' @aliases predict
-# #'
-# #' @param  object     object of type \code{Trained}.
-# #'
-# #' @export
-# methods::setMethod(
-#   f = "predict",
-#   signature = "Trained",
-#   definition = function(object, newx, type, newoffset, ...){
-#
-#     #----------------------------------------------------------------------#
-#     #method
-#     learning.method = get_learning_method(object = object)
-#
-#     #----------------------------------------------------------------------#
-#     #setup type
-#     if(missing(type)){
-#       type = switch(
-#         learning.method,
-#         glmnet       = "link",
-#         lasso        = "link",
-#         ridge        = "link",
-#         elnet        = "link",
-#         randomForest = "response"
-#       )
-#     }
-#
-#     #----------------------------------------------------------------------#
-#     #extract fit
-#     fit = get_fit(object = object)
-#
-#     #----------------------------------------------------------------------#
-#     #predict
-#     # out = stats::predict(object = fit, ...)
-#     # out = switch(
-#     #   learning.method,
-#     #   glmnet       = stats::predict(object = fit, newx = newx, type = type, newoffset = newoffset, ...),
-#     #   lasso        = stats::predict(object = fit, newx = newx, type = type, newoffset = newoffset, ...),
-#     #   ridge        = stats::predict(object = fit, newx = newx, type = type, newoffset = newoffset, ...),
-#     #   elnet        = stats::predict(object = fit, newx = newx, type = type, newoffset = newoffset, ...),
-#     #   randomForest = stats::predict(object = fit, newdata = newx, type = type, ...)
-#     # )
-#
-#     args = get_predict_param(object = object, ...)
-#
-#     #update
-#     args = c(list(object = fit, type = type), args)
-#
-#     if(learning.method %in% glmnet_learning_method_names()){
-#
-#       #update
-#       if(!missing(newx)){args = c(args, list(newx = newx))}
-#       if(!missing(newoffset)){args = c(args, list(newoffset = newoffset))}
-#
-#       out = do.call(what = stats::predict, args = args)
-#
-#       #check predicted
-#       out = check_predicted_by_glmnet(object = out, type = type)
-#
-#     } else if(identical(learning.method, "randomForest")){
-#       # out = randomForest:::predict.randomForest(object = fit, newdata = newx, type = type, ...)
-#
-#       if(!missing(newx)){args = c(args, list(newdata = newx))}
-#
-#       out = do.call(what = stats::predict, args = args)
-#     } else {
-#       stop("Learning method not supported.\n")
-#     }
-#
-#     #----------------------------------------------------------------------#
-#     return(out)
-# })
 
 
-#' Assess performance using test data
-#' @param object an object of class \code{renoir.trained.cv.glmnet} containing the fitted data
-#'
-methods::setMethod(
-  f = "assess",
-  signature = methods::signature(object = "Trained"),
-  function(object, newx, newy, weights = NULL, ...){
 
-    #----------------------------------------------------------------------#
-    #method
-    learning.method = get_learning_method(object = object)
 
-    #----------------------------------------------------------------------#
-    #fit
-    fit = get_fit(object = object)
-
-    #----------------------------------------------------------------------#
-    # out = switch(
-    #   learning.method,
-    #   glmnet = glmnet::assess.glmnet(object = fit, newx = newx, newy = newy, weights = weights,...),
-    #   lasso  = glmnet::assess.glmnet(object = fit, newx = newx, newy = newy, weights = weights,...),
-    #   ridge  = glmnet::assess.glmnet(object = fit, newx = newx, newy = newy, weights = weights,...),
-    #   elnet  = glmnet::assess.glmnet(object = fit, newx = newx, newy = newy, weights = weights,...)
-    # )
-
-    #----------------------------------------------------------------------#
-    #create args
-    args = get_predict_param(object = object, ...)
-
-    #assess
-    out = switch(
-      learning.method,
-      glmnet = do.call(what = glmnet::assess.glmnet, args = c(list(object = fit, newx = newx, newy = newy, weights = weights), args)),
-      lasso  = do.call(what = glmnet::assess.glmnet, args = c(list(object = fit, newx = newx, newy = newy, weights = weights), args)),
-      ridge  = do.call(what = glmnet::assess.glmnet, args = c(list(object = fit, newx = newx, newy = newy, weights = weights), args)),
-      elnet  = do.call(what = glmnet::assess.glmnet, args = c(list(object = fit, newx = newx, newy = newy, weights = weights), args))
-    )
-
-    #----------------------------------------------------------------------#
-    return(out)
-  }
-)
 
 #'Get parameters for predict method from Trained object
 #'@return a list of parameters to use for predict method. The list can be empty
@@ -367,6 +255,7 @@ get_predict_param <- function(object, ...){
 #'object's size raises too much when the initial set of features and observations is big.
 #'@param object a \linkS4class{Trained} object
 #'@return the cleaned \linkS4class{Trained} object
+#'@keywords internal
 methods::setMethod(
   f = "clean",
   signature = methods::signature(object = "Trained"),
@@ -483,6 +372,7 @@ summary_table.Trained <- function(object){
 #'
 #'@author Alessandro Barberis
 #'@export
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = methods::signature(object = "Trained"),

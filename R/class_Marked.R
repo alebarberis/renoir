@@ -27,6 +27,8 @@ methods::setClass(
 #' Constructor for the S4 Marked object.
 #'
 #' Constructor for the S4 \linkS4class{Marked} object.
+#'
+#' @rdname Marked-class
 Marked <- function(
   mark = data.frame(),
   # config          = character(),
@@ -76,7 +78,7 @@ methods::setMethod(
     return(out)
   })
 
-
+#'@keywords internal
 get_annotated_marks <- function(x, annotation, feat.index = 0, check.names = TRUE){
 
   #create df

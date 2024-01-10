@@ -26,6 +26,8 @@ methods::setClass(
 #' Constructor for the S4 TunedList object.
 #'
 #' Constructor for the S4 \linkS4class{TunedList} object.
+#'
+#'@rdname TunedList-class
 TunedList <- function(...){
 
   obj = new("TunedList", S4Vectors::SimpleList(...))

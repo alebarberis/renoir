@@ -79,6 +79,8 @@ methods::setClass(
 #' @export
 #'
 #' @author Alessandro Barberis
+#'
+#' @rdname Forecaster-class
 Forecaster <- function(
   id,
   forecaster,
@@ -123,6 +125,7 @@ methods::setMethod(f = "get_id", signature = "Forecaster", definition = function
 #'@param type.measure the accuracy measure
 #'@return the prediction type required to compute the prediction values expected
 #'in input by a \linkS4class{Scorer} to calculate the score
+#'@keywords internal
 methods::setMethod(
   f = "get_prediction_type",
   signature = "Forecaster",
@@ -140,6 +143,7 @@ methods::setMethod(
   }
 )
 
+#'@keywords internal
 check_provided_prediction_function <- function(forecaster){
 
   if(missing(forecaster)){
@@ -176,6 +180,7 @@ check_provided_prediction_function <- function(forecaster){
   }
 }
 
+#'@keywords internal
 check_provided_prediction_type_selector_function <- function(selector){
   if(missing(selector)){
     stop("'selector' is missing with no default.\n")
@@ -210,10 +215,20 @@ check_provided_prediction_type_selector_function <- function(selector){
 
 
 #@describeIn forecast
+#'Forecast method
+#'
+#'@param forecaster an object of class \linkS4class{Forecaster}
 #'@param models an object of class \code{\link{Trained}}
 #'@param newx the new values at which prediction are to be made
 #'@param newoffset the new offset, if provided it is added to the predicted value
 #'@param type the type of prediction
+#'@param check.newx logical, whether to check the \code{newx} to make sure
+#'features are matching
+#'@param ... further arguments to the forecaster
+#'
+#'@return The prediction
+#'
+#'@rdname forecast
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "Forecaster", models = "Trained"),
@@ -248,6 +263,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname forecast
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "missing", models = "Trained"),
@@ -266,6 +282,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname forecast
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "Forecaster", models = "TrainedList"),
@@ -280,6 +297,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname forecast
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "Forecaster", models = "Tuned"),
@@ -312,6 +330,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname forecast
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "missing", models = "Tuned"),
@@ -331,7 +350,7 @@ methods::setMethod(
   }
 )
 
-
+#'@rdname forecast
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "Forecaster", models = "TunedList"),
@@ -368,7 +387,7 @@ methods::setMethod(
 #   return(out)
 # }
 
-#'
+#'@keywords internal
 forecast_by_glmnet <- function(
     object,
     newx,
@@ -896,7 +915,7 @@ forecast_by_gknn <- function(
   return(out)
 }
 
-
+#'@keywords internal
 get_prediction_function <- function(learning.method){
   #set fun
   out = switch(
@@ -958,7 +977,7 @@ check_predicted_by_glmnet <- function(object, type){
 }
 
 
-
+#'@keywords internal
 get_prediction_type_selector_function <- function(learning.method){
   out = switch(
     learning.method,
@@ -990,7 +1009,7 @@ get_prediction_type_selector_function <- function(learning.method){
   return(out)
 }
 
-
+#'@keywords internal
 get_glmnet_prediction_type_for_performance_metric <- function(type.measure){
 
   out = switch(
@@ -1027,6 +1046,7 @@ get_glmnet_prediction_type_for_performance_metric <- function(type.measure){
   return(out)
 }
 
+#'@keywords internal
 get_randomForest_prediction_type_for_performance_metric <- function(type.measure){
   out = switch(
     type.measure,
@@ -1060,7 +1080,7 @@ get_randomForest_prediction_type_for_performance_metric <- function(type.measure
   return(out)
 }
 
-
+#'@keywords internal
 get_xgboost_prediction_type_for_performance_metric <- function(type.measure){
   out = switch(
     type.measure,
@@ -1094,6 +1114,7 @@ get_xgboost_prediction_type_for_performance_metric <- function(type.measure){
   return(out)
 }
 
+#'@keywords internal
 get_gbm_prediction_type_for_performance_metric  <- function(type.measure){
   out = switch(
     type.measure,
@@ -1127,6 +1148,7 @@ get_gbm_prediction_type_for_performance_metric  <- function(type.measure){
   return(out)
 }
 
+#'@keywords internal
 get_svm_prediction_type_for_performance_metric  <- function(type.measure){
   out = switch(
     type.measure,
@@ -1160,6 +1182,7 @@ get_svm_prediction_type_for_performance_metric  <- function(type.measure){
   return(out)
 }
 
+#'@keywords internal
 get_gknn_prediction_type_for_performance_metric  <- function(type.measure){
   out = switch(
     type.measure,

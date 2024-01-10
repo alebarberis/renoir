@@ -39,6 +39,8 @@
 #'\code{\link{plot_multi_evaluation}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 plot_evaluation <- function(data, ...){
 
   #--------------------------------------------------------------------------------------------#
@@ -112,6 +114,8 @@ plot_evaluation <- function(data, ...){
 #'\code{\link{plot_multi_evaluation}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 plot_single_evaluation <- function(
   data,
   thr = NULL,
@@ -278,6 +282,8 @@ plot_single_evaluation <- function(
 #'\code{\link{plot_single_evaluation}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 plot_multi_evaluation <- function(
   data,
   thr = NULL,
@@ -604,7 +610,16 @@ create_dataframe_from_evaluated_object <- function(
   return(out)
 }
 
+#'Create textual info for tooltip
+#'
 #'@param model a \linkS4class{Tuned} or a \linkS4class{Trained} object
+#'@param learner a \linkS4class{Learner} object
+#'@param show.config logical, whether to add information about the hyperparameters configuration
+#'@param index (optional) model index
+#'
+#'@return A character string containing information to report in the plot tooltip.
+#'
+#'@keywords internal
 create_text_for_tooltip <- function(model, learner, show.config = FALSE, index = NULL){
 
   #--------------------------------------------------------------------------------------------#
@@ -818,30 +833,6 @@ create_dataframe_to_plot_for_single_learning_method <- function(
   #--------------------------------------------------------------------------------------------#
   #return
   return(out)
-
-}
-
-#'@param tested a \linkS4class{TestedList} objects
-extract_accuracy_to_plot <- function(testedlist){
-
-  data = lapply(X = testedlist, FUN = function(tested){
-
-    #get error
-    err  = get_score(tested)
-    #Get mean error
-    merr = get_mscore(tested)
-    #Get standard error
-    se   = get_sem(tested)
-
-
-
-    list(acc.ci   = acc.ci,
-         measures = measures,
-         repeats = length(measures),
-         ncoeffs = nz_coeffs,
-         configs = lapply(x[[get_name_slot_tat_train()]], FUN = function(obj){obj[[get_name_slot_best_config(best.config)]]})
-    )
-  }, type.measure = type.measure)
 
 }
 
@@ -1245,7 +1236,6 @@ get_yrange <- function(y, ylim = NULL, measure){
 #'has PC components from same group across the columns,
 #'while the same PC components for different groups are reported across the rows
 #'@param width,height size of each plot in inches
-#'@inheritParams gridExtra::arrangeGrob
 #'@param ... further arguments to \code{\link[gridExtra]{arrangeGrob}}
 #'@return a \code{ggplot2} object
 #'@keywords internal
@@ -1436,7 +1426,7 @@ plot_PCA <- function(PCA,
 
 }
 
-
+#'Plot PCA
 #'@param PCA object as returned by \code{\link[stats]{prcomp}}
 #'@param groups data frame with 1 column containing the groups
 #'@param pc vector with 2 elements, the principal components to plot

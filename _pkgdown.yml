@@ -12,7 +12,7 @@ articles:
   navbar: Use Case
   contents: usecase/use_case
 reference:
-- title: Learning
+- title: Evaluation
   desc: This is the main function to evaluate a learning method
   contents: renoir
 - title: List supported methods
@@ -26,15 +26,27 @@ reference:
 - title: Unsupervised Screening
   desc: These functions are used to pre-process the predictors matrix and reduce its
     dimensionality
-  contents: filter
+  contents:
+  - filter
+  - filter_by_na
+  - filter_by_intensity
+  - filter_by_variability
 - title: Random sampling
   desc: These functions are used to randomly sample data from an initial population
 - title: Supervised Screening
   desc: These functions are used to pre-process the predictors matrix and reduce its
     dimensionality in a supervised manner
+  contents:
+  - ebayes_screener
+  - permutation_screener
+  - multiresponse_screener
+  - default_screener
+  - screen
 - title: Performance metrics
   desc: These functions are used to compute the performance metrics
   contents:
+  - absolute_error
+  - absolute_percentage_error
   - mean_absolute_error
   - mean_absolute_percentage_error
   - mean_squared_error
@@ -48,6 +60,32 @@ reference:
   - precision
   - classification_error_rate
   - accuracy_score
+  - threat_score
+  - confusion_matrix
+  - confusion_matrix_outcomes
+  - ACC
+  - BAS
+  - BMI
+  - CSI
+  - DOR
+  - ERR
+  - F1S
+  - FBS
+  - FDR
+  - FMI
+  - FNR
+  - FOR
+  - FPR
+  - MCC
+  - MKD
+  - NLR
+  - NPV
+  - PLR
+  - PPV
+  - PRT
+  - PRV
+  - TNR
+  - TPR
 - title: Quantifying uncertainty
   desc: These functions are used to compute the confidence interval for the mean performance
     metric
@@ -56,17 +94,56 @@ reference:
   - ciwm
   - sewm
   - uevarwm
+  - quantify
 - title: Learning
   desc: These functions are used for learning
   contents: learn
+- title: Training
+  desc: These functions are used for training
+  contents:
+  - renoir_gbm
+  - renoir_gknn
+  - renoir_random_forest
+  - renoir_svm
+  - renoir_glmnet
+  - renoir_nearest_shrunken_centroid
+  - train
+- title: Predicting
+  desc: These functions are used for predictions
+  contents:
+  - forecast
+- title: Scoring
+  desc: These functions are used for scoring
+  contents:
+  - score
+  - mean_score
+  - se_score
+  - summary_score
+- title: Marking
+  desc: These functions are used for marking
+  contents:
+  - mark_gbm
+  - mark_gknn
+  - mark_randomForest
+  - mark_svm
+  - mark_glmnet
+  - mark_nsc
+  - mark
 - title: Features importance
   desc: These functions are used to compute the features importance
+  contents:
+  - importance
 - title: Visualisation
   desc: These functions are used for visualisation
   contents: plot
 - title: Summary
   desc: These functions are used for summarising objects
   contents: summary_table
+- title: Reports
+  desc: These functions are used for creating reports
+  contents:
+  - create_report,Renoir-method
+  - create_report,Trained-method
 - title: Logging
   desc: These functions are used for logging
   contents:
@@ -74,4 +151,66 @@ reference:
   - log_trace
   - log_debug
   - log_info
+- title: Recording
+  desc: These functions are used for recording
+  contents:
+  - record_glmnet
+  - record_randomForest
+  - record_gbm
+  - record_svm
+  - record_gknn
+  - record_nsc
+  - record
+- title: Classes
+  desc: Main classes
+  contents:
+  - Evaluated-class
+  - EvaluatedList-class
+  - Evaluator-class
+  - Filter-class
+  - FilterList-class
+  - Filtered-class
+  - Forecaster-class
+  - ForecasterList-class
+  - Learner-class
+  - LearnerList-class
+  - Logger-class
+  - Looper-class
+  - Marked-class
+  - MarkedList-class
+  - Marker-class
+  - Quantifier-class
+  - Recorder-class
+  - Renoir-class
+  - Resampler-class
+  - Sampler-class
+  - Scorer-class
+  - ScorerList-class
+  - Screened-class
+  - Screener-class
+  - ScreenerList-class
+  - Selector-class
+  - Tested-class
+  - TestedList-class
+  - Tester-class
+  - TesterList-class
+  - Trained-class
+  - TrainedList-class
+  - Trainer-class
+  - Tuned-class
+  - TunedList-class
+  - Tuner-class
+- title: Others
+  desc: Other functions
+  contents:
+  - get_sample
+  - get_model
+  - stability
+  - evaluate
+  - features
+  - nfeatures
+  - features_importance
+  - resample
+  - select
+  - test
 

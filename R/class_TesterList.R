@@ -23,9 +23,9 @@ methods::setClass(
 
 #'TesterList Constructor
 #'
-#' @title Constructor for the S4 TesterList object.
-#'
 #'Constructor for the S4 \linkS4class{TesterList} object.
+#'
+#'@rdname TesterList-class
 TesterList <- function(...){
 
   obj = new("TesterList", S4Vectors::SimpleList(...))

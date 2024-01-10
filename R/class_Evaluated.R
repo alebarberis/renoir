@@ -66,6 +66,8 @@ methods::setClass(
 #' @return An object of class \linkS4class{Evaluated}.
 #'
 #' @author Alessandro Barberis
+#'
+#' @keywords internal
 Evaluated <- function(
   id           = character(),
   config       = character(),
@@ -208,6 +210,8 @@ methods::setMethod(
 #'\code{\link{generate_name}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 summary_table.Evaluated <- function(object, best = c("opt", "1se"), key){
 
   #--------------------------------------------------------------------------------------------#
@@ -323,6 +327,8 @@ summary_table.Evaluated <- function(object, best = c("opt", "1se"), key){
 #@inherit summary_table.Evaluated return
 #
 #'@author Alessandro Barberis
+#'
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = methods::signature(object = "Evaluated"),
@@ -340,6 +346,8 @@ methods::setMethod(
 #'@return A character string.
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 generate_name <- function(
   object,
   key = c("id", "config", "response", "sampling")
@@ -398,6 +406,8 @@ generate_name <- function(
 #' @return a \linkS4class{Trained} or \linkS4class{Tuned} object
 #'
 #' @author Alessandro Barberis
+#'
+#'@rdname get_model
 methods::setMethod(
   f = "get_model",
   signature = "Evaluated",
@@ -411,6 +421,13 @@ methods::setMethod(
   }
 )
 
+#'Get Sample
+#'@param object \linkS4class{Evaluated} object
+#'@param index index of sample in the list
+#'
+#'@return The selected sample.
+#'
+#'@rdname get_sample
 methods::setMethod(
   f = "get_sample",
   signature = c("Evaluated", "numeric"),

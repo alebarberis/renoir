@@ -32,6 +32,7 @@ methods::setClass(
 #'@return a \linkS4class{ScreenerList} object
 #' @export
 #'@author Alessandro Barberis
+#'@rdname ScreenerList-class
 ScreenerList <- function(...){
 
   obj = new("ScreenerList", S4Vectors::SimpleList(...))
@@ -72,6 +73,7 @@ methods::setMethod(f = "get_parameters", signature = "ScreenerList", definition 
 #' only the most significant \code{maxvars} variables are kept.
 #'@return a \linkS4class{Screened} object
 #'@author Alessandro Barberis
+#'@rdname screen
 methods::setMethod(
   f = "screen",
   signature = methods::signature(screener ="ScreenerList"),

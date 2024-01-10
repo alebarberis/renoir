@@ -21,6 +21,8 @@ methods::setClass(
 )
 
 #' Resampler Class Constructor
+#'
+#' @rdname Resampler-class
 Resampler <- function(
   sampler = Sampler(),
   logger  = Logger(),
@@ -109,6 +111,8 @@ methods::setMethod(
 #'@inheritParams foreach::foreach
 #'@return A \code{list} containing the output of function \code{fun}
 #'@author Alessandro Barberis
+#'
+#'@rdname resample
 methods::setMethod(
   f = "resample",
   signature = methods::signature(object = "Resampler"),

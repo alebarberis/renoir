@@ -18,6 +18,7 @@ methods::setClass(
 
 #' Looper Class Constructor
 #' @export
+#' @rdname Looper-class
 Looper <- function(
   logger  = Logger(),
   cores   = 1L
@@ -43,6 +44,8 @@ methods::setMethod(f = "get_cores",    signature = "Looper", definition = functi
 #@param cores number of cores to use for parallel execution.
 #'@param ... further arguments to \code{fun}
 #'@inheritParams foreach::foreach
+#'
+#'@keywords internal
 methods::setMethod(
   f = "loop",
   signature = methods::signature(looper = "Looper"),

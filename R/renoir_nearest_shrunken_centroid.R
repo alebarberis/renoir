@@ -1,4 +1,4 @@
-#' @include classes_generics.R utils.R class_Trained.R class_TrainedList.R
+#' @include classes_generics.R utils.R class_Trainer.R class_Trained.R class_TrainedList.R
 NULL
 
 #'Nearest Shrunken Centroid
@@ -7,11 +7,11 @@ NULL
 #'
 #'@details Renoir interface to \code{\link[pamr]{pamr.train}}.
 #'
-#'@inheritParams train-Trainer
+#'@inheritParams train,Trainer,ANY-method
 #'@param ... further arguments to \code{\link[pamr]{pamr.train}}
 #'@inheritParams pamr::pamr.train
 #'
-#'@inherit train-Trainer return
+#'@inherit train,Trainer,ANY-method return
 #'
 #'@seealso
 #'\code{\link[pamr]{pamr.train}}

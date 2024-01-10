@@ -44,6 +44,7 @@ methods::setClass(
 #' @export
 #'
 #' @author Alessandro Barberis
+#' @rdname Selector-class
 Selector <- function(
   id,
   selector,
@@ -72,7 +73,7 @@ methods::setMethod(f = "get_id",       signature = "Selector", definition = func
 methods::setMethod(f = "get_selector", signature = "Selector", definition = function(object){methods::slot(object = object, name = 'selector')})
 methods::setMethod(f = "get_logger",   signature = "Selector", definition = function(object){methods::slot(object = object, name = 'logger')})
 
-
+#'@rdname select
 methods::setMethod(
   f = "select",
   signature = methods::signature(selector = "Selector", models = "TrainedList"),
@@ -111,6 +112,8 @@ methods::setMethod(
 #'@param scorer the \linkS4class{Scorer} object used to generate \code{merr} and \code{sderr}
 #'@return list of 2 elements, containing the index of the model having optimal accuracy
 #'and the index of the model having accuracy within 1 standard error from the optimal accuracy
+#'
+#'@rdname select
 methods::setMethod(
   f = "select",
   signature = methods::signature(selector = "Selector", models = "TrainedList", merr = "numeric", sderr = "numeric", scorer = "Scorer"),
@@ -171,6 +174,8 @@ methods::setMethod(
   }
 )
 
+#'
+#'@rdname select
 methods::setMethod(
   f = "select",
   signature = methods::signature(selector = "Selector", models = "TrainedList", merr = "numeric", sderr = "missing", scorer = "Scorer"),
@@ -377,6 +382,8 @@ which_least_complex_model_gknn <- function(models){
 #'@param trainedlist list of trained models. Each element corresponds to an element in \code{merr} and \code{sderr},
 #'and it is a list of trained models with the same configuration over different sampled data
 #'@param type.measure accuracy measure used in the computation of \code{merr} and \code{sderr}
+#'
+#'@keywords internal
 select_model <- function(merr, sderr, type.measure, trainedlist, rule = c("opt", "1se"), FUN){
 
   #select optimal accuracy

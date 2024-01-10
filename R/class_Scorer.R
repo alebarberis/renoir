@@ -74,6 +74,7 @@ methods::setClass(
 #' @param logger a \linkS4class{Logger}
 #' @author Alessandro Barberis
 #' @export
+#' @rdname Scorer-class
 Scorer <- function(
   # type.measure = c("default", "mse", "deviance", "class", "auc", "mae", "C", "rmse", "mape", "r2", "msle"),
   # type.measure = c("mse", "mdev", "mclass", "auc", "mae", "C", "rmse", "mape", "r2", "msle",
@@ -357,6 +358,7 @@ methods::setMethod(
 #}
 #'@param ... further arguments to scorer function
 #'@return the computed accuracy measure
+#'@rdname score
 methods::setMethod(
   f = "score",
   signature = methods::signature(scorer = "Scorer"),
@@ -457,6 +459,8 @@ methods::setMethod(
 #'@param logger a \linkS4class{Logger}
 #'@param ... further arguments to scorer function
 #'@return the computed accuracy measure
+#'
+#'@rdname score
 methods::setMethod(
   f = "score",
   signature = methods::signature(scorer = "Scorer", true = "list", pred = "list"),
@@ -614,6 +618,7 @@ methods::setMethod(
 #'@param logger a \linkS4class{Logger}
 #'@param ... further arguments to scorer function
 #'@return the computed score estimate (the average error)
+#'@rdname mean_score
 methods::setMethod(
   f = "mean_score",
   signature = methods::signature(scorer = "Scorer", true = "list", pred = "list"),
@@ -697,13 +702,27 @@ methods::setMethod(
   }
 )
 
-#Standard Error of the Mean (SEM) score
+#'Standard Error of the Mean (SEM) score
+#'@param scorer a \linkS4class{Scorer} object
+#'@param true a list of vectors (or matrices) of observed values. If list elements are matrices,
+#'a multi-response is assumed
+#'@param pred a list of vectors (or matrices) of predicted values
+#'@param weights a list of vectors of observation weights
+#'@param multi what to do when response has multiple output values
+#'\describe{
+#'   \item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
+#'   \item{\code{sum}}{errors of multiple outputs are summed up to get a single value for each observation}
+#'}
+#'@param grouped logical, whether to compute separate statistics when lists of values are provided
 #'@param min.obs integer, minimum number of observations per list. If the number of
 #'observations per list is less than \code{min.obs}, an attempt to compute errors at the
 #'observation level (for the unlisted observations)
 #'and then summarise is made (equivalent to \code{grouped = FALSE}). It is working only for certain
 #'accuracy measures. Default is \code{min.obs = 3}. Set \code{min.obs = 0} to suppress.
 #'@param logger a \linkS4class{Logger}
+#'@param ... further arguments to scorer function
+#'@return The standard error of the score estimate
+#'@rdname se_score
 methods::setMethod(
   f = "se_score",
   signature = methods::signature(scorer = "Scorer", true = "list", pred = "list"),
@@ -828,6 +847,7 @@ methods::setMethod(
 #'@param return.raw logical, whether to return scores used to compute estimate
 #'@param ... further arguments to scorer function
 #'@return list of 2 elements containing a score estimate and its standard error
+#'@rdname summary_score
 methods::setMethod(
   f = "summary_score",
   signature = methods::signature(scorer = "Scorer", true = "list", pred = "list"),

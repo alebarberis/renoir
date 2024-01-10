@@ -47,6 +47,8 @@ methods::setMethod(f = "get_logger",     signature = "Marker", definition = func
 #' @export
 #'
 #' @author Alessandro Barberis
+#'
+#' @rdname Marker-class
 Marker <- function(
   id,
   marker,
@@ -381,6 +383,8 @@ mark_gbm <- function(object, marking.system = c("presence", "influence", "normal
 #'@return A list with one element per response, containing the marks for the features
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 mark_xgblinear <- function(object, marking.system = c("presence", "coefficient")){
   #match
   marking.system = match.arg(marking.system)
@@ -462,6 +466,8 @@ mark_xgblinear <- function(object, marking.system = c("presence", "coefficient")
 #@return a named vector containing the feature marks
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 mark_xgbtree <- function(object, marking.system = c("presence", "frequency")){
   #match
   marking.system = match.arg(marking.system)
@@ -685,10 +691,21 @@ check_provided_marker_function <- function(f){
   }
 }
 
-
+#'Mark the features of the trained model
+#'
+#'@param object an object of class \linkS4class{Trained}
+#'@param marker an object of class \linkS4class{Marker}
 #'@param features (optional) vector containing all the predictors. If provided,
 #'the results from the marker function are checked and the missing features are added
 #'with NA mark
+#'@param weights (optional) feature weights to be used in the computation
+#'@param ... further arguments to \code{marker}
+#'
+#'@return A list with one element per response, containing the marks for the features
+#'
+#'@author Alessandro Barberis
+#'
+#'@rdname mark
 methods::setMethod(
   f = "mark",
   signature = methods::signature(object ="Trained"),
@@ -769,6 +786,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname mark
 methods::setMethod(
   f = "mark",
   signature = methods::signature(object ="Tuned"),
@@ -792,6 +810,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname mark
 methods::setMethod(
   f = "mark",
   signature = methods::signature(object ="list"),

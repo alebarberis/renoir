@@ -23,9 +23,11 @@ methods::setClass(
 
 #'LearnerList Constructor
 #'
-#' @title Constructor for the S4 LearnerList object.
+#'@description Constructor for the S4 \linkS4class{LearnerList} object.
 #'
-#'Constructor for the S4 \linkS4class{LearnerList} object.
+#'@author Alessandro Barberis
+#'
+#'@rdname LearnerList-class
 LearnerList <- function(...){
 
   obj = new("LearnerList", S4Vectors::SimpleList(...))

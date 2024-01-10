@@ -77,6 +77,8 @@ methods::setClass(
 #'
 #'@author Alessandro Barberis
 #'@export
+#'
+#'@rdname Renoir-class
 Renoir <- function(
   id         = character(),
   config     = character(),
@@ -188,6 +190,9 @@ is.Renoir <- function(object){
 #'@author Alessandro Barberis
 #'
 #'@export
+#'
+#'@name renoir
+#'@rdname renoir
 renoir = function(
   #Pre-processing
   filter,
@@ -453,6 +458,8 @@ NULL
 #'\code{\link{summary_table.Trained}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 summary_table.Renoir <- function(object, ...){
 
   #--------------------------------------------------------------------------------------------#
@@ -504,13 +511,15 @@ summary_table.Renoir <- function(object, ...){
 #'
 #'@author Alessandro Barberis
 #'
+#'@rdname summary_table
 methods::setMethod(
   f = "summary_table",
   signature = methods::signature(object = "Renoir"),
   definition = summary_table.Renoir
 )
 
-
+#'Get Object Summary
+#'@keywords internal
 summary_table.RenoirList <- function(object, key, ...){
   #--------------------------------------------------------------------------------------------#
   #check all element in list are of class Renoir
@@ -632,6 +641,12 @@ plot.Renoir <- function(
   return(out)
 }
 
+
+#'Plot method for `RenoirList` object
+#'
+#'@inheritParams plot.Renoir
+#'
+#'@keywords internal
 plot.RenoirList <- function(
   x,
   y,
@@ -709,7 +724,11 @@ plot.RenoirList <- function(
 }
 
 
-
+#'Plot method for `RenoirSummaryTable` object
+#'
+#'@inheritParams plot.Renoir
+#'
+#'@keywords internal
 plot.RenoirSummaryTable <- function(
   x,
   y,
@@ -828,7 +847,10 @@ methods::setMethod(
 #'   \item{\code{tabset}}{logical, whether to use tabbed sections (if any)}
 #'}
 #'@return The compiled report is written into the output file.
+#'
 #'@author Alessandro Barberis
+#'
+#'@export
 methods::setMethod(
   f = "create_report",
   signature = methods::signature(object = "Renoir"),
@@ -881,6 +903,19 @@ methods::setMethod(
     }
 )
 
+
+#'Create an interactive report
+#'
+#'@description Create an interactive report for the computed analysis.
+#'
+#'@param object an object of class \linkS4class{Trained}
+#'@inheritParams create_report,Renoir-method
+#'
+#'@return The compiled report is written into the output file.
+#'
+#'@author Alessandro Barberis
+#'
+#'@export
 methods::setMethod(
   f = "create_report",
   signature = methods::signature(object = "Trained"),

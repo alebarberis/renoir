@@ -25,6 +25,7 @@ methods::setClass(
 #' Constructor for the S4 LearnedList object.
 #'
 #' Constructor for the S4 \linkS4class{LearnedList} object.
+#' @rdname MarkedList-class
 MarkedList <- function(...){
 
   obj = new("MarkedList", S4Vectors::SimpleList(...))

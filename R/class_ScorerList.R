@@ -33,6 +33,7 @@ methods::setClass(
 #'@return a \linkS4class{ScorerList} object
 #'
 #' @export
+#' @rdname ScorerList-class
 ScorerList <- function(...){
 
   obj = new("ScorerList", S4Vectors::SimpleList(...))
@@ -63,6 +64,8 @@ is.ScorerList <- function(object){
 #'@description Creates a list of supported scorers for the selected response type
 #'@param resp.type response type
 #'@return a \linkS4class{ScorerList}
+#'
+#'@rdname ScorerList-class
 create_ScorerList <- function(
   resp.type,
   measures,
@@ -118,6 +121,8 @@ methods::setAs(
 #'@param logger a \linkS4class{Logger} object
 #'@param ... further arguments to scorer function
 #'@return the computed accuracy measure for each \linkS4class{Scorer} in the \linkS4class{ScorerList}
+#'
+#'@rdname score
 methods::setMethod(
   f = "score",
   signature = methods::signature(scorer = "ScorerList"),
@@ -174,6 +179,8 @@ methods::setMethod(
 #'@param grouped logical, whether to compute separate statistics when lists of values are provided
 #'@param ... further arguments to scorer function
 #'@return the computed accuracy measure for each \linkS4class{Scorer} in the \linkS4class{ScorerList}
+#'
+#'@rdname score
 methods::setMethod(
   f = "score",
   signature = methods::signature(scorer = "ScorerList", true = "list", pred = "list"),
@@ -231,6 +238,8 @@ methods::setMethod(
 #'@param logger a \linkS4class{Logger} object
 #'@param ... further arguments to scorer function
 #'@return list containing the computed score estimate (the average error) for each \linkS4class{Scorer} in the \linkS4class{ScorerList}
+#'
+#'@rdname mean_score
 methods::setMethod(
   f = "mean_score",
   signature = methods::signature(scorer = "ScorerList", true = "list", pred = "list"),
@@ -288,6 +297,8 @@ methods::setMethod(
 #'@param logger a \linkS4class{Logger} object
 #'@param ... further arguments to scorer function
 #'@return list containing the score estimate and its standard error for each \linkS4class{Scorer} in the \linkS4class{ScorerList}
+#'
+#'@rdname se_score
 methods::setMethod(
   f = "se_score",
   signature = methods::signature(scorer = "ScorerList", true = "list", pred = "list"),
@@ -346,6 +357,8 @@ methods::setMethod(
 #'@param logger a \linkS4class{Logger} object
 #'@param ... further arguments to scorer function
 #'@return list containing the score estimate and its standard error for each \linkS4class{Scorer} in the \linkS4class{ScorerList}
+#'
+#'@rdname summary_score
 methods::setMethod(
   f = "summary_score",
   signature = methods::signature(scorer = "ScorerList", true = "list", pred = "list"),

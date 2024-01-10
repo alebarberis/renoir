@@ -44,6 +44,8 @@ methods::setClass(
 #' @param parameters list containing the parameters to fix for the chosen quantifier
 #' @param logger a \linkS4class{Logger}
 #' @author Alessandro Barberis
+#'
+#' @rdname Quantifier-class
 Quantifier <- function(
   id = "ciwm",
   quantifier,
@@ -75,6 +77,7 @@ Quantifier <- function(
   )
 }
 
+#'@keywords internal
 get_quantifier_function <- function(id){
 
   #set function
@@ -107,6 +110,7 @@ methods::setMethod(f = "get_logger",      signature = "Quantifier", definition =
 #'@param ... further arguments to quantifier function
 #'@return the computed quantification of the uncertainty
 #'@author Alessandro Barberis
+#'@rdname quantify
 methods::setMethod(
   f = "quantify",
   signature = methods::signature(quantifier = "Quantifier"),
@@ -134,6 +138,7 @@ methods::setMethod(
   }
 )
 
+#'@keywords internal
 supported_uncertainty_quantifiers <- function(){
   out = c("ciwm")
   return(out)

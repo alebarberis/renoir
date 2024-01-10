@@ -215,7 +215,14 @@ subset_features_def <- function(x, which){
   return(x)
 }
 
+#'Create a filename
+#'
+#'@param filename string, a file name
 #'@param n sample size
+#'
+#'@return A string, the file name.
+#'
+#'@keywords internal
 create_filename <- function(filename, n){
   out = filename
 

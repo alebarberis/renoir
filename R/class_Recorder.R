@@ -50,6 +50,8 @@ methods::setMethod(f = "get_logger",     signature = "Recorder", definition = fu
 #' @export
 #'
 #' @author Alessandro Barberis
+#'
+#' @rdname Recorder-class
 Recorder <- function(
   id,
   recorder,
@@ -73,6 +75,7 @@ Recorder <- function(
     logger   = logger
   )
 }
+
 
 get_recorder_function <-function(id) {
   out = switch(
@@ -103,9 +106,6 @@ get_recorder_function <-function(id) {
   return(out)
 }
 
-
-#'@param obejct a \linkS4class{Trained} object
-record_trained_glmnet <- function(object){out = record_glmnet(object = get_fit(object)); return(out)}
 
 #'Features Recorder
 #'
@@ -169,6 +169,8 @@ record_glmnet <- function(object){
 #'an integer vector of length equivalent to the number of features.
 #'
 #'@author Alessandro Barberis
+#'
+#'@export
 record_randomForest <- function(object){
   # #get fit
   # object = get_fit(object)
@@ -224,6 +226,8 @@ record_randomForest <- function(object){
 #'an integer vector of length equivalent to the number of features.
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 record_xgboost <- function(object){
   # #get fit
   # object = get_fit(object)
@@ -275,6 +279,8 @@ record_xgboost <- function(object){
 #'an integer vector of length equivalent to the number of features.
 #'
 #'@author Alessandro Barberis
+#'
+#'@export
 record_gbm <- function(object){
   # #get fit
   # object = get_fit(object)
@@ -325,6 +331,8 @@ record_gbm <- function(object){
 #'an integer vector of length equivalent to the number of features.
 #'
 #'@author Alessandro Barberis
+#'
+#'@export
 record_svm <- function(object){
 
   #check coefs
@@ -383,6 +391,8 @@ record_svm <- function(object){
 #'an integer vector of length equivalent to the number of features.
 #'
 #'@author Alessandro Barberis
+#'
+#'@export
 record_gknn <- function(object){
 
   #number of features
@@ -404,9 +414,15 @@ record_gknn <- function(object){
   return(out)
 }
 
+#'Features Recorder
+#'
+#'@param object a \linkS4class{Trained} object
+#'@param recorder a \linkS4class{Recorder} object
 #'@param features (optional) vector containing all the predictor names. If provided,
 #'the results from the recorder function are checked and the missing features are added
 #'with NA record
+#'
+#'@rdname record
 methods::setMethod(
   f = "record",
   signature = methods::signature(object ="Trained", recorder = "Recorder"),
@@ -444,6 +460,8 @@ methods::setMethod(
   }
 )
 
+#'@param object a \linkS4class{Trained} object
+#'@rdname record
 methods::setMethod(
   f = "record",
   signature = methods::signature(object ="Trained", recorder = "missing"),
@@ -468,6 +486,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname record
 methods::setMethod(
   f = "record",
   signature = methods::signature(object ="TrainedList", recorder = "Recorder"),
@@ -483,6 +502,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname record
 methods::setMethod(
   f = "record",
   signature = methods::signature(object ="Tuned", recorder = "Recorder"),
@@ -498,7 +518,8 @@ methods::setMethod(
   }
 )
 
-#Get features in the model
+#'Get features in the model
+#'@rdname features
 methods::setMethod(
   f = "features",
   signature = methods::signature(object ="Trained", recorder = "Recorder"),
@@ -531,6 +552,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname features
 methods::setMethod(
   f = "features",
   signature = methods::signature(object ="Trained", recorder = "missing"),
@@ -554,6 +576,7 @@ methods::setMethod(
     return(out)
   }
 )
+
 
 get_nrecords <- function(records){
 
@@ -587,7 +610,9 @@ get_nrecords <- function(records){
   return(out)
 }
 
-#Get features in the model
+
+#'Get number of features in the model
+#'@rdname nfeatures
 methods::setMethod(
   f = "nfeatures",
   signature = methods::signature(object ="Trained", recorder = "Recorder"),
@@ -616,6 +641,7 @@ methods::setMethod(
 )
 
 
+#'@rdname features
 methods::setMethod(
   f = "features",
   signature = methods::signature(object ="Tuned", recorder = "Recorder"),
@@ -632,6 +658,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname features
 methods::setMethod(
   f = "features",
   signature = methods::signature(object ="Tuned", recorder = "missing"),
@@ -653,6 +680,7 @@ methods::setMethod(
   }
 )
 
+#'@rdname nfeatures
 methods::setMethod(
   f = "nfeatures",
   signature = methods::signature(object ="Tuned", recorder = "Recorder"),
