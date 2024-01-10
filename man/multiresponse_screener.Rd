@@ -15,10 +15,10 @@ multiresponse_screener(
 
 \item{multi}{what to do when response has multiple output values
 \describe{
-  \item{\code{max}}{for each feature, the maximal significance value across responses is kept}
-  \item{\code{average}}{significances of multiple outputs are averaged to get a single value for each feature}
-  \item{\code{sum}}{significances of multiple outputs are summed up to get a single value for each feature}
-  \item{\code{raw}}{for each feature, returns one score for each output}
+\item{\code{max}}{for each feature, the maximal significance value across responses is kept}
+\item{\code{average}}{significances of multiple outputs are averaged to get a single value for each feature}
+\item{\code{sum}}{significances of multiple outputs are summed up to get a single value for each feature}
+\item{\code{raw}}{for each feature, returns one score for each output}
 }}
 
 \item{coef}{(optional) integer value indicating the response to keep}
@@ -34,4 +34,3 @@ this function allows to adopt different strategies.
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

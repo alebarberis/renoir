@@ -33,7 +33,7 @@ default_screener(
 \item{method}{which correlation method to use. Currently, only "pearson" is supported.}
 
 \item{conf.level}{confidence levels used for the confidence intervals (where computed). A single number or a
-numeric vector with value for each observation. All values must be in the range of [0;1].}
+numeric vector with value for each observation. All values must be in the range of \link{0;1}.}
 
 \item{resp.type}{the response type}
 
@@ -49,10 +49,10 @@ increasing conservatism, include "none", "BH", "BY" and "holm"}
 
 \item{multi}{what to do when response has multiple output values
 \describe{
-  \item{\code{max}}{the max value of scores across multiple outputs is selected to get a single value for each observation}
-  \item{\code{average}}{scores of multiple outputs are averaged to get a single value for each observation}
-  \item{\code{sum}}{scores of multiple outputs are summed up to get a single value for each observation}
-  \item{\code{raw}}{returns the scores for the multiple outputs}
+\item{\code{max}}{the max value of scores across multiple outputs is selected to get a single value for each observation}
+\item{\code{average}}{scores of multiple outputs are averaged to get a single value for each observation}
+\item{\code{sum}}{scores of multiple outputs are summed up to get a single value for each observation}
+\item{\code{raw}}{returns the scores for the multiple outputs}
 }}
 
 \item{...}{further arguments}
@@ -66,4 +66,3 @@ This function compute the significance of the screening test
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

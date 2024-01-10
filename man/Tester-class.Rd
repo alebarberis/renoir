@@ -3,10 +3,25 @@
 \docType{class}
 \name{Tester-class}
 \alias{Tester-class}
+\alias{Tester}
 \title{Tester Class
 An S4 class providing the methods to test the trained models on provided data.}
+\usage{
+Tester(forecaster, scorer, logger = Logger())
+}
+\arguments{
+\item{forecaster}{a \linkS4class{ForecasterList}}
+
+\item{scorer}{a \linkS4class{ScorerList}}
+
+\item{logger}{a \linkS4class{Logger}}
+
+\item{looper}{a \linkS4class{Looper}}
+}
 \description{
 The object consists of 6 slots
+
+Constructor for the S4 \linkS4class{Tester} object.
 }
 \section{Slots}{
 

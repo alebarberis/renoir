@@ -16,12 +16,12 @@ a multi-response is assumed}
 
 \item{multi}{what to do when response has multiple output values
 \describe{
-  \item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
-  \item{\code{micro}}{the score is computed by using the global number of true positives, false negatives and false positives}
-  \item{\code{macro}}{scores of different classes are averaged by unweighted mean to get a single value. Class imbalance is not taken into account}
-  \item{\code{weighted}}{scores of different classes are averaged by weighted mean to get a single value. Weights are number of true instances per class. It takes into account label imbalance}
-  \item{\code{raw}}{returns a vector containing one score for each class}
-  \item{\code{binary}}{returns the score for the class specified by \code{positive}}
+\item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
+\item{\code{micro}}{the score is computed by using the global number of true positives, false negatives and false positives}
+\item{\code{macro}}{scores of different classes are averaged by unweighted mean to get a single value. Class imbalance is not taken into account}
+\item{\code{weighted}}{scores of different classes are averaged by weighted mean to get a single value. Weights are number of true instances per class. It takes into account label imbalance}
+\item{\code{raw}}{returns a vector containing one score for each class}
+\item{\code{binary}}{returns the score for the class specified by \code{positive}}
 }}
 
 \item{...}{further arguments to \code{\link{multiresponse_classification_metric}}}

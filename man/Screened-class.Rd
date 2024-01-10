@@ -3,7 +3,16 @@
 \docType{class}
 \name{Screened-class}
 \alias{Screened-class}
+\alias{Screened}
 \title{Screened Class}
+\usage{
+Screened(
+  method = character(),
+  n = numeric(),
+  index = numeric(),
+  score = numeric()
+)
+}
 \description{
 An S4 class providing a container for the results of a screening procedure.
 }

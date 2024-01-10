@@ -33,18 +33,18 @@ The object consists of 10 slots
 \describe{
 \item{\code{method}}{the type of screening to apply
 \describe{
-  \item{\code{default}}{if default is selected, the adopted test is different depending on the response type:
-       \describe{
-           \item{\code{gaussian}}{test is correlation}
-           \item{\code{mgaussian}}{test is correlation (for each gene, one correlation is computed with each response variable)}
-           \item{\code{binomial}}{test is t-test or Wilcox test, depending on the number of observations}
-           \item{\code{multinomial}}{test is anova or Kruskall-Wallis test, depending on the number of observations}
-           \item{\code{poisson}}{test is correlation}
-           \item{\code{cox}}{test is a Cox proportional hazards regression model}
-       }
-  }
-  \item{\code{ebayes}}{}
-  \item{\code{permutation}}{}
+\item{\code{default}}{if default is selected, the adopted test is different depending on the response type:
+\describe{
+\item{\code{gaussian}}{test is correlation}
+\item{\code{mgaussian}}{test is correlation (for each gene, one correlation is computed with each response variable)}
+\item{\code{binomial}}{test is t-test or Wilcox test, depending on the number of observations}
+\item{\code{multinomial}}{test is anova or Kruskall-Wallis test, depending on the number of observations}
+\item{\code{poisson}}{test is correlation}
+\item{\code{cox}}{test is a Cox proportional hazards regression model}
+}
+}
+\item{\code{ebayes}}{}
+\item{\code{permutation}}{}
 }}
 
 \item{\code{resp.type}}{the response type}

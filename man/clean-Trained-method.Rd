@@ -16,3 +16,4 @@ the cleaned \linkS4class{Trained} object
 This function tries to clean the trained object to avoid that the final
 object's size raises too much when the initial set of features and observations is big.
 }
+\keyword{internal}

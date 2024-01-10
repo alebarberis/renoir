@@ -3,11 +3,17 @@
 \docType{class}
 \name{TunedList-class}
 \alias{TunedList-class}
+\alias{TunedList}
 \title{TunedList Class
 An S4 class to represent a list of tuned models.}
+\usage{
+TunedList(...)
+}
 \description{
 This subclass extends the S4  \linkS4class{List} virtual class by using
 the  \linkS4class{SimpleList} implementation.
+
+Constructor for the S4 \linkS4class{TunedList} object.
 }
 \details{
 The object consists of 4 slots

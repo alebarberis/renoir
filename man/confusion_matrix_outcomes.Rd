@@ -29,10 +29,10 @@ This function returns the outcome of a confusion matrix in a list.
 The outcomes of a \code{\link[confusion_matrix]{confusion matrix}} are returned as elements of a list.
 The four possible outcomes are:
 \describe{
-  \item{TP}{true positives, when the actual presence of a condition is correctly predicted}
-  \item{TN}{true negatives, when the actual absence of a condition is correctly predicted}
-  \item{FP}{false positives, when the actual absence of a condition is wrongly predicted}
-  \item{FN}{false negatives, when the actual presence of a condition is wrongly predicted}
+\item{TP}{true positives, when the actual presence of a condition is correctly predicted}
+\item{TN}{true negatives, when the actual absence of a condition is correctly predicted}
+\item{FP}{false positives, when the actual absence of a condition is wrongly predicted}
+\item{FN}{false negatives, when the actual presence of a condition is wrongly predicted}
 }
 }
 \author{

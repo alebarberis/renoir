@@ -3,12 +3,69 @@
 \docType{class}
 \name{Tuner-class}
 \alias{Tuner-class}
+\alias{Tuner}
 \title{Tuner Class}
+\usage{
+Tuner(
+  id = "grid.search",
+  tuner,
+  sampler = Sampler(method = "cv", k = 10L),
+  looper = Looper(),
+  screener = ScreenerList(Screener(id = "ebayes")),
+  logger = Logger(),
+  parameters
+)
+}
+\arguments{
+\item{id}{object identifier, the name of the tuning method to use.
+If \code{id} is one of the supported by renoir, the constructor will
+automatically select a built-in \code{tuner} function.}
+
+\item{tuner}{(optional) function for tuning the hyperparameters of the model
+If tuning method is one of the supported by renoir, the constructor will
+automatically select a built-in \code{tuner} function.
+If \code{tuner} is provided it must conform to the renoir common interface,
+and must have the following formal arguments:
+\describe{
+\item{sampler}{a \linkS4class{Sampler} object, the sampling procedure to use for tuning}
+\item{looper}{a \linkS4class{Looper} object}
+\item{screener}{a \linkS4class{ScreenerList} object, can contain just one \linkS4class{Screener}}
+\item{trainer}{a \linkS4class{Trainer} object}
+\item{tester}{a \linkS4class{Tester} object}
+\item{selector}{a \linkS4class{Selector} object}
+\item{logger}{a \linkS4class{Logger} object}
+\item{hyperparameters}{the input matrix, where rows are observations and columns are variables}
+\item{x}{the input matrix, where rows are observations and columns are variables}
+\item{y}{the response variable. Its number of rows must match the number of rows of \code{x}}
+\item{weights}{priors of the observations}
+\item{offset}{a priori known component to be included in the linear predictor during fitting}
+\item{resp.type}{the response type}
+\item{...}{additional arguments}
+}
+It must return a \linkS4class{Tuned} or \linkS4class{TunedList} object}
+
+\item{sampler}{a \linkS4class{Sampler} object, the sampling procedure to use for tuning}
+
+\item{looper}{a \linkS4class{Looper} object}
+
+\item{screener}{a \linkS4class{Screener} object}
+
+\item{logger}{a \linkS4class{Logger} object}
+
+\item{parameters}{list containing the parameters to fix for the chosen tuning method.
+Please, note that the parameters shouldn't include the default renoir formals as they won't be considered.
+(It is helpful to change default settings)}
+}
+\value{
+An object of class \linkS4class{Tuner}.
+}
 \description{
 An S4 class providing the methods to perform the tuning of
 hyperparameters and the training of the final model.
 
 The object consists of 6 slots
+
+Constructor for the S4 \linkS4class{Tuner} object.
 }
 \section{Slots}{
 

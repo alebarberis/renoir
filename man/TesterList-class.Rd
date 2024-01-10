@@ -3,9 +3,15 @@
 \docType{class}
 \name{TesterList-class}
 \alias{TesterList-class}
+\alias{TesterList}
 \title{Tester List Class}
+\usage{
+TesterList(...)
+}
 \description{
 An S4 class to represent a scorer list.
+
+Constructor for the S4 \linkS4class{TesterList} object.
 }
 \details{
 This subclass extends the S4  \linkS4class{List} virtual class by using

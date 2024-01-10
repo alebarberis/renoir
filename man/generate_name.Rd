@@ -21,3 +21,4 @@ This function generates a name from a key selection.
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

@@ -68,10 +68,10 @@ or "none". (Permitted synonyms are "M" for "logFC", "A" or "Amean" for "AveExpr"
 
 \item{multi}{what to do when response has multiple output values
 \describe{
-  \item{\code{max}}{the max value of scores across multiple outputs is selected to get a single value for each observation}
-  \item{\code{average}}{scores of multiple outputs are averaged to get a single value for each observation}
-  \item{\code{sum}}{scores of multiple outputs are summed up to get a single value for each observation}
-  \item{\code{raw}}{returns the scores for the multiple outputs}
+\item{\code{max}}{the max value of scores across multiple outputs is selected to get a single value for each observation}
+\item{\code{average}}{scores of multiple outputs are averaged to get a single value for each observation}
+\item{\code{sum}}{scores of multiple outputs are summed up to get a single value for each observation}
+\item{\code{raw}}{returns the scores for the multiple outputs}
 }}
 
 \item{logger}{a \linkS4class{Logger}}
@@ -93,4 +93,3 @@ This function compute the significance of the screening test by using an Empiric
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

@@ -25,3 +25,4 @@ learning method in \code{learning.method}.
 \description{
 Select the appropriate prediction type given the accuracy measure
 }
+\keyword{internal}

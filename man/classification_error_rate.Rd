@@ -21,8 +21,8 @@ classification_error_rate(
 
 \item{multi}{what to do when response has multiple classes
 \describe{
-  \item{\code{average}}{errors of multiple classes are averaged to get a single value}
-  \item{\code{raw}}{returns a vector containing one score for each class}
+\item{\code{average}}{errors of multiple classes are averaged to get a single value}
+\item{\code{raw}}{returns a vector containing one score for each class}
 }}
 
 \item{...}{not currently used}

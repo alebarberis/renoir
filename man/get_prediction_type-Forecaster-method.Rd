@@ -18,3 +18,4 @@ in input by a \linkS4class{Scorer} to calculate the score
 \description{
 Select the appropriate prediction type given the accuracy measure
 }
+\keyword{internal}

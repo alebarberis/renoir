@@ -47,7 +47,7 @@ obtain information about the population parameter.
 
 Beware about the interpretation. The CI is not telling us if the population parameter is inside its range.
 In fact, as generally we don't know the population parameter, we don't know if the interval
-contains it. However, we know that a certain number of intervals (our confidence level, e.g. 95\%)
+contains it. However, we know that a certain number of intervals (our confidence level, e.g. 95\\%)
 formed in this way will contain the parameter.
 }
 \references{

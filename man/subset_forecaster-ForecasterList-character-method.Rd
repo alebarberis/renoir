@@ -18,3 +18,4 @@ a \linkS4class{ForecasterList} object
 \description{
 Select the forecasters from the list matching the learning method in \code{by}
 }
+\keyword{internal}

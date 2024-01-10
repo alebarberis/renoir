@@ -23,9 +23,9 @@ a multi-response is assumed}
 
 \item{multi}{what to do when response has multiple output values
 \describe{
-  \item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
-  \item{\code{sum}}{errors of multiple outputs are summed up to get a single value for each observation}
-  \item{\code{raw}}{returns a vector containing one error for each output}
+\item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
+\item{\code{sum}}{errors of multiple outputs are summed up to get a single value for each observation}
+\item{\code{raw}}{returns a vector containing one error for each output}
 }}
 
 \item{root}{logical, whether to return the MSE or the root mean squared error (RMSE)}
@@ -44,7 +44,7 @@ The mean squared error (MSE) is a measure of errors based on squared losses.
 Small and large errors are not treated equally, as the large errors are more heavily
 weighted than small ones thus skewing the measure.
 It is more sensitive to outliers compared to other measures (e.g. MAE).
-The MSE estimated over *n* observations is defined as
+The MSE estimated over \emph{n} observations is defined as
 
 \deqn{MSE(y,\hat{y}) = \frac{1}{n}\sum_{i=1}^{n} (y_{i} - \hat{y}_{i})^{2}}
 

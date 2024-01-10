@@ -32,3 +32,4 @@ This function has a common interface to compute a classification metric.
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

@@ -3,9 +3,20 @@
 \docType{class}
 \name{Trained-class}
 \alias{Trained-class}
+\alias{Trained}
 \title{An S4 class to represent a renoir trained model}
+\usage{
+Trained(
+  fit = NULL,
+  config = list(),
+  learning.method = character(),
+  nfeatures = integer()
+)
+}
 \description{
 The studies object consists of eight slots
+
+Constructor for the S4 \linkS4class{Trained} object.
 }
 \section{Slots}{
 

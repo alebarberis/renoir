@@ -11,14 +11,14 @@ plot_evaluation(data, ...)
 \linkS4class{Renoir} as returned by \code{\link{summary_table()}}.
 This function expects specific columns:
 \describe{
-  \item{\code{training_set_size}}{contains the considered training-set sizes}
-  \item{\code{score}}{contains the performance metric for each model}
-  \item{\code{mean_score}}{contains the mean performance metric for the specific training-set size}
-  \item{\code{lower_ci}}{contains the lower bound of the confidence interval for the mean score}
-  \item{\code{upper_ci}}{contains the upper bound of the confidence interval for the mean score}
-  \item{\code{best_resample}}{contains the index of the automatically selected optimal training-set size}
-  \item{\code{best_model}}{contains the index of the best model for the optimal training-set size}
-  \item{\code{name}}{contains a grouping key, e.g. the learning method}
+\item{\code{training_set_size}}{contains the considered training-set sizes}
+\item{\code{score}}{contains the performance metric for each model}
+\item{\code{mean_score}}{contains the mean performance metric for the specific training-set size}
+\item{\code{lower_ci}}{contains the lower bound of the confidence interval for the mean score}
+\item{\code{upper_ci}}{contains the upper bound of the confidence interval for the mean score}
+\item{\code{best_resample}}{contains the index of the automatically selected optimal training-set size}
+\item{\code{best_model}}{contains the index of the best model for the optimal training-set size}
+\item{\code{name}}{contains a grouping key, e.g. the learning method}
 }
 The \code{name} column is used to identify the
 number of considered evaluations}
@@ -36,7 +36,7 @@ training-set sizes.
 }
 \details{
 A plot showing the mean performance and the related
-95\% confidence interval of a learning method
+95\\% confidence interval of a learning method
 across different training-set sizes is produced.
 The evaluated element is identified by the \code{name}
 column in the \code{data}. If a unique key is found then
@@ -52,3 +52,4 @@ multiple evaluations are reported in the same plot.
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

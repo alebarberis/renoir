@@ -3,10 +3,44 @@
 \docType{class}
 \name{Screener-class}
 \alias{Screener-class}
+\alias{Screener}
 \title{Screener Class
 An S4 class providing the methods to perform a features screening.}
+\usage{
+Screener(id, screener, parameters, logger = Logger(verbose = F))
+}
+\arguments{
+\item{id}{a name to identify the screener.
+If screening method is one of the supported by renoir, the constructor will
+automatically select a \code{screener}. See \code{supported_screening_methods()}
+for the supported methods.}
+
+\item{screener}{(optional) function to screen the data for features selection.
+Used if \code{id} is not one of the supported by renoir.
+If \code{screener} is provided it must conform to the renoir common interface,
+and must have the following formal arguments:
+\describe{
+\item{x}{the input matrix, where rows are observations and columns are variables.}
+\item{y}{the response variable. Its number of rows must match the number of rows of \code{x}.}
+\item{weights}{priors of the observations}
+\item{resp.type}{the response type}
+\item{observations}{indices of observations to keep}
+\item{...}{additional arguments}
+}
+The output must be a \linkS4class{Screened} object, where the slot \code{score} stores the
+feature scores with the same order as in \code{x}}
+
+\item{parameters}{list containing the parameters to fix for the chosen screening method}
+
+\item{logger}{a \linkS4class{Logger}}
+}
 \description{
 The object consists of 3 slots
+
+Constructor for the S4 Screener object.
+}
+\details{
+Constructor for the S4 \linkS4class{Screener} object.
 }
 \section{Slots}{
 

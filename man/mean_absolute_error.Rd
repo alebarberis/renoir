@@ -22,9 +22,9 @@ a multi-response is assumed}
 
 \item{multi}{what to do when response has multiple output values
 \describe{
-  \item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
-  \item{\code{sum}}{errors of multiple outputs are summed up to get a single value for each observation}
-  \item{\code{raw}}{returns a vector containing one error for each output}
+\item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
+\item{\code{sum}}{errors of multiple outputs are summed up to get a single value for each observation}
+\item{\code{raw}}{returns a vector containing one error for each output}
 }}
 
 \item{rweights}{response weights}

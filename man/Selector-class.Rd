@@ -3,10 +3,36 @@
 \docType{class}
 \name{Selector-class}
 \alias{Selector-class}
+\alias{Selector}
 \title{Selector Class
 An S4 class providing the methods to select a model from a list.}
+\usage{
+Selector(id, selector, logger = Logger(verbose = FALSE))
+}
+\arguments{
+\item{id}{object identifier, must be equivalent to the id of the associated \linkS4class{Trainer}.
+If learning method is one of the supported by renoir, the constructor will
+automatically select a built-in \code{selector} function.}
+
+\item{selector}{(optional) function used to select a model from a list.
+Used if \code{id} is not one of the supported by renoir.
+If \code{selector} is provided it must conform to the renoir common interface,
+and must have the following formal arguments:
+\describe{
+\item{models}{list of models}
+\item{...}{additional arguments}
+}
+It should return the index of the selected model}
+
+\item{logger}{a \linkS4class{Logger}}
+}
+\value{
+An object of class \linkS4class{Selector}.
+}
 \description{
 The object consists of 3 slots
+
+Constructor for the S4 \linkS4class{Selector} object.
 }
 \section{Slots}{
 

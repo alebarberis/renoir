@@ -3,10 +3,44 @@
 \docType{class}
 \name{Trainer-class}
 \alias{Trainer-class}
+\alias{Trainer}
 \title{Trainer Class
 An S4 class representing a learning method.}
+\usage{
+Trainer(id, trainer, parameters, logger = Logger())
+}
+\arguments{
+\item{id}{the learning method name associated to this \linkS4class{Trainer}.
+If learning method is one of the supported by renoir, the constructor will
+automatically select a \code{trainer}. See \code{supported_learning_methods()}
+for the supported methods.}
+
+\item{trainer}{(optional) function to train a model.
+Used if \code{id} is not one of the supported by renoir.
+If \code{trainer} is provided it must conform to the renoir common interface,
+and must have the following formal arguments:
+\describe{
+\item{x}{the input matrix, where rows are observations and columns are variables.}
+\item{y}{the response variable. Its number of rows must match the number of rows of \code{x}.}
+\item{weights}{priors of the observations}
+\item{offset}{used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting}
+\item{resp.type}{the response type}
+\item{observations}{indices of observations to keep}
+\item{features}{indices of predictors to keep}
+\item{...}{additional arguments}
+}}
+
+\item{parameters}{list containing the parameters for the chosen learning method}
+
+\item{logger}{a \linkS4class{Logger}}
+}
+\value{
+An object of class \linkS4class{Trainer}.
+}
 \description{
 The object consists of 4 slots
+
+Constructor for the S4 \linkS4class{Trainer} object.
 }
 \section{Slots}{
 
@@ -16,14 +50,14 @@ The object consists of 4 slots
 \item{\code{trainer}}{trainer function.
 It must have the following formal arguments:
 \describe{
-   \item{x}{the input matrix, where rows are observations and columns are variables.}
-   \item{y}{the response variable. Its number of rows must match the number of rows of \code{x}.}
-   \item{weights}{priors of the observations}
-   \item{offset}{used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting}
-   \item{resp.type}{the response type}
-   \item{observations}{indices of observations to keep}
-   \item{features}{indices of predictors to keep}
-   \item{...}{additional arguments}
+\item{x}{the input matrix, where rows are observations and columns are variables.}
+\item{y}{the response variable. Its number of rows must match the number of rows of \code{x}.}
+\item{weights}{priors of the observations}
+\item{offset}{used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting}
+\item{resp.type}{the response type}
+\item{observations}{indices of observations to keep}
+\item{features}{indices of predictors to keep}
+\item{...}{additional arguments}
 }}
 
 \item{\code{parameters}}{list containing the parameters for the chosen learning method}

@@ -31,12 +31,12 @@ otherwise it contains the vector of gene names}
 \value{
 a dataframe containing different elements
 \describe{
-  \item{code{pfp_}}{estimated percentage of false positive predictions for each feature
-  positively and negatively correlated with the outcome}
-  \item{code{p_val}}{estimated p-value for each feature
-  positively and negatively correlated with the outcome}
-  \item{code{Rank_Stat_}}{the rank-product/rank-sum statistics evaluated per each gene
-  positively and negatively correlated with the outcome}
+\item{code{pfp_}}{estimated percentage of false positive predictions for each feature
+positively and negatively correlated with the outcome}
+\item{code{p_val}}{estimated p-value for each feature
+positively and negatively correlated with the outcome}
+\item{code{Rank_Stat_}}{the rank-product/rank-sum statistics evaluated per each gene
+positively and negatively correlated with the outcome}
 
 }
 }

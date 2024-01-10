@@ -3,15 +3,29 @@
 \docType{class}
 \name{ScreenerList-class}
 \alias{ScreenerList-class}
+\alias{ScreenerList}
 \title{ScreenerList Class}
+\usage{
+ScreenerList(...)
+}
+\arguments{
+\item{...}{\linkS4class{Screener} objects to be stored in a \linkS4class{ScreenerList}}
+}
+\value{
+a \linkS4class{ScreenerList} object
+}
 \description{
 An S4 class to represent a scorer list.
+
+Constructor for the S4 ScreenerList object.
 }
 \details{
 This subclass extends the S4  \linkS4class{List} virtual class by using
 the  \linkS4class{SimpleList} implementation.
 
 The object consists of 4 slots
+
+Constructor for the S4 \linkS4class{ScreenerList} object.
 }
 \section{Slots}{
 
@@ -26,3 +40,6 @@ with a row for each element and a column for each metadata available. Default is
 \item{\code{metadata}}{\code{list} storing the global metadata annotating the object as a whole}
 }}
 
+\author{
+Alessandro Barberis
+}

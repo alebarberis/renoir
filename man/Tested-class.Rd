@@ -3,10 +3,42 @@
 \docType{class}
 \name{Tested-class}
 \alias{Tested-class}
+\alias{Tested}
 \title{Tested
 An S4 class to represent a tested model}
+\usage{
+Tested(
+  set = character(),
+  measure = character(),
+  score = numeric(),
+  mscore = numeric(),
+  sem = numeric(),
+  ci = numeric(),
+  opt = integer(),
+  `1se` = integer()
+)
+}
+\arguments{
+\item{set}{name of the set}
+
+\item{measure}{name of the considered performance metric}
+
+\item{score}{performance metrics}
+
+\item{mscore}{mean of the performance metrics}
+
+\item{sem}{standard error of the mean}
+
+\item{ci}{confidence interval}
+
+\item{opt}{index of model associated to optimal performance}
+
+\item{1se}{index of least complex model associated to performance within 1SE from the optimal}
+}
 \description{
 The Tested object consists of 3 slots
+
+Constructor for the S4 \linkS4class{Tested} object.
 }
 \section{Slots}{
 
@@ -28,3 +60,6 @@ The Tested object consists of 3 slots
 \item{\code{1se}}{a length-one integer vector}
 }}
 
+\author{
+Alessandro Barberis
+}

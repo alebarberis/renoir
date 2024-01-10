@@ -116,10 +116,10 @@ for computing fold changes }
 
 \item{multi}{what to do when response has multiple output values
 \describe{
-  \item{\code{max}}{the max value of scores across multiple outputs is selected to get a single value for each observation}
-  \item{\code{average}}{scores of multiple outputs are averaged to get a single value for each observation}
-  \item{\code{sum}}{scores of multiple outputs are summed up to get a single value for each observation}
-  \item{\code{raw}}{returns the scores for the multiple outputs}
+\item{\code{max}}{the max value of scores across multiple outputs is selected to get a single value for each observation}
+\item{\code{average}}{scores of multiple outputs are averaged to get a single value for each observation}
+\item{\code{sum}}{scores of multiple outputs are summed up to get a single value for each observation}
+\item{\code{raw}}{returns the scores for the multiple outputs}
 }}
 
 \item{...}{further arguments}
@@ -135,4 +135,3 @@ in the reported \linkS4class{Screened} object is the computed q-value.
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

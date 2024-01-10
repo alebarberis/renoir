@@ -20,10 +20,30 @@ renoir_nearest_shrunken_centroid(
 )
 }
 \arguments{
+\item{x}{the input matrix, where rows are observations and columns are variables.}
+
+\item{y}{the response variable. Its number of rows must match the number of rows of \code{x}.}
+
+\item{weights}{priors of the observations}
+
+\item{offset}{used only for GLM methods, it is an a priori known component to be included in the linear predictor during fitting}
+
+\item{resp.type}{the response type}
+
+\item{observations}{(optional) indices of observations to keep}
+
+\item{features}{(optional) indices of predictors to keep}
+
 \item{...}{further arguments to \code{\link[pamr]{pamr.train}}}
 
 \item{threshold}{A vector of threshold values for the centroid
     shrinkage.Default is a set of 30 values chosen by the software}
+}
+\value{
+a \linkS4class{Trained} object or a \linkS4class{TrainedList} object if learning method
+runs multiple configurations (i.e. multiple sets of hyper-parameters).
+
+Results are merged into one \linkS4class{TrainedList} object
 }
 \description{
 This function trains a nearest shrunken centroid classifier.

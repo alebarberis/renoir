@@ -3,8 +3,15 @@
 \docType{class}
 \name{TestedList-class}
 \alias{TestedList-class}
+\alias{TestedList}
 \title{TestedList Class
 An S4 class to represent a renoir tuned and tested models list}
+\usage{
+TestedList(...)
+}
+\arguments{
+\item{...}{a comma-separated list of S4 \linkS4class{TestedList} objects.}
+}
 \description{
 This subclass extends the S4  \linkS4class{List} virtual class by using
 the  \linkS4class{SimpleList} implementation.

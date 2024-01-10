@@ -19,9 +19,8 @@ A \linkS4class{Filtered} object
 \description{
 This function filters the input matrix \code{x} depending on the presence of NAs.
 A variable is removed if sum of NA elements is greater than a given percentage defined by \code{threshold}.
-Default is 0.5 (i.e. select variables with less than 50\% of NAs)
+Default is 0.5 (i.e. select variables with less than 50\\% of NAs)
 }
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

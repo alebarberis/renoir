@@ -32,20 +32,20 @@ are not created (this could solve the pandoc "out of memory" issue when the numb
 
 \item{...}{further arguments to \code{\link[rmarkdown]{render}} \code{params} argument. Possible options are:
 \describe{
-  \item{\code{yml_author}}{A character vector, name of the author(s)}
-  \item{\code{yml_affiliation}}{The author’s affiliation; must match length of name,
-  e.g. if name has length of two, affiliation must as well; use NA if you don’t want
-  to include an affiliation for a given author.Note that not all formats support the affiliation field.}
-  \item{\code{yml_email}}{The author email address. Note that not all formats support the email field.}
-  \item{\code{yml_title}}{A character vector, the title of the document}
-  \item{\code{yml_subtitle}}{A character vector, the subtitle of the document.
-  Not all R Markdown formats use subtitles, so it may depend on what you use in the output field.
-  It is available in \code{pdf_document}, \code{html_document}, and \code{word_document} by default}
-  \item{\code{yml_abstract}}{A character vector, the abstract. Long character vectors
-  are automatically wrapped using valid YAML syntax.
-  This field is not available in all output formats; it is available in \code{pdf_document} and \code{html_document} by default.}
-  \item{\code{yml_name}}{A character vector, the name of the document}
-  \item{\code{tabset}}{logical, whether to use tabbed sections (if any)}
+\item{\code{yml_author}}{A character vector, name of the author(s)}
+\item{\code{yml_affiliation}}{The author’s affiliation; must match length of name,
+e.g. if name has length of two, affiliation must as well; use NA if you don’t want
+to include an affiliation for a given author.Note that not all formats support the affiliation field.}
+\item{\code{yml_email}}{The author email address. Note that not all formats support the email field.}
+\item{\code{yml_title}}{A character vector, the title of the document}
+\item{\code{yml_subtitle}}{A character vector, the subtitle of the document.
+Not all R Markdown formats use subtitles, so it may depend on what you use in the output field.
+It is available in \code{pdf_document}, \code{html_document}, and \code{word_document} by default}
+\item{\code{yml_abstract}}{A character vector, the abstract. Long character vectors
+are automatically wrapped using valid YAML syntax.
+This field is not available in all output formats; it is available in \code{pdf_document} and \code{html_document} by default.}
+\item{\code{yml_name}}{A character vector, the name of the document}
+\item{\code{tabset}}{logical, whether to use tabbed sections (if any)}
 }}
 }
 \value{

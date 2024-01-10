@@ -26,14 +26,14 @@ plot_multi_evaluation(
 \item{data}{\code{data.frame} containing the data to plot. The function expects
 specific columns:
 \describe{
-  \item{\code{training_set_size}}{contains the considered training-set sizes}
-  \item{\code{score}}{contains the performance metric for each model}
-  \item{\code{mean_score}}{contains the mean performance metric for the specific training-set size}
-  \item{\code{lower_ci}}{contains the lower bound of the confidence interval for the mean score}
-  \item{\code{upper_ci}}{contains the upper bound of the confidence interval for the mean score}
-  \item{\code{best_resample}}{contains the index of the automatically selected optimal training-set size}
-  \item{\code{best_model}}{contains the index of the best model for the optimal training-set size}
-  \item{\code{name}}{contains a grouping key, e.g. the learning method}
+\item{\code{training_set_size}}{contains the considered training-set sizes}
+\item{\code{score}}{contains the performance metric for each model}
+\item{\code{mean_score}}{contains the mean performance metric for the specific training-set size}
+\item{\code{lower_ci}}{contains the lower bound of the confidence interval for the mean score}
+\item{\code{upper_ci}}{contains the upper bound of the confidence interval for the mean score}
+\item{\code{best_resample}}{contains the index of the automatically selected optimal training-set size}
+\item{\code{best_model}}{contains the index of the best model for the optimal training-set size}
+\item{\code{name}}{contains a grouping key, e.g. the learning method}
 }}
 
 \item{thr}{numerical value, if provided it is used to draw an horizontal line}
@@ -61,9 +61,7 @@ of what is reported as best model in \code{data}}
 
 \item{caption}{character string, the caption of the plot}
 
-\item{xlab}{character string, axes labels}
-
-\item{ylab}{character string, axes labels}
+\item{xlab, ylab}{character string, axes labels}
 
 \item{...}{further arguments to \code{\link[ggplot2]{ggplot}}}
 }
@@ -77,7 +75,7 @@ training-set sizes.
 }
 \details{
 A plot showing the mean performance and the related
-95\% confidence interval of learning methods
+95\\% confidence interval of learning methods
 across different training-set sizes is produced.
 Individual scores and summary metrics in the form of boxplots
 can be also added (default) via the \code{add.scores} and
@@ -89,3 +87,4 @@ can be also added (default) via the \code{add.scores} and
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

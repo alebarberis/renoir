@@ -3,7 +3,7 @@
 \name{plot,Renoir,missing-method}
 \alias{plot,Renoir,missing-method}
 \alias{plot}
-\title{Plot method for `Renoir` object}
+\title{Plot method for \code{Renoir} object}
 \usage{
 \S4method{plot}{Renoir,missing}(x, y, ..., key, measure, set, interactive = FALSE)
 }
@@ -34,7 +34,7 @@ for a \linkS4class{Renoir} object.
 }
 \details{
 A plot showing the mean performance and the related
-95\% confidence interval of a learning method
+95\\% confidence interval of a learning method
 across different training-set sizes is produced.
 }
 \seealso{

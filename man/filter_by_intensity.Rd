@@ -19,9 +19,8 @@ A \linkS4class{Filtered} object
 \description{
 This function filters the input matrix \code{x} depending on the features intensity.
 A variable is kept if value is greater than median across observations in a given percentage of observations defined by \code{threshold}.
-Default is 0.25 (i.e. select variables with values > median in more than 25\% of observations)
+Default is 0.25 (i.e. select variables with values > median in more than 25\\% of observations)
 }
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

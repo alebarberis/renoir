@@ -18,12 +18,15 @@ of \linkS4class{Evaluated} objects.
 }
 \details{
 Currently, elements can be uniquely grouped by four identifiers:
-1) the learning method, 2) the hyperparameter configuration,
-3) the response type, 4) the sampling strategy.
+\enumerate{
+\item the learning method, 2) the hyperparameter configuration,
+\item the response type, 4) the sampling strategy.
 This function extracts the related values from the \linkS4class{EvaluatedList}
 object and check if multiple values are present in order to
 identify a unique key.
 }
+}
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

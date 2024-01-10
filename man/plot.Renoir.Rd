@@ -2,7 +2,7 @@
 % Please edit documentation in R/class_Renoir.R
 \name{plot.Renoir}
 \alias{plot.Renoir}
-\title{Plot method for `Renoir` object}
+\title{Plot method for \code{Renoir} object}
 \usage{
 \method{plot}{Renoir}(x, y, ..., key, measure, set, interactive = FALSE)
 }
@@ -33,7 +33,7 @@ for a \linkS4class{Renoir} object.
 }
 \details{
 A plot showing the mean performance and the related
-95\% confidence interval of a learning method
+95\\% confidence interval of a learning method
 across different training-set sizes is produced.
 }
 \seealso{

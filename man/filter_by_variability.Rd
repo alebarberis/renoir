@@ -27,10 +27,9 @@ A \linkS4class{Filtered} object
 \description{
 This function filters the input matrix \code{x} by features variability.
 A feature is kept if part of the top variable features, where the cutoff is defined by \code{threshold}.
-Default is 0.25 (i.e. select features in the top 25\% of variable features).
+Default is 0.25 (i.e. select features in the top 25\\% of variable features).
 Two measures of variability are possible.
 }
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

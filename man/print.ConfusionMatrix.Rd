@@ -25,11 +25,11 @@ the number of digits for individual columns.}
 
 \item{format}{A character string. Possible values are \code{latex},
 \code{html}, \code{pipe} (Pandoc's pipe tables), \code{simple} (Pandoc's
-simple tables), and \code{rst}. The value of this argument will be
-automatically determined if the function is called within a \pkg{knitr}
-document. The \code{format} value can also be set in the global option
-\code{knitr.table.format}. If \code{format} is a function, it must return a
-character string.}
+simple tables), \code{rst}, \code{jira}, and \code{org} (Emacs Org-mode).
+The value of this argument will be automatically determined if the function
+is called within a \pkg{knitr} document. The \code{format} value can also
+be set in the global option \code{knitr.table.format}. If \code{format} is
+a function, it must return a character string.}
 
 \item{...}{Other arguments (see Examples and References).}
 }

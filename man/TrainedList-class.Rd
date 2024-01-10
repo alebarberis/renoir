@@ -3,11 +3,17 @@
 \docType{class}
 \name{TrainedList-class}
 \alias{TrainedList-class}
+\alias{TrainedList}
 \title{TrainedList Class
 An S4 class to represent a renoir trained and tested models list}
+\usage{
+TrainedList(...)
+}
 \description{
 This subclass extends the S4  \linkS4class{List} virtual class by using
 the  \linkS4class{SimpleList} implementation.
+
+Constructor for the S4 \linkS4class{TrainedList} object.
 }
 \details{
 The object consists of 4 slots

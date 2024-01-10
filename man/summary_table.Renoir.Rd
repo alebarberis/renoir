@@ -28,3 +28,4 @@ This function produces a summary of an object of class \linkS4class{Renoir}.
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

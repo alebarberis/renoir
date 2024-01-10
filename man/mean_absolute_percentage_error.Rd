@@ -23,9 +23,9 @@ a multi-response is assumed}
 
 \item{multi}{what to do when response has multiple output values
 \describe{
-  \item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
-  \item{\code{sum}}{errors of multiple outputs are summed up to get a single value for each observation}
-  \item{\code{raw}}{returns a vector containing one error for each output}
+\item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
+\item{\code{sum}}{errors of multiple outputs are summed up to get a single value for each observation}
+\item{\code{raw}}{returns a vector containing one error for each output}
 }}
 
 \item{eps}{an arbitrary positive small number, used to correct the MAPE formula and avoid the division by zero}
@@ -41,7 +41,7 @@ This function computes the mean absolute percentage error.
 }
 \details{
 The mean absolute percentage error (MAPE) is a measure of errors based on relative absolute values.
-The MAPE estimated over *n* observations is defined as
+The MAPE estimated over \emph{n} observations is defined as
 
 \deqn{MAPE(y,\hat{y}) = \frac{1}{n}\sum_{i=1}^{n} \frac{\lvert y_{i} - \hat{y}_{i} \rvert}{\max{\lvert y_{i} \rvert, \epsilon}}}
 

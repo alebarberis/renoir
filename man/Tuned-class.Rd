@@ -3,9 +3,62 @@
 \docType{class}
 \name{Tuned-class}
 \alias{Tuned-class}
+\alias{Tuned}
 \title{Tuned Class}
+\usage{
+Tuned(
+  model = Trained(),
+  config = character(),
+  mscore = numeric(),
+  sem = numeric(),
+  tuning = character(),
+  sampling = character(),
+  measure = character(),
+  screened = Screened(),
+  xvars = integer(),
+  xobs = integer(),
+  index = integer(),
+  trained = list(),
+  validated = list(),
+  stability = list()
+)
+}
+\arguments{
+\item{model}{the tuned model}
+
+\item{config}{(optional) name of the configuration selected for the final model
+(e.g. 'opt' for configuration giving optimal accuracy during the repeated sampling procedure and
+'1se' for configuration giving least complex model having performance metric within
+1SE from the optimal)}
+
+\item{mscore}{the average performance metric across the sampling procedure}
+
+\item{sem}{the standard error of the \code{mscore}}
+
+\item{tuning}{the tuning method}
+
+\item{sampling}{the sampling method used to tune the model}
+
+\item{measure}{the accuracy metric}
+
+\item{screened}{a \linkS4class{Screened}}
+
+\item{xvars}{the number of features in the input matrix}
+
+\item{xobs}{the number of observations in the input matrix}
+
+\item{index}{the index of the selected configuration}
+
+\item{trained}{a list containing the models trained during the resampling}
+
+\item{validated}{a list containing the validation of the trained models}
+
+\item{stability}{a list containing the features stability}
+}
 \description{
 An S4 class providing a container for the results of a tuning procedure.
+
+Constructor for the S4 \linkS4class{Tuned} object.
 }
 \section{Slots}{
 

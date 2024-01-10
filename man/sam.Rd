@@ -109,7 +109,7 @@ A list with components (the same as returned by \code{\link[samr]{SAM}})
 }
 \description{
 Correlates a large number of features (eg genes) with an outcome variable,
-           such as a group indicator, quantitative variable or survival time by using \code{\link[samr]{SAM}}
-           function.
+such as a group indicator, quantitative variable or survival time by using \code{\link[samr]{SAM}}
+function.
 }
 \keyword{internal}

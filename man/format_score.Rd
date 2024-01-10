@@ -24,12 +24,14 @@ If a data.frame, it must contain a \code{score} column.}
     format, or an integer penalty (see \code{\link[base]{options}("scipen")}).
     Missing values correspond to the current default penalty.}
 
-\item{digits}{how many significant digits are to be used for
+\item{digits}{a positive integer indicating how many significant digits
+    are to be used for
     numeric and complex \code{x}.  The default, \code{NULL}, uses
     \code{\link[base]{getOption}("digits")}.  This is a suggestion: enough decimal
     places will be used so that the smallest (in magnitude) number has
     this many significant digits, and also to satisfy \code{nsmall}.
-    (For the interpretation for complex numbers see \code{\link[base]{signif}}.)}
+    (For more, notably the interpretation for complex numbers see
+    \code{\link[base]{signif}}.)}
 
 \item{cutoff}{numerical cutoff for adding the symbol to the
 \code{string} column}

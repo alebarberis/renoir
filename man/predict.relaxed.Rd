@@ -4,7 +4,7 @@
 \alias{predict.relaxed}
 \title{Predict}
 \usage{
-predict.relaxed(
+\method{predict}{relaxed}(
   object,
   newx,
   s = NULL,
