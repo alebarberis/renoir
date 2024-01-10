@@ -3,7 +3,7 @@
 Correlates a large number of features (eg genes) with an outcome variable,
 such as a group indicator, quantitative variable or survival time.
 This is a simple user interface for the samr function applied to array data.
-For sequencing data applications, see the function SAMseq"><title>Significance analysis of microarrays - simple user interface — SAM.mod • renoir</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Significance analysis of microarrays - simple user interface — SAM.mod"><meta property="og:description" content="Modified from SAM to solve a bug.
+For sequencing data applications, see the function SAMseq"><title>Significance analysis of microarrays - simple user interface — SAM.mod • renoir</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Significance analysis of microarrays - simple user interface — SAM.mod"><meta property="og:description" content="Modified from SAM to solve a bug.
 Correlates a large number of features (eg genes) with an outcome variable,
 such as a group indicator, quantitative variable or survival time.
 This is a simple user interface for the samr function applied to array data.
@@ -25,7 +25,7 @@ For sequencing data applications, see the function SAMseq"><!-- mathjax --><scri
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item">
   <a class="nav-link" href="../articles/renoir.html">Get started</a>
 </li>
@@ -38,12 +38,21 @@ For sequencing data applications, see the function SAMseq"><!-- mathjax --><scri
     <h6 class="dropdown-header" data-toc-skip>Benchmarks</h6>
     <a class="dropdown-item" href="../articles/benchmark/classification.html">Classification</a>
     <a class="dropdown-item" href="../articles/benchmark/regression.html">Regression</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Use Case</h6>
+    <a class="dropdown-item" href="../articles/usecase/use_case.html">Use Case</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/alebarberis/renoir/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -51,7 +60,7 @@ For sequencing data applications, see the function SAMseq"><!-- mathjax --><scri
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Significance analysis of microarrays - simple user interface</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/alebarberis/renoir/blob/HEAD/R/sam.R" class="external-link"><code>R/sam.R</code></a></small>
       <div class="d-none name"><code>SAM.mod.Rd</code></div>
     </div>
 
@@ -65,30 +74,30 @@ For sequencing data applications, see the function SAMseq</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">SAM.mod</span><span class="op">(</span>
-  <span class="va">x</span>,
-  y <span class="op">=</span> <span class="cn">NULL</span>,
-  censoring.status <span class="op">=</span> <span class="cn">NULL</span>,
-  resp.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quantitative"</span>, <span class="st">"Two class unpaired"</span>, <span class="st">"Survival"</span>, <span class="st">"Multiclass"</span>,
-    <span class="st">"One class"</span>, <span class="st">"Two class paired"</span>, <span class="st">"Two class unpaired timecourse"</span>,
-    <span class="st">"One class timecourse"</span>, <span class="st">"Two class paired timecourse"</span>, <span class="st">"Pattern discovery"</span><span class="op">)</span>,
-  geneid <span class="op">=</span> <span class="cn">NULL</span>,
-  genenames <span class="op">=</span> <span class="cn">NULL</span>,
-  s0 <span class="op">=</span> <span class="cn">NULL</span>,
-  s0.perc <span class="op">=</span> <span class="cn">NULL</span>,
-  nperms <span class="op">=</span> <span class="fl">100</span>,
-  center.arrays <span class="op">=</span> <span class="cn">FALSE</span>,
-  testStatistic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"standard"</span>, <span class="st">"wilcoxon"</span><span class="op">)</span>,
-  time.summary.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slope"</span>, <span class="st">"signed.area"</span><span class="op">)</span>,
-  regression.method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"standard"</span>, <span class="st">"ranks"</span><span class="op">)</span>,
-  return.x <span class="op">=</span> <span class="cn">TRUE</span>,
-  knn.neighbors <span class="op">=</span> <span class="fl">10</span>,
-  random.seed <span class="op">=</span> <span class="cn">NULL</span>,
-  logged2 <span class="op">=</span> <span class="cn">FALSE</span>,
-  fdr.output <span class="op">=</span> <span class="fl">0.2</span>,
-  eigengene.number <span class="op">=</span> <span class="fl">1</span>,
-  all.genes <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">SAM.mod</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  censoring.status <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  resp.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quantitative"</span>, <span class="st">"Two class unpaired"</span>, <span class="st">"Survival"</span>, <span class="st">"Multiclass"</span>,</span>
+<span>    <span class="st">"One class"</span>, <span class="st">"Two class paired"</span>, <span class="st">"Two class unpaired timecourse"</span>,</span>
+<span>    <span class="st">"One class timecourse"</span>, <span class="st">"Two class paired timecourse"</span>, <span class="st">"Pattern discovery"</span><span class="op">)</span>,</span>
+<span>  geneid <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  genenames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  s0 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  s0.perc <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nperms <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  center.arrays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  testStatistic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"standard"</span>, <span class="st">"wilcoxon"</span><span class="op">)</span>,</span>
+<span>  time.summary.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slope"</span>, <span class="st">"signed.area"</span><span class="op">)</span>,</span>
+<span>  regression.method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"standard"</span>, <span class="st">"ranks"</span><span class="op">)</span>,</span>
+<span>  return.x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  knn.neighbors <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  random.seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  logged2 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  fdr.output <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  eigengene.number <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  all.genes <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -96,10 +105,16 @@ For sequencing data applications, see the function SAMseq</p>
     <dl><dt>x</dt>
 <dd><p>Feature matrix: p (number of features) by n (number of samples),
 one observation per column (missing values allowed)</p></dd>
+
+
 <dt>y</dt>
 <dd><p>n-vector of outcome measurements</p></dd>
+
+
 <dt>censoring.status</dt>
 <dd><p>n-vector of censoring censoring.status (1= died or event occurred, 0=survived, or event was censored), needed for a censored survival outcome</p></dd>
+
+
 <dt>resp.type</dt>
 <dd><p>Problem type:
 "Quantitative" for a continuous parameter;
@@ -112,51 +127,84 @@ one observation per column (missing values allowed)</p></dd>
 "One class time course",
 "Two class.paired timecourse",
 "Pattern discovery"</p></dd>
+
+
 <dt>geneid</dt>
 <dd><p>Optional character vector of geneids for output.</p></dd>
+
+
 <dt>genenames</dt>
 <dd><p>Optional character vector of genenames for output.</p></dd>
+
+
 <dt>s0</dt>
 <dd><p>Exchangeability factor  for denominator of test statistic; Default
 is automatic choice. Only used for array data.</p></dd>
+
+
 <dt>s0.perc</dt>
 <dd><p>Percentile of standard  deviation values to use for s0; default is
 automatic choice; -1 means s0=0 (different from s0.perc=0, meaning
 s0=zeroeth percentile of  standard  deviation values= min of sd values.
 Only used for array data.</p></dd>
+
+
 <dt>nperms</dt>
 <dd><p>Number of permutations used to estimate false discovery rates</p></dd>
+
+
 <dt>center.arrays</dt>
 <dd><p>Should the data for each sample (array) be median centered
 at the outset? Default =FALSE. Only used for array data.</p></dd>
+
+
 <dt>testStatistic</dt>
 <dd><p>Test statistic to use in two class unpaired case.Either
 "standard" (t-statistic) or ,"wilcoxon" (Two-sample wilcoxon or Mann-Whitney
 test). Only used for array data.</p></dd>
+
+
 <dt>time.summary.type</dt>
 <dd><p>Summary measure for each time course: "slope", or "signed.area"). Only used for array data.</p></dd>
+
+
 <dt>regression.method</dt>
 <dd><p>Regression method for quantitative case:
 "standard", (linear least squares) or "ranks" (linear least squares 
 on ranked data). Only used for array data.</p></dd>
+
+
 <dt>return.x</dt>
 <dd><p>Should the matrix of feature values be returned?
 Only useful for time course data, where x contains summaries of the features
 over time. Otherwise x is the same as the input data data\$x</p></dd>
+
+
 <dt>knn.neighbors</dt>
 <dd><p>Number of nearest neighbors to use for imputation
 of missing features values. Only used for array data.</p></dd>
+
+
 <dt>random.seed</dt>
 <dd><p>Optional initial seed for random number generator (integer)</p></dd>
+
+
 <dt>logged2</dt>
 <dd><p>Has the data been transformed by log (base 2)? This information is used only 
 for computing fold changes</p></dd>
+
+
 <dt>fdr.output</dt>
 <dd><p>(Approximate) False Discovery Rate cutoff for output in significant genes table</p></dd>
+
+
 <dt>eigengene.number</dt>
 <dd><p>Eigengene to be used  (just for resp.type="Pattern discovery")</p></dd>
+
+
 <dt>all.genes</dt>
 <dd><p>Should all genes be listed? Default FALSE</p></dd>
+
 </dl></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -168,7 +216,7 @@ for computing fold changes</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer></div>
