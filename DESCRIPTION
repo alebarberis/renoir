@@ -14,6 +14,7 @@ Description: This package carries out a systematic evaluation of a learning meth
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown=TRUE)
 Depends: R (>= 3.6.0),
     glmnet (>= 4.1),
     Matrix (>= 1.0-6),
@@ -47,13 +48,11 @@ Imports:
     survival,
     S4Vectors,
     matrixStats
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3.9000
 VignetteBuilder: knitr
 Collate: 
     'accuracy.R'
-    'best_model_selection.R'
     'checkInput.R'
-    'class_ClassificationReport.R'
     'classes_generics.R'
     'class_Tested.R'
     'class_TestedList.R'
