@@ -367,6 +367,8 @@ compute_limma <- function(x, y,
 #'@param obj object returned from \code{\link{compute_limma}}
 #'@inheritParams limma
 #'@return the adjusted p-values of the test
+#'
+#'@keywords internal
 extract_pval_limma <- function(obj,
                                coef = NULL,
                                feat.order = NULL,

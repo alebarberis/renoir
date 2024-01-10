@@ -995,6 +995,8 @@ get_score_full_name <- function(type = c("mean_score", "summary_score", "se_scor
 #'@description Utility function used to switch accuracy measure when
 #'\code{grouped = FALSE}
 #'@return measure name
+#'
+#'@keywords internal
 switch_to_supported_ungrouped_measure <- function(measure){
 
   measure = switch(

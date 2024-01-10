@@ -155,6 +155,8 @@ create_EvaluatedList <- function(..., grouping = T){
 #'containing the \linkS4class{Scorer} object that computed the \code{measure} of interest
 #'@return integer indicating the index of the best \linkS4class{Evaluated} object
 #'in the input list
+#'
+#'@keywords internal
 which_best_evaluated <- function(
   object,
   set,

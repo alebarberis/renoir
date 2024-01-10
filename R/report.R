@@ -553,6 +553,8 @@ report_test_between_strata <- function(object, newx, strata = NULL, do.warning =
 #' sscore = summarise_as_single_score(x = x, features = colnames(x)[1:5], method = "ssgsea")
 #' sscore = summarise_as_single_score(x = x, features = colnames(x)[1:5], method = "plage")
 #' }
+#'
+#'@keywords internal
 summarise_features_as_single_score <- function(
   x,
   features = NULL,
@@ -686,6 +688,7 @@ compute_test_between_strata <- function(scores = NULL, x, features = NULL, strat
 #'@param ... further arguments to compute_score
 #'@return non adjusted p-value
 #'
+#'@keywords internal
 compute_test_on_PC <- function(PCA, pc = "PC1", strata = NULL, survival = NULL, verbose = TRUE, ...){
 
   # out = data.frame(stringsAsFactors = F)

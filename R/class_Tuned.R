@@ -219,6 +219,8 @@ methods::setMethod(
 #'\code{\link{summary_table.Trained}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 summary_table.Tuned <- function(object){
 
   #--------------------------------------------------------------------------------------------#

@@ -317,6 +317,8 @@ methods::setGeneric(name = "get_permutation",function(object) standardGeneric("g
 methods::setGeneric(name = "get_args",       function(object, ...) standardGeneric("get_args"))
 methods::setGeneric(name = "get_coef",       function(object) standardGeneric("get_coef"))
 
+#'@name signature
+#'@rdname signature
 methods::setGeneric(name = "signature",       function(object, index, n, cutoff, measure, set, ...) standardGeneric("signature"))
 
 

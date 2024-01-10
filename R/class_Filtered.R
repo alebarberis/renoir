@@ -66,6 +66,8 @@ methods::setMethod(f = "get_summary",  signature = "Filtered", definition = func
 #'\code{\link{summary_table.Trained}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 summary_table.Filtered <- function(object){
 
   #get method

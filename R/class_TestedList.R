@@ -119,6 +119,8 @@ methods::setMethod(
 #'\code{\link{summary_table.Trained}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 summary_table.TestedList <- function(object, best){
   #summary
   out = lapply(X = object, FUN = summary_table, best = best)

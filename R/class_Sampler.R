@@ -205,6 +205,8 @@ methods::setMethod(
 #'Resample
 #'@description Takes a sample with or without replacement from the population.
 #'@return A \code{list} containing the samples
+#'
+#'@rdname resample
 methods::setMethod(
   f = "resample",
   signature = "Sampler",
@@ -584,6 +586,8 @@ get_training_sets <- function(method = c("multi.random", "bootstrap", "cv"), ...
 #'@param samples list of samples as returned by resample
 #'@param N population size
 #'@return a vector containing the fold ids
+#'
+#'@keywords internal
 get_foldid <- function(samples, N){
   #set output vector
   out = vector(mode = "integer", length = N);
@@ -712,6 +716,8 @@ get_training_set_size_grid <- function(
 #'@param npoints integer, the desired number of sample sizes
 #'
 #'@return A vector containing the sample sizes.
+#'
+#'@keywords internal
 get_size_grid <- function(
   method = c("random", "bootstrap", "cv"),
   N,

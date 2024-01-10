@@ -373,6 +373,8 @@ num_to_sym <- function(
 #'\item{score_sym}{scores as symbols, as returned by \link{num_to_sym}}
 #'\item{string}{scores as string, e.g. 'p = 0.005 **'}
 #'}
+#'
+#'@keywords internal
 format_score <- function(
   x,
   scientific = TRUE, digits = 3,
@@ -425,6 +427,8 @@ format_score <- function(
 #'@param sep.col a character string to separate the resulting strings
 #'
 #'@return A character string
+#'
+#'@keywords internal
 stts <- function(object, sep.el = ": ", collapse.el = ", ", sep.col = "<br>"){
 
   #--------------------------------------------------------------------------------------------#
@@ -674,35 +678,6 @@ check_function_arg <- function(arg = NULL, check.na = TRUE, check.null = TRUE){
 #
 #   return(out)
 # }
-
-#'Clean cv.glmnet objects
-#'@description This function remove the \code{x} from the \code{call}
-#'slots of the trained object. It is needed to avoid that the final
-#'object's size raises too much when the initial set of features and observations is big.
-#'@param object a \code{cv.glmnet} object
-#'@return the cleaned object
-clean.cv.glmnet <- function(object){
-
-  class = class(object);
-
-  if(!identical(x = typeof(object[['call']][['x']]), y = "symbol")){
-    if(!is.null(object[['call']][['x']]))
-      object[['call']][['x']] = NULL;
-  }
-
-  if(!identical(x = typeof(object[['glmnet.fit']][['call']][['x']]), y = "symbol")){
-    if(!is.null(object[['glmnet.fit']][['call']][['x']]))
-      object[['glmnet.fit']][['call']][['x']] = NULL;
-  }
-
-
-  class(object) = class;
-
-  return(object)
-}
-
-
-
 
 
 #'@keywords internal

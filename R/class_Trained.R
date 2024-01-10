@@ -166,6 +166,8 @@ methods::setMethod(
 #'Get parameters for predict method from Trained object
 #'@return a list of parameters to use for predict method. The list can be empty
 #'if no parameter was found in input data
+#'
+#'@keywords internal
 get_predict_param <- function(object, ...){
 
   #----------------------------------------------------------------------#
@@ -330,6 +332,8 @@ is.Trained <- function(object){
 #'\code{\link{summary_table.Tuned}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 summary_table.Trained <- function(object){
 
   #--------------------------------------------------------------------------------------------#

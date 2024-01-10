@@ -142,6 +142,8 @@ methods::setMethod(
 #'\code{\link{summary_table.Tuned}}
 #'
 #'@author Alessandro Barberis
+#'
+#'@keywords internal
 summary_table.Screened <- function(object){
 
   #check

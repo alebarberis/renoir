@@ -161,6 +161,8 @@ methods::setMethod(
 #'@param cores number of cores to use for parallel execution.
 #'@param ... further arguments to \code{fun}
 #'@inheritParams foreach::foreach
+#'
+#'@keywords internal
 forloop = function(n.iter, logger, cores = 1, .inorder = TRUE, fun, ...){
 
   #-----------------------------------------------------------------------------------#

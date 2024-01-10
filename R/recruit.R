@@ -344,6 +344,8 @@ compute_significance_score <- function(weights, recruitment){
 #'@return a data frame or a list of data frames containing the statistics and
 #'associated estimated significance. See \code{\link{compute_rank_product}}
 #'for more details.
+#'
+#'@keywords internal
 get_rank_product <- function(object,
                              # set = c('full.set', 'test.set', 'train.set'),
                              set = c('full.set', 'test.set'),

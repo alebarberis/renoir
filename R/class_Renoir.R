@@ -1051,6 +1051,8 @@ print_density <- function(object, y, xaxis, header = '##'){
 #'@author Alessandro Barberis
 #'
 #'@export
+#'
+#'@rdname get_model
 methods::setMethod(
   f = "get_model",
   signature = "Renoir",
@@ -1077,10 +1079,14 @@ methods::setMethod(
   }
 )
 
-#@description Features with non-zero coefficients (where applicable) from
-#selected model are considered as signature
-#@param grouped logical, whether to merge results from a multi-response
-#to obtain a single set of features
+#'Extract a signature
+#'
+#'@description Features with non-zero coefficients (where applicable) from
+#'selected model are considered as signature
+#'@param grouped logical, whether to merge results from a multi-response
+#'to obtain a single set of features
+#'
+#'@rdname signature
 methods::setMethod(
   f = "signature",
   signature = c("Renoir", "numeric", "numeric", "missing", "missing", "missing"),
@@ -1098,6 +1104,8 @@ methods::setMethod(
   }
 )
 
+
+#'@rdname signature
 methods::setMethod(
   f = "signature",
   signature = c("Renoir", "missing", "missing", "numeric", "character", "character"),
@@ -1136,6 +1144,8 @@ methods::setMethod(
   }
 )
 
+
+#'@rdname signature
 methods::setMethod(
   f = "signature",
   signature = c("Renoir", "missing", "missing", "missing", "character", "character"),
@@ -1172,6 +1182,8 @@ methods::setMethod(
   }
 )
 
+
+#'@rdname signature
 methods::setMethod(
   f = "signature",
   signature = c("Renoir", "missing", "missing", "numeric", "missing", "missing"),
@@ -1193,6 +1205,8 @@ methods::setMethod(
 )
 
 #Measures are merged via RankProd
+
+#'@rdname signature
 methods::setMethod(
   f = "signature",
   signature = c("Renoir", "missing", "missing", "missing", "missing", "missing"),
@@ -1223,6 +1237,7 @@ methods::setMethod(
 
 #If model was tuned, then the features of the model
 #are filtered for the stability
+#'@rdname signature
 methods::setMethod(
   f = "signature",
   signature = c("Renoir", "numeric", "numeric", "numeric"),
