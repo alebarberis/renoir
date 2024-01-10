@@ -213,4 +213,8 @@ reference:
   - resample
   - select
   - test
+  - predict.relaxed
+  - signature
+  - multiresponse_error
+  - get_features_importance
 
