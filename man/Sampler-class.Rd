@@ -3,20 +3,59 @@
 \docType{class}
 \name{Sampler-class}
 \alias{Sampler-class}
+\alias{Sampler}
 \title{Sampler Class}
+\usage{
+Sampler(
+  method = c("random", "bootstrap", "cv"),
+  N = integer(),
+  n = 10L,
+  k = 10L,
+  strata = NULL,
+  balance = FALSE,
+  logger = Logger()
+)
+}
+\arguments{
+\item{method}{The sampling strategy to use. The available options are:
+\describe{
+\item{\code{'random'}}{random sampling}
+\item{\code{'cv'}}{k-fold cross-validation}
+\item{\code{'bootstrap'}}{bootstrap (sampling with replacement)}
+}}
+
+\item{N}{the population size}
+
+\item{n}{the sample size for \code{method = "random"} and \code{method = "bootstrap"}}
+
+\item{k}{the number of folds for \code{method = "cv"},
+or the number of repeats for\code{method = "random"} and \code{method = "bootstrap"}}
+
+\item{strata}{(optional) vector of stratification variables. If provided must be of length \code{N}}
+
+\item{balance}{logical, whether to (try to) balance the strata frequency in the output sample.
+Used only if \code{strata} is provided when \code{method = "random"} or \code{method = "bootstrap"}}
+
+\item{logger}{a \linkS4class{Logger}}
+}
+\value{
+a \linkS4class{Sampler} object
+}
 \description{
 An S4 class to represent a sampling methodology.
 
 The object consists of 7 slots
+
+Constructor for the S4 \linkS4class{Sampler} object.
 }
 \section{Slots}{
 
 \describe{
 \item{\code{method}}{The sampling strategy to use. The available options are:
 \describe{
-  \item{\code{'random'}}{random sampling}
-  \item{\code{'cv'}}{k-fold cross-validation}
-  \item{\code{'bootstrap'}}{bootstrap (sampling with replacement)}
+\item{\code{'random'}}{random sampling}
+\item{\code{'cv'}}{k-fold cross-validation}
+\item{\code{'bootstrap'}}{bootstrap (sampling with replacement)}
 }}
 
 \item{\code{N}}{a length-one integer vector, the population size}

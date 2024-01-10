@@ -3,11 +3,34 @@
 \docType{class}
 \name{Evaluator-class}
 \alias{Evaluator-class}
+\alias{Evaluator}
 \title{Evaluator Class}
+\usage{
+Evaluator(
+  sampler = Sampler(method = "random", k = 1L),
+  looper = Looper(),
+  scorer = ScorerList(Scorer(id = "mse")),
+  logger = Logger()
+)
+}
+\arguments{
+\item{sampler}{a \linkS4class{Sampler}}
+
+\item{looper}{a \linkS4class{Looper}}
+
+\item{scorer}{a \linkS4class{ScorerList} or a \linkS4class{Scorer} object}
+
+\item{logger}{a \linkS4class{Logger}}
+}
+\value{
+An object of class \linkS4class{Evaluator}.
+}
 \description{
 An S4 class providing the methods to perform an evaluation of a learning method.
 
 The object consists of 3 slots
+
+Constructor for the S4 \linkS4class{Evaluator} object.
 }
 \section{Slots}{
 

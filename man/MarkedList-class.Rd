@@ -3,11 +3,17 @@
 \docType{class}
 \name{MarkedList-class}
 \alias{MarkedList-class}
+\alias{MarkedList}
 \title{MarkedList Class
 An S4 class to represent a renoir trained and tested models list}
+\usage{
+MarkedList(...)
+}
 \description{
 This subclass extends the S4  \linkS4class{List} virtual class by using
 the  \linkS4class{SimpleList} implementation.
+
+Constructor for the S4 \linkS4class{LearnedList} object.
 }
 \details{
 The object consists of 4 slots

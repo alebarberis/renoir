@@ -3,8 +3,12 @@
 \docType{class}
 \name{Resampler-class}
 \alias{Resampler-class}
+\alias{Resampler}
 \title{Resampler Class
 An S4 class providing the re-sampling methods.}
+\usage{
+Resampler(sampler = Sampler(), logger = Logger(), looper = Looper())
+}
 \description{
 The object consists of 2 slots
 }

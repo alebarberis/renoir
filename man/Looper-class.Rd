@@ -3,8 +3,12 @@
 \docType{class}
 \name{Looper-class}
 \alias{Looper-class}
+\alias{Looper}
 \title{Looper Class
 An S4 class providing methods for loop constructs.}
+\usage{
+Looper(logger = Logger(), cores = 1L)
+}
 \description{
 The object consists of 2 slots
 }

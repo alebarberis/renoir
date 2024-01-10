@@ -3,10 +3,16 @@
 \docType{class}
 \name{Marked-class}
 \alias{Marked-class}
+\alias{Marked}
 \title{Marked
 An S4 class to represent a marked model}
+\usage{
+Marked(mark = data.frame(), measure = character(), set = character())
+}
 \description{
 The Marked object consists of 3 slots
+
+Constructor for the S4 \linkS4class{Marked} object.
 }
 \section{Slots}{
 

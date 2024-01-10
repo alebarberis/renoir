@@ -3,9 +3,71 @@
 \docType{class}
 \name{Renoir-class}
 \alias{Renoir-class}
+\alias{Renoir}
 \title{Renoir Class}
+\usage{
+Renoir(
+  id = character(),
+  config = character(),
+  response = character(),
+  nout = integer(),
+  grid = integer(),
+  k = integer(),
+  sampling = character(),
+  learning = character(),
+  screening = character(),
+  scoring = character(),
+  filter = Filtered(),
+  evaluation = EvaluatedList(),
+  stability = list(),
+  marks = MarkedList(),
+  nbest = data.frame(),
+  call = list()
+)
+}
+\arguments{
+\item{id}{evaluated learning method}
+
+\item{config}{name of the configuration}
+
+\item{response}{response type}
+
+\item{nout}{the number of responses}
+
+\item{grid}{integer vector, the considered training set sizes}
+
+\item{k}{integer, the number of sampling repeats}
+
+\item{sampling}{string, sampling method used for evaluation}
+
+\item{learning}{string, the learning procedure (i.e. training or tuning)}
+
+\item{screening}{string, the feature screening strategy adopted}
+
+\item{scoring}{string, the accuracy measure(s) used during the evaluation}
+
+\item{filter}{a \linkS4class{Filtered} object containing the summary of the pre-processing}
+
+\item{evaluation}{a \linkS4class{EvaluatedList} object containing the evaluation of the
+learning method}
+
+\item{stability}{list, containing the features stability for each response,
+i.e. the frequency of features recruitment per response across all the computed models}
+
+\item{marks}{a \linkS4class{MarkedList} object containing the features importance}
+
+\item{nbest}{data.frame, it contains the indices of the automatically selected best training set size for
+different settings (e.g. assessment on training, testing, full set of data)}
+
+\item{call}{list, containing the arguments to the "renoir" function call that creates the \linkS4class{Renoir} object}
+}
+\value{
+a \linkS4class{Renoir} object
+}
 \description{
 An S4 class representing the evaluation of a learning method by repeated sampling.
+
+Constructor for the S4 \linkS4class{Renoir} object.
 }
 \section{Slots}{
 

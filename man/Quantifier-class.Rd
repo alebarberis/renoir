@@ -3,10 +3,30 @@
 \docType{class}
 \name{Quantifier-class}
 \alias{Quantifier-class}
-\title{Quantifier Class
-An S4 class providing the methods to quantify uncertainty.}
+\alias{Quantifier}
+\title{Quantifier Class}
+\usage{
+Quantifier(id = "ciwm", quantifier, parameters, logger = Logger())
+}
+\arguments{
+\item{id}{the quantifier method name associated to this \linkS4class{Quantifier}.
+If the method is one of the supported by renoir, the constructor will
+automatically select a \code{quantifier}. See \code{supported_uncertainty_quantifiers()}
+for the supported methods.}
+
+\item{quantifier}{(optional) function to quantify uncertainty.
+Must be provided if \code{id} is not one of the supported by renoir.}
+
+\item{parameters}{list containing the parameters to fix for the chosen quantifier}
+
+\item{logger}{a \linkS4class{Logger}}
+}
 \description{
+An S4 class providing the methods to quantify uncertainty.
+
 The object consists of 6 slots
+
+Constructor for the S4 \linkS4class{Quantifier} object.
 }
 \section{Slots}{
 

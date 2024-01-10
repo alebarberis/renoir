@@ -3,10 +3,47 @@
 \docType{class}
 \name{Forecaster-class}
 \alias{Forecaster-class}
+\alias{Forecaster}
 \title{Forecaster Class
 An S4 class providing the methods to test the trained models on provided data.}
+\usage{
+Forecaster(id, forecaster, selector)
+}
+\arguments{
+\item{id}{object identifier, must be equivalent to the id of the associated \linkS4class{Trainer}.
+If learning method is one of the supported by renoir, the constructor will
+automatically select \code{forecaster} and \code{selector} if they are missing.}
+
+\item{forecaster}{(optional) function used to compute predictions.
+Used if \code{id} is not one of the supported by renoir.
+If \code{forecaster} is provided it must conform to the renoir common interface,
+and must have the following formal arguments:
+\describe{
+\item{object}{a model for which prediction is desired.
+It is a \linkS4class{Trained} object as returned by the training process,
+where the fit is stored in the \code{fit} slot}
+\item{newx}{the new values at which prediction are to be made}
+\item{type}{the type of prediction required}
+\item{newoffset}{if an offset was used in the fit then one must be provided}
+\item{...}{additional arguments affecting the predictions produced}
+}}
+
+\item{selector}{(optional) helper function to select the appropriate prediction type given
+the response type and an accuracy measure
+If provided it must return a prediction type supported by \code{forecaster}
+and must have the following formal arguments:
+\describe{
+\item{resp.type}{the response type}
+\item{type.measure}{the accuracy type measure, used to internally select the correct prediction type}
+}}
+}
+\value{
+An object of class \linkS4class{Forecaster}.
+}
 \description{
 The object consists of 3 slots
+
+Constructor for the S4 \linkS4class{Forecaster} object.
 }
 \section{Slots}{
 
@@ -16,21 +53,21 @@ The object consists of 3 slots
 \item{\code{forecaster}}{function to use to compute predictions.
 It must have the following formal arguments:
 \describe{
-   \item{object}{a model for which prediction is desired.
-   It is a \linkS4class{Trained} object as returned by the training process,
-   where the fit is stored in the \code{fit} slot}
-   \item{newx}{the new values at which prediction are to be made}
-   \item{type}{the type of prediction required}
-   \item{newoffset}{if an offset was used in the fit then one must be provided}
-   \item{...}{additional arguments affecting the predictions produced}
+\item{object}{a model for which prediction is desired.
+It is a \linkS4class{Trained} object as returned by the training process,
+where the fit is stored in the \code{fit} slot}
+\item{newx}{the new values at which prediction are to be made}
+\item{type}{the type of prediction required}
+\item{newoffset}{if an offset was used in the fit then one must be provided}
+\item{...}{additional arguments affecting the predictions produced}
 }}
 
 \item{\code{selector}}{helper function to select the appropriate prediction type given
 the response type and an accuracy measure
 It must have the following formal arguments:
 \describe{
-   \item{learning.method}{the learning method, used to internally select the correct prediction type}
-   \item{type.measure}{the accuracy type measure, used to internally select the correct prediction type}
+\item{learning.method}{the learning method, used to internally select the correct prediction type}
+\item{type.measure}{the accuracy type measure, used to internally select the correct prediction type}
 }}
 }}
 

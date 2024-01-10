@@ -3,15 +3,44 @@
 \docType{class}
 \name{ScorerList-class}
 \alias{ScorerList-class}
+\alias{ScorerList}
+\alias{create_ScorerList}
 \title{ScorerList Class}
+\usage{
+ScorerList(...)
+
+create_ScorerList(
+  resp.type,
+  measures,
+  grouped = TRUE,
+  parameters,
+  logger = Logger()
+)
+}
+\arguments{
+\item{...}{\linkS4class{Scorer} objects}
+
+\item{resp.type}{response type}
+}
+\value{
+a \linkS4class{ScorerList} object
+
+a \linkS4class{ScorerList}
+}
 \description{
 An S4 class to represent a scorer list.
+
+Constructor for the S4 ScorerList object.
+
+Creates a list of supported scorers for the selected response type
 }
 \details{
 This subclass extends the S4  \linkS4class{List} virtual class by using
 the  \linkS4class{SimpleList} implementation.
 
 The object consists of 4 slots
+
+Constructor for the S4 \linkS4class{ScorerList} object.
 }
 \section{Slots}{
 

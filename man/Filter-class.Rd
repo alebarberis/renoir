@@ -3,11 +3,41 @@
 \docType{class}
 \name{Filter-class}
 \alias{Filter-class}
+\alias{Filter}
 \title{Filter Class}
+\usage{
+Filter(id, filter, parameters, logger = Logger(verbose = F))
+}
+\arguments{
+\item{id}{a name to identify the filter.
+If filtering method is one of the supported by renoir, the constructor will
+automatically select a \code{filter}. See \code{list_supported_unsupervised_screening_methods()}
+for the supported methods.}
+
+\item{filter}{(optional) function to filter the initial data.
+Used if \code{id} is not one of the supported by renoir.
+If \code{filter} is provided it must conform to the renoir common interface,
+and must have the following formal arguments:
+\describe{
+\item{x}{the input matrix, where rows are observations and columns are variables.}
+\item{logger}{a \linkS4class{Logger}}
+\item{...}{additional arguments}
+}
+The output must be a \linkS4class{Filtered} object}
+
+\item{parameters}{list containing the parameters to fix for the chosen filtering method}
+
+\item{logger}{a \linkS4class{Logger}}
+}
+\value{
+A \linkS4class{Filtered} object.
+}
 \description{
 An S4 class representing a filter to pre-process the input data.
 
 The object consists of 3 slots
+
+Constructor for the S4 \linkS4class{Filter} object.
 }
 \section{Slots}{
 
@@ -21,6 +51,11 @@ The object consists of 3 slots
 \item{\code{logger}}{a \linkS4class{Logger}}
 }}
 
+\seealso{
+\code{\link{filter_by_na}},
+\code{\link{filter_by_intensity}},
+\code{\link{filter_by_variability}}
+}
 \author{
 Alessandro Barberis
 }

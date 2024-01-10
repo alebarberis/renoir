@@ -3,11 +3,90 @@
 \docType{class}
 \name{Learner-class}
 \alias{Learner-class}
+\alias{Learner,missing-method}
+\alias{Learner,character-method}
+\alias{is.Learner}
 \title{Learner Class}
+\usage{
+\S4method{Learner}{missing}(
+  tuner = Tuner(),
+  trainer,
+  forecaster,
+  scorer = Scorer(id = "mse"),
+  selector,
+  recorder,
+  marker,
+  logger = Logger()
+)
+
+\S4method{Learner}{character}(
+  id,
+  tuning = "grid.search",
+  screening,
+  sampling = c("cv", "random", "bootstrap"),
+  strata = NULL,
+  balance = FALSE,
+  k = 10L,
+  score = "mse",
+  resp.type,
+  looper = Looper(),
+  logger = Logger()
+)
+
+is.Learner(object)
+}
+\arguments{
+\item{tuner}{a \linkS4class{Tuner} object}
+
+\item{trainer}{a \linkS4class{Trainer} object}
+
+\item{forecaster}{a \linkS4class{Forecaster} object}
+
+\item{scorer}{a \linkS4class{ScorerList} or a \linkS4class{Scorer} object}
+
+\item{selector}{a \linkS4class{Selector} object}
+
+\item{recorder}{a \linkS4class{Recorder} object}
+
+\item{marker}{a \linkS4class{Marker} object}
+
+\item{logger}{a \linkS4class{Logger}}
+
+\item{id}{learning method}
+
+\item{tuning}{the tuning method}
+
+\item{screening}{the screening method}
+
+\item{sampling}{the sampling strategy}
+
+\item{strata}{(optional) vector of stratification variables. If provided must be of length \code{N}}
+
+\item{balance}{logical, whether to (try to) balance the strata frequency in the output sample.
+Used only if \code{strata} is provided when \code{method = "random"} or \code{method = "bootstrap"}}
+
+\item{k}{the number of folds for \code{method = "cv"},
+or the number of repeats for\code{method = "random"} and \code{method = "bootstrap"}}
+
+\item{score}{the accuracy measure to use during tuning}
+
+\item{resp.type}{the response type}
+
+\item{looper}{a \linkS4class{Looper}}
+}
+\value{
+a \linkS4class{Learner} object
+
+a \linkS4class{Learner} object
+}
 \description{
 An S4 class representing a learner.
 
 The object consists of 8 slots
+
+Constructor for the S4 \linkS4class{Learner} object.
+
+Constructor for the S4 \linkS4class{Learner} object.
 }
 \section{Slots}{
 

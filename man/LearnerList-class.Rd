@@ -3,9 +3,15 @@
 \docType{class}
 \name{LearnerList-class}
 \alias{LearnerList-class}
+\alias{LearnerList}
 \title{Learner List Class}
+\usage{
+LearnerList(...)
+}
 \description{
 An S4 class to represent a scorer list.
+
+Constructor for the S4 \linkS4class{LearnerList} object.
 }
 \details{
 This subclass extends the S4  \linkS4class{List} virtual class by using
@@ -26,3 +32,6 @@ with a row for each element and a column for each metadata available. Default is
 \item{\code{metadata}}{\code{list} storing the global metadata annotating the object as a whole}
 }}
 
+\author{
+Alessandro Barberis
+}

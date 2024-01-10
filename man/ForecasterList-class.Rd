@@ -3,9 +3,15 @@
 \docType{class}
 \name{ForecasterList-class}
 \alias{ForecasterList-class}
+\alias{ForecasterList}
 \title{Forecaster List Class}
+\usage{
+ForecasterList(...)
+}
 \description{
 An S4 class to represent a scorer list.
+
+Constructor for the S4 \linkS4class{ForecasterList} object.
 }
 \details{
 This subclass extends the S4  \linkS4class{List} virtual class by using

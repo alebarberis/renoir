@@ -52,3 +52,4 @@ Constructor for the S4 \linkS4class{Evaluated} object.
 \author{
 Alessandro Barberis
 }
+\keyword{internal}

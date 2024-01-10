@@ -3,10 +3,31 @@
 \docType{class}
 \name{Marker-class}
 \alias{Marker-class}
+\alias{Marker}
 \title{Marker Class
 An S4 class to represent a features marker.}
+\usage{
+Marker(id, marker, parameters, logger = Logger())
+}
+\arguments{
+\item{id}{the learning method}
+
+\item{marker}{(optional) function able to assign a numerical value to
+the features in a trained model. Used if \code{id} is not one of the supported by renoir.
+If provided, it must return a list with the number of elements equivalent to the number
+of responses in the outcome variable.}
+
+\item{parameters}{list containing the parameters to fix for the marking}
+
+\item{logger}{a \linkS4class{Logger}}
+}
+\value{
+An object of class \linkS4class{Marker}.
+}
 \description{
 The object consists of 3 slots
+
+Constructor for the S4 \linkS4class{Marker} object.
 }
 \section{Slots}{
 

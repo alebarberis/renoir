@@ -12,3 +12,4 @@ Constructor for the S4 EvaluatedList object.
 \details{
 Constructor for the S4 \linkS4class{EvaluatedList} object.
 }
+\keyword{internal}

@@ -58,7 +58,7 @@ if it stopped before the end (\code{outdir} should have been set in the previous
 
 \item{y}{the response variable. Its number of rows must match the number of rows of \code{x}.}
 
-\item{weights}{vector of observation weights}
+\item{weights}{(optional) vector of observation weights}
 
 \item{offset}{vector containing an offset, used for linear models. Default is \code{NULL}.}
 
@@ -76,11 +76,21 @@ object can be huge.}
 \value{
 The output depends on the adopted learning strategy.
 If the tuning was required then the output is a list containing
-2 \linkS4class{Renoir} objects, one per assessed configuration:
-renoir
+2 \linkS4class{Renoir} objects, one per assessed configuration.
+If tuning was not required, the output is a \linkS4class{Renoir}
+object.
 }
 \description{
-This function runs an evaluation of a learning method.
+This function runs an evaluation of a learning method
+applied over a predictors matrix \code{x} and a response variable
+\code{y}.
+See the \strong{Details} section below for further information.
+}
+\details{
+This function uses the provided \linkS4class{Learner} to
+train a model.
+
+The \linkS4class{Evaluator} in input contains
 }
 \author{
 Alessandro Barberis

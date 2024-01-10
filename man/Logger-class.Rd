@@ -3,9 +3,44 @@
 \docType{class}
 \name{Logger-class}
 \alias{Logger-class}
+\alias{Logger}
 \title{Logger Class}
+\usage{
+Logger(
+  path = character(),
+  con = NULL,
+  verbose = TRUE,
+  level = c("INFO", "DEBUG", "TRACE", "ALL", "OFF")
+)
+}
+\arguments{
+\item{path}{a path to the log file to use}
+
+\item{con}{(optional) connection to a file}
+
+\item{verbose}{logical, whether R should report extra information on progress}
+
+\item{level}{the log level of the logger. Five levels are supported:
+\describe{
+\item{\code{"OFF"}}{indicates the logger is inactive}
+\item{\code{"INFO"}}{indicates informational messages}
+\item{\code{"DEBUG"}}{indicates fine-grained informational messages}
+\item{\code{"TRACE"}}{indicates finer-grained informational events than the \code{"DEBUG"}}
+\item{\code{"ALL"}}{all levels are considered}
+}
+Levels are considered ordered: \code{OFF < INFO < DEBUG < TRACE < ALL}}
+}
+\value{
+a \linkS4class{Logger} object
+}
 \description{
 An S4 class providing a logger.
+
+Constructor for the S4 \linkS4class{Logger} object.
+}
+\details{
+A log request in a \linkS4class{Logger} of \code{level} \strong{l}
+is enabled if the level of the request is \strong{<= l}.
 }
 \section{Slots}{
 
@@ -19,6 +54,12 @@ An S4 class providing a logger.
 \item{\code{level}}{character, the log level}
 }}
 
+\seealso{
+\code{\link{log_all}},
+\code{\link{log_trace}},
+\code{\link{log_debug}},
+\code{\link{log_info}}
+}
 \author{
 Alessandro Barberis
 }

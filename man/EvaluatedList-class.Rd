@@ -26,3 +26,4 @@ with a row for each element and a column for each metadata available. Default is
 \item{\code{metadata}}{\code{list} storing the global metadata annotating the object as a whole}
 }}
 
+\keyword{internal}

@@ -3,10 +3,36 @@
 \docType{class}
 \name{Recorder-class}
 \alias{Recorder-class}
+\alias{Recorder}
 \title{Recorder Class
 An S4 class to represent a recorder.}
+\usage{
+Recorder(id, recorder, logger = Logger())
+}
+\arguments{
+\item{id}{the learning method name associated to this \linkS4class{Recorder}.
+If learning method is one of the supported by renoir, the constructor will
+automatically select a \code{recorder}. See \code{supported_learning_methods()}
+for the supported methods.}
+
+\item{recorder}{(optional) function to record if a predictor is present in the trained model.
+Used if \code{id} is not one of the supported by renoir.
+If \code{recorder} is provided it must conform to the renoir common interface,
+and must have the following formal arguments:
+\describe{
+\item{object}{a \linkS4class{Trained} object}
+\item{...}{additional arguments}
+}}
+
+\item{logger}{a \linkS4class{Logger}}
+}
+\value{
+An object of class \linkS4class{Recorder}.
+}
 \description{
 The object consists of 3 slots
+
+Constructor for the S4 \linkS4class{Recorder} object.
 }
 \section{Slots}{
 

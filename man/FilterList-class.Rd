@@ -3,15 +3,29 @@
 \docType{class}
 \name{FilterList-class}
 \alias{FilterList-class}
+\alias{FilterList}
 \title{FilterList Class}
+\usage{
+FilterList(...)
+}
+\arguments{
+\item{...}{\linkS4class{Filter} objects}
+}
+\value{
+a \linkS4class{FilterList} object
+}
 \description{
 An S4 class to represent a list of filters to pre-process the data.
+
+Constructor for the S4 FilterList object.
 }
 \details{
 This subclass extends the S4  \linkS4class{List} virtual class by using
 the  \linkS4class{SimpleList} implementation.
 
 The object consists of 4 slots
+
+Constructor for the S4 \linkS4class{FilterList} object.
 }
 \section{Slots}{
 
