@@ -98,13 +98,11 @@ Collate:
     'limma.R'
     'plot.R'
     'print.R'
-    'recruit.R'
     'renoir_nearest_shrunken_centroid.R'
     'report.R'
     'sam.R'
     'screening.R'
     'stat_tests.R'
-    'update.R'
 URL: https://github.com/alebarberis/renoir,
     https://alebarberis.github.io/renoir/
 BugReports: https://github.com/alebarberis/renoir/issues

@@ -135,7 +135,7 @@ reference:
   - importance
 - title: Visualisation
   desc: These functions are used for visualisation
-  contents: plot
+  contents: plot.Renoir
 - title: Summary
   desc: These functions are used for summarising objects
   contents: summary_table
