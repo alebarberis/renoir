@@ -40,7 +40,7 @@ are returned.
 \code{\link{fbeta_score}},
 \code{\link{precision}},
 \code{\link{sensitivity}},
-\code{\link{jaccard}}
+\code{\link{jaccard_index}}
 }
 \author{
 Alessandro Barberis

@@ -18,7 +18,7 @@ A list with one element per response, containing the marks for the features
 }
 \description{
 This function marks the features of an object of class
-\code{\link{xgb.Booster}}.
+\code{xgb.Booster}.
 }
 \details{
 The features in the \linkS4class{Trained} object in input

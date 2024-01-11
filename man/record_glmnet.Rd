@@ -7,7 +7,7 @@
 record_glmnet(object)
 }
 \arguments{
-\item{obejct}{an object of class \linkS4class{glmnet}}
+\item{obejct}{an object of class  \code{\link{glmnet}}}
 }
 \value{
 A list with one element per response, each element being
@@ -18,7 +18,7 @@ This function records the presence of the features
 in an object of class \code{\link{glmnet}}.
 }
 \details{
-The presence of the features in the \linkS4class{glmnet}
+The presence of the features in the  \code{\link{glmnet}}
 object in input is recorded and returned in a named vector
 per output response.
 

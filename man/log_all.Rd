@@ -28,9 +28,9 @@ A log information of level \code{ALL} is printed if the provided logger
 has a >= log level.
 }
 \seealso{
-\code{\link{log_trace()}},
-\code{\link{log_debug()}},
-\code{\link{log_info()}}
+\code{\link{log_trace}},
+\code{\link{log_debug}},
+\code{\link{log_info}}
 }
 \author{
 Alessandro Barberis

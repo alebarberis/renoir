@@ -45,7 +45,7 @@ where \eqn{mean = \frac{\sum_{i=1}^{n} w_{i} x_{i}}{\sum_{i=1}^{n} w_{i}}} is th
 \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5723800/}
 }
 \seealso{
-\code{\link{ci()}} for more information on confidence intervals, \code{\link{sewm()}} for the standard error
+\code{\link{ci}} for more information on confidence intervals, \code{\link{sewm}} for the standard error
 of the weighted sample mean.
 }
 \author{

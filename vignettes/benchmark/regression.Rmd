@@ -40,11 +40,11 @@ library(htmltools)
 ```
 
 ### Learning Methods
-Now we retrieve the ids of all the supported learners. A list of supported methods is available through the `?list_supported_learning_methods` function call.
+Now we retrieve the ids of all the supported learners supporting regression problems. A list of supported methods is available through the `?list_supported_learning_methods` function call.
 
 ```{r learning_methods}
 #list methods
-learning.methods = list_supported_learning_methods()
+learning.methods = list_supported_learning_methods(x = "regression")
 
 #print in table
 knitr::kable(x = learning.methods)
@@ -257,7 +257,7 @@ In the code below, we set a seed before running the analysis for each considered
 resl = list()
 
 #loop
-for(learning.method.id in learning.methods.ids[c(10)]){
+for(learning.method.id in learning.methods.ids){
   
   #Each analysis can take hours, so we save data 
   #for future faster load

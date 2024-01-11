@@ -46,7 +46,7 @@ signature(object, index, n, cutoff, measure, set, ...)
 
 \S4method{signature}{Renoir,missing,missing,missing,missing,missing}(object, index, n, cutoff, measure, set = c("train", "test", "full"))
 
-\S4method{signature}{Renoir,numeric,numeric,numeric,ANY,ANY}(object, index, n, cutoff)
+\S4method{signature}{Renoir,numeric,numeric,numeric,ANY,ANY}(object, index, n, cutoff, grouped = F)
 }
 \arguments{
 \item{grouped}{logical, whether to merge results from a multi-response

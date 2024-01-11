@@ -8,7 +8,7 @@ plot_evaluation(data, ...)
 }
 \arguments{
 \item{data}{\code{data.frame} containing the summary of an object of class
-\linkS4class{Renoir} as returned by \code{\link{summary_table()}}.
+\linkS4class{Renoir} as returned by \code{\link{summary_table}}.
 This function expects specific columns:
 \describe{
 \item{\code{training_set_size}}{contains the considered training-set sizes}

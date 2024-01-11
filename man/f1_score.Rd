@@ -51,7 +51,7 @@ It is a specific case of the F-beta score, where \code{beta = 1}
 \url{https://en.wikipedia.org/wiki/F-score}
 }
 \seealso{
-\code{\link{fbeta_score()}}
+\code{\link{fbeta_score}}
 }
 \author{
 Alessandro Barberis

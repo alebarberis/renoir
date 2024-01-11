@@ -7,7 +7,7 @@
 record_randomForest(object)
 }
 \arguments{
-\item{obejct}{an object of class \linkS4class{randomForest}}
+\item{obejct}{an object of class \code{\link{randomForest}}}
 }
 \value{
 A list with one element per response, each element being
@@ -18,7 +18,7 @@ This function records the presence of the features
 in an object of class \code{\link{randomForest}}.
 }
 \details{
-The presence of the features in the \linkS4class{randomForest}
+The presence of the features in the \code{\link{randomForest}}
 object in input is recorded and returned in a named vector
 per output response.
 

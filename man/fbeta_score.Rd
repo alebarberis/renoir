@@ -50,7 +50,7 @@ The highest possible value of an F-score is 1.0, indicating perfect precision an
 \url{https://en.wikipedia.org/wiki/F-score}
 }
 \seealso{
-\code{\link{f1_score()}} a special case of F-beta score where \code{beta = 1}
+\code{\link{f1_score}} a special case of F-beta score where \code{beta = 1}
 }
 \author{
 Alessandro Barberis

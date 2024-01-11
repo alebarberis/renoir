@@ -33,7 +33,7 @@ default_screener(
 \item{method}{which correlation method to use. Currently, only "pearson" is supported.}
 
 \item{conf.level}{confidence levels used for the confidence intervals (where computed). A single number or a
-numeric vector with value for each observation. All values must be in the range of \link{0;1}.}
+numeric vector with value for each observation. All values must be in the range of \code{[0;1]}.}
 
 \item{resp.type}{the response type}
 

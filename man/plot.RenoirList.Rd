@@ -23,7 +23,18 @@
 \code{interactive = FALSE}) or \code{\link{plotly_evaluation}} (if
 \code{interactive = TRUE})}
 }
+\value{
+An object of class \code{ggplot} (if \code{interactive = FALSE})
+or \code{plotly} (if \code{interactive = TRUE})
+}
 \description{
 Plot method for \code{RenoirList} object
 }
-\keyword{internal}
+\seealso{
+\code{\link{plot_evaluation}},
+\code{\link{plot_single_evaluation}},
+\code{\link{plot_multi_evaluation}},
+\code{\link{plotly_evaluation}},
+\code{\link{plotly_single_evaluation}},
+\code{\link{plotly_multi_evaluation}}
+}

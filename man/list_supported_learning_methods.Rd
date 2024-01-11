@@ -4,7 +4,11 @@
 \alias{list_supported_learning_methods}
 \title{Supported Learning Methods}
 \usage{
-list_supported_learning_methods()
+list_supported_learning_methods(x = c("all", "regression", "classification"))
+}
+\arguments{
+\item{x}{character string indicating whether to return all learning methods,
+the learning method for regression, or the learning methods for classification.}
 }
 \value{
 A \code{data.frame} with 3 columns:

@@ -33,7 +33,7 @@ estimate of the mean, it may affect its standard error.
 Different options for the calculation of the variance are here provided.
 }
 \seealso{
-\code{\link{uevarwm()}} for more information on the default estimate
+\code{\link{uevarwm}} for more information on the default estimate
 of the variance.
 }
 \author{

@@ -47,4 +47,3 @@ across different training-set sizes is produced.
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

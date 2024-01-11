@@ -15,7 +15,7 @@ an integer vector of length equivalent to the number of features.
 }
 \description{
 This function records the presence of the features
-in an object of class \code{\link{xgboost::xgb.Booster}}.
+in an object of class \code{xgb.Booster}.
 }
 \details{
 The presence of the features in the \code{xgb.Booster}

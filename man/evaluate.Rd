@@ -115,7 +115,7 @@ directly. Information of the sampling procedure in the output \linkS4class{Evalu
 object are still retrieved from \linkS4class{Sampler} in \linkS4class{Evaluator} even if
 \code{observation} is provided.}
 
-\item{logger}{an object of class \linkS4class{logger}}
+\item{logger}{an object of class \linkS4class{Logger}}
 
 \item{outdir}{path to the output directory}
 

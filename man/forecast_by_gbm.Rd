@@ -14,7 +14,7 @@ forecast_by_gbm(
 )
 }
 \arguments{
-\item{object}{an object of class \code{\link{gbm::gbm.object}}}
+\item{object}{an object of class \code{\link[gbm]{gbm.object}}}
 
 \item{newx}{the new values at which prediction are to be made}
 
