@@ -1112,7 +1112,7 @@ multiresponse_classification_metric <- function(
     if(isTRUE(identical(multi, "average")) | isTRUE(identical(multi, "macro"))){
       out = mean(out, na.rm = T)
     } else if(isTRUE(identical(multi, "weighted"))){
-      out = weighted.mean(x = out, w = rowSums(confusion), na.rm = T)
+      out = stats::weighted.mean(x = out, w = rowSums(confusion), na.rm = T)
     }
   }
 
@@ -1173,7 +1173,7 @@ area_under_roc_curve <- function(true, pred, weights = NULL, multi, ...){
 #'
 #'@inherit multiresponse_classification_metric return
 #'
-#'@seealso \code{\link{fbeta_score()}}
+#'@seealso \code{\link{fbeta_score}}
 #'
 #'@references \url{https://en.wikipedia.org/wiki/F-score}
 #'
@@ -1202,7 +1202,7 @@ f1_score <- function(true, pred, weights = NULL, multi, ...){
 #'
 #'@inherit multiresponse_classification_metric return
 #'
-#'@seealso \code{\link{f1_score()}} a special case of F-beta score where \code{beta = 1}
+#'@seealso \code{\link{f1_score}} a special case of F-beta score where \code{beta = 1}
 #'
 #'@references \url{https://en.wikipedia.org/wiki/F-score}
 #'
@@ -1572,7 +1572,7 @@ get_performance_metric_ml_problem <- function(metric){
 #'\code{\link{fbeta_score}},
 #'\code{\link{precision}},
 #'\code{\link{sensitivity}},
-#'\code{\link{jaccard}}
+#'\code{\link{jaccard_index}}
 #'
 #\code{\link{mae}},
 #\code{\link{mape}},

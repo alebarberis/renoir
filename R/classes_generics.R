@@ -3,7 +3,7 @@ setClassUnion(name = "integerOrNULL", members = c("integer", "NULL"))
 setClassUnion(name = "characterOrNULL", members = c("character", "NULL"))
 setClassUnion(name = "fileOrNULL", members = c("file", "NULL"))
 
-if (!methods::isGeneric("plot")) methods::setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
+# if (!methods::isGeneric("plot")) methods::setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
 #-----------------------------------------------------------------------------------#
 #Logger
 methods::setGeneric(name = "get_con",          function(object) standardGeneric("get_con"))
@@ -80,9 +80,9 @@ methods::setGeneric(name = "update_scorer", function(object,...) standardGeneric
 #'@rdname mean_score
 methods::setGeneric(name = "mean_score",     function(scorer, true, pred, weights, ...) standardGeneric("mean_score"))
 
-#'@name se_score
-#'@rdname se_score
-methods::setGeneric(name = "se_score",       function(scorer, true, pred, weights, ...) standardGeneric("se_score"))
+# #'@name se_score
+# #'@rdname se_score
+# methods::setGeneric(name = "se_score",       function(scorer, true, pred, weights, ...) standardGeneric("se_score"))
 
 #'@name summary_score
 #'@rdname summary_score
@@ -396,6 +396,7 @@ methods::setGeneric(name = "set_size", def = function(object, value) standardGen
 
 methods::setGeneric(name = "set_N",       def = function(object, value) standardGeneric("set_N"))
 methods::setGeneric(name = "set_n",       def = function(object, value) standardGeneric("set_n"))
+methods::setGeneric(name = "set_k",       def = function(object, value) standardGeneric("set_k"))
 methods::setGeneric(name = "set_strata",  def = function(object, value) standardGeneric("set_strata"))
 
 #-----------------------------------------------------------------------------------#

@@ -190,7 +190,7 @@ methods::setMethod(
 
     #--------------------------------------------------------------------------------------------#
     #logger
-    if(missing(logger)){logger = get_logger(tester)}
+    if(missing(logger)){logger = get_logger(scorer)}
     #open connection
     logger = open_con(logger)
 

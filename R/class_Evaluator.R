@@ -102,7 +102,7 @@ methods::setMethod(f = "set_sampler", signature = "Evaluator", definition = func
 #'
 #'@param learner an object of class \linkS4class{Learner}
 #'@param evaluator an object of class \linkS4class{Evaluator}
-#'@param logger an object of class \linkS4class{logger}
+#'@param logger an object of class \linkS4class{Logger}
 #'@param x the input matrix, where rows are observations and columns are variables.
 #'@param y the response variable. Its number of rows must match the number of rows of \code{x}.
 #'@param weights (optional) vector of observation weights

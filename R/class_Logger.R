@@ -213,9 +213,9 @@ log_default = function(object, log.level, message, sep, add.level = FALSE, add.t
 #'@inherit log_default return
 #'
 #'@seealso
-#'\code{\link{log_trace()}},
-#'\code{\link{log_debug()}},
-#'\code{\link{log_info()}}
+#'\code{\link{log_trace}},
+#'\code{\link{log_debug}},
+#'\code{\link{log_info}}
 #'
 #'@author Alessandro Barberis
 #'
@@ -379,7 +379,7 @@ print.log <- function(message, verbose, con, sep){
     cat(message, sep=sep);
   }
 
-  if(check.con(con)){
+  if(check_con(con)){
     cat(message, file = con, sep=sep);
   }
 

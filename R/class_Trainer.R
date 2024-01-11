@@ -1793,7 +1793,24 @@ glmnet_learning_method_names <- function(all = T, relaxed = T){
   return(out)
 }
 
-supported_learning_methods <- function(){
+
+supported_regression_learning_methods <- function(){
+
+  #GLMNET
+  out = glmnet_learning_method_names(all = T)
+
+  #OTHERS
+  out = c(out, "randomForest", "gbm",
+          # "xgbtree", "xgblinear",
+          "linear_SVM", "polynomial_SVM", "radial_SVM", "sigmoid_SVM",
+          "linear_NuSVM", "polynomial_NuSVM", "radial_NuSVM", "sigmoid_NuSVM",
+          "gknn"
+  )
+
+  return(out)
+}
+
+supported_classification_learning_methods <- function(){
 
   #GLMNET
   out = glmnet_learning_method_names(all = T)
@@ -1805,6 +1822,35 @@ supported_learning_methods <- function(){
           "linear_NuSVM", "polynomial_NuSVM", "radial_NuSVM", "sigmoid_NuSVM",
           "gknn", "nsc"
   )
+
+  return(out)
+}
+
+#'List supported learning methods
+#'
+#'@description This function lists the available learning methods.
+#'
+#'@param x character string indicating whether to return all learning methods,
+#'the learning method for regression, or the learning methods for classification.
+#'
+#'@return A vector containing the supported learning methods.
+#'
+#'@keywords internal
+supported_learning_methods <- function(x = c("all", "regression", "classification")){
+
+  x = match.arg(x)
+  #method ids
+  out = switch(
+    x,
+    'all' = unique(c(
+      supported_regression_learning_methods(),
+      supported_classification_learning_methods()
+    )),
+    'regression' = supported_regression_learning_methods(),
+    'classification'  = supported_classification_learning_methods()
+  )
+
+  return(out)
 
   return(out)
 }
@@ -1929,6 +1975,9 @@ renoir_default_hyperparameters <- function(learning.method){
 #'@description This function returns a \code{data.frame} containing the currently
 #'supported learning methods.
 #'
+#'@param x character string indicating whether to return all learning methods,
+#'the learning method for regression, or the learning methods for classification.
+#'
 #'@return A \code{data.frame} with 3 columns:
 #'\describe{
 #'\item{\code{id}}{contains the id used in renoir for the learning method}
@@ -1939,10 +1988,10 @@ renoir_default_hyperparameters <- function(learning.method){
 #'@export
 #'
 #'@author Alessandro Barberis
-list_supported_learning_methods <- function(){
+list_supported_learning_methods <- function(x = c("all", "regression", "classification")){
 
   #get ids
-  ids = supported_learning_methods()
+  ids = supported_learning_methods(x = x)
 
   #get names
   nm = get_name_learning_method(learning.method = ids)

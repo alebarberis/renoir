@@ -147,7 +147,7 @@ methods::setMethod(
 summary_table.Screened <- function(object){
 
   #check
-  if(isEmpty(x = object)){
+  if(S4Vectors::isEmpty(x = object)){
     # out = data.frame(stringsAsFactors = F)
     screening = screened = NA
   } else {

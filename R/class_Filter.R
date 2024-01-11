@@ -483,7 +483,7 @@ filter_by_intensity <- function(x, threshold = 0.25, logger){
     #-----------------------------------------------------------------------------------#
     #Compute median
     log_debug(object = logger, message = "Computing the median of each row", sep = "\n", add.level = TRUE, add.time = TRUE)
-    median.rows = apply(X = x, MARGIN = 1, FUN = median, na.rm = TRUE)
+    median.rows = apply(X = x, MARGIN = 1, FUN = stats::median, na.rm = TRUE)
 
     #-----------------------------------------------------------------------------------#
     #Test if expression is over median

@@ -102,6 +102,7 @@ methods::setMethod(f = "get_logger",   signature = "Sampler", definition = funct
 methods::setMethod(f = "set_N",        signature = "Sampler", definition = function(object, value){methods::slot(object = object, name = 'N') = value; return(object)})
 methods::setMethod(f = "set_n",        signature = "Sampler", definition = function(object, value){methods::slot(object = object, name = 'n') = value; return(object)})
 methods::setMethod(f = "set_strata",   signature = "Sampler", definition = function(object, value){methods::slot(object = object, name = 'strata') = value; return(object)})
+methods::setMethod(f = "set_k",        signature = "Sampler", definition = function(object, value){methods::slot(object = object, name = 'k') = value; return(object)})
 
 
 is_valid_sampler_object <- function(object) {
@@ -683,31 +684,6 @@ methods::setMethod(
 )
 
 
-get_training_set_size_grid <- function(
-  method  = c("random", "bootstrap", "cv"),
-  N       = 100L,
-  n       = 10L,
-  k       = 10L,
-  strata        = NULL,
-  balance       = FALSE,
-  min.obs       = 5,
-  n.grid.points = 5
-  ){
-
-  #--------------------------------------------------------------------------------------------#
-  method = match.arg(method)
-  #--------------------------------------------------------------------------------------------#
-
-  grid = switch(
-    method,
-    random = f,
-    bootstrap = f,
-    cv = f
-  )
-
-  #--------------------------------------------------------------------------------------------#
-  return(grid)
-}
 
 #'Get Sample Size Grid
 #'

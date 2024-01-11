@@ -280,64 +280,6 @@ methods::setMethod(
   }
 )
 
-#'Standard Error of the Mean Score
-#'
-#'@description Computes a score estimate given different sets of data, and returns the relative standard error
-#'@param scorer a \linkS4class{ScorerList} object
-#'@param true a list of vectors (or matrices) of observed values. If list elements are matrices,
-#'a multi-response is assumed
-#'@param pred a list of vectors (or matrices) of predicted values
-#'@param weights a list of vectors of observation weights
-#'@param multi what to do when response has multiple output values
-#'\describe{
-#'   \item{\code{average}}{errors of multiple outputs are averaged to get a single value for each observation}
-#'   \item{\code{sum}}{errors of multiple outputs are summed up to get a single value for each observation}
-#'}
-#'@param grouped logical, whether to compute separate statistics when lists of values are provided
-#'@param logger a \linkS4class{Logger} object
-#'@param ... further arguments to scorer function
-#'@return list containing the score estimate and its standard error for each \linkS4class{Scorer} in the \linkS4class{ScorerList}
-#'
-#'@rdname se_score
-methods::setMethod(
-  f = "se_score",
-  signature = methods::signature(scorer = "ScorerList", true = "list", pred = "list"),
-  definition = function(scorer, true, pred, weights = NULL, multi = c("average", "sum"), grouped = TRUE, logger, ...){
-
-    #--------------------------------------------------------------------------------------------#
-    if(missing(logger)){logger = get_logger(scorer[[1]])}
-    logger = open_con(logger)
-
-    #--------------------------------------------------------------------------------------------#
-    #match
-    multi = match.arg(multi)
-
-    #--------------------------------------------------------------------------------------------#
-    out = list()
-
-    for(i in seq(length(scorer))){
-      #scorer
-      iscorer = scorer[[i]]
-
-      #get measure
-      measure = get_id(iscorer)
-
-      #log
-      log_debug(object = logger, message = paste("Computing", measure), sep = "\n", add.level = TRUE, add.time = TRUE)
-
-      #compute
-      out[[measure]] = se_score(scorer = iscorer, true = true, pred = pred, weights = weights, multi = multi, grouped = grouped, ...)
-    }
-
-    #--------------------------------------------------------------------------------------------#
-    #close
-    close_con(logger)
-
-    #--------------------------------------------------------------------------------------------#
-    #return
-    return(out)
-  }
-)
 
 #'Score
 #'

@@ -21,10 +21,10 @@ methods::setClass(
 )
 
 
-#' LearnedList Constructor
-#' Constructor for the S4 LearnedList object.
+#' MarkedList Constructor
+#' Constructor for the S4 MarkedList object.
 #'
-#' Constructor for the S4 \linkS4class{LearnedList} object.
+#' Constructor for the S4 \linkS4class{MarkedList} object.
 #' @rdname MarkedList-class
 MarkedList <- function(...){
 

@@ -90,7 +90,7 @@ ci <- function(estimate, se, confidence = 0.95, distribution = c("normal", "t"),
 #'
 #@family quantifying uncertainty
 #'
-#'@seealso \code{\link{ci()}} for more information on confidence intervals, \code{\link{sewm()}} for the standard error
+#'@seealso \code{\link{ci}} for more information on confidence intervals, \code{\link{sewm}} for the standard error
 #'of the weighted sample mean.
 #'
 #'@references \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5723800/}
@@ -147,7 +147,7 @@ ciwm <- function(x, weights, ..., confidence = 0.95, distribution = "normal", n)
 #'
 #'@return A length-one numeric vector.
 #'
-#'@seealso \code{\link{uevarwm()}} for more information on the default estimate
+#'@seealso \code{\link{uevarwm}} for more information on the default estimate
 #'of the variance.
 #'
 #@references

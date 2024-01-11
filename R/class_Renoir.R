@@ -579,7 +579,9 @@ summary_table.RenoirList <- function(object, key, ...){
 #'\code{\link{plotly_multi_evaluation}}
 #'
 #'@author Alessandro Barberis
-#'@keywords internal
+#'
+#'@export
+#'@export plot.Renoir
 plot.Renoir <- function(
   x,
   y,
@@ -646,7 +648,10 @@ plot.Renoir <- function(
 #'
 #'@inheritParams plot.Renoir
 #'
-#'@keywords internal
+#'@inherit plot.Renoir return seealso
+#'
+#'@export plot.RenoirList
+#'@export
 plot.RenoirList <- function(
   x,
   y,
@@ -728,7 +733,10 @@ plot.RenoirList <- function(
 #'
 #'@inheritParams plot.Renoir
 #'
-#'@keywords internal
+#'@inherit plot.Renoir return seealso
+#'
+#'@export plot.RenoirSummaryTable
+#'@export
 plot.RenoirSummaryTable <- function(
   x,
   y,
@@ -813,7 +821,6 @@ methods::setMethod(
 #   signature = methods::signature(x = "RenoirList", y="missing"),
 #   definition = plot.RenoirList
 # )
-
 
 #'Create an interactive report
 #'
@@ -1241,7 +1248,7 @@ methods::setMethod(
 methods::setMethod(
   f = "signature",
   signature = c("Renoir", "numeric", "numeric", "numeric"),
-  definition = function(object, index, n, cutoff){
+  definition = function(object, index, n, cutoff, grouped = F){
     #get evaluated list
     object = get_evaluation(object = object)
     #subset

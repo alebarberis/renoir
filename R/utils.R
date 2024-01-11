@@ -331,7 +331,16 @@ get_description_scoring <- function(x, set = NULL){
 }
 
 
-
+#'Number to symbols
+#'
+#'@param x number to convert
+#'@param cutpoints cutpoints linked to \code{symbols}
+#'@param symbols character strings representing the numer in \code{x} falling
+#'in the range defined by the corresponding \code{cutpoints}
+#'
+#'@return A symbolic representation of the number in input.
+#'
+#'@keywords internal
 num_to_sym <- function(
   x,
   cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 0.1, 1),

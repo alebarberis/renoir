@@ -112,7 +112,7 @@ get_recorder_function <-function(id) {
 #'@description This function records the presence of the features
 #'in an object of class \code{\link{glmnet}}.
 #'
-#'@details The presence of the features in the \linkS4class{glmnet}
+#'@details The presence of the features in the  \code{\link{glmnet}}
 #'object in input is recorded and returned in a named vector
 #'per output response.
 #'
@@ -121,7 +121,7 @@ get_recorder_function <-function(id) {
 #'If a feature is missing in the model (i.e. the feature's coefficient
 #'is equal to zero) then the feature is returned with a \code{0}.
 #'
-#'@param obejct an object of class \linkS4class{glmnet}
+#'@param obejct an object of class  \code{\link{glmnet}}
 #'
 #'@return A list with one element per response, each element being
 #'an integer vector of length equivalent to the number of features.
@@ -154,7 +154,7 @@ record_glmnet <- function(object){
 #'@description This function records the presence of the features
 #'in an object of class \code{\link{randomForest}}.
 #'
-#'@details The presence of the features in the \linkS4class{randomForest}
+#'@details The presence of the features in the \code{\link{randomForest}}
 #'object in input is recorded and returned in a named vector
 #'per output response.
 #'
@@ -163,7 +163,7 @@ record_glmnet <- function(object){
 #'If a feature is missing in the model (i.e. the feature is not used in
 #'the random forest) then the feature is returned with a \code{0}.
 #'
-#'@param obejct an object of class \linkS4class{randomForest}
+#'@param obejct an object of class \code{\link{randomForest}}
 #'
 #'@return A list with one element per response, each element being
 #'an integer vector of length equivalent to the number of features.
@@ -211,7 +211,7 @@ record_randomForest <- function(object){
 #'Features Recorder
 #'
 #'@description This function records the presence of the features
-#'in an object of class \code{\link{xgboost::xgb.Booster}}.
+#'in an object of class \code{xgb.Booster}.
 #'
 #'@details The presence of the features in the \code{xgb.Booster}
 #'object in input is recorded and returned in a named vector

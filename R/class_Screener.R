@@ -158,7 +158,7 @@ check_provided_screener_function <- function(screener){
 #'@param alternative alternative hypotesis to use. Must be one of \code{"two.sided"} (default),
 #'\code{"greater"} or \code{"less"}.
 #'@param conf.level confidence levels used for the confidence intervals (where computed). A single number or a
-#'numeric vector with value for each observation. All values must be in the range of [0;1].
+#'numeric vector with value for each observation. All values must be in the range of \code{[0;1]}.
 #'@param adjust.method method used to adjust the p-values for multiple testing. Options, in
 #'                     increasing conservatism, include "none", "BH", "BY" and "holm"
 #'@param multi what to do when response has multiple output values
@@ -776,7 +776,7 @@ permutation_screener <- function(
   sam_fun = function(x, y, censoring.status, resp.type, geneid, genenames,
                      s0, s0.perc, nperms, center.arrays, testStatistic, time.summary.type, regression.method,
                      fdr.output, random.seed, logged2, eigengene.number, all.genes, nresamp, assay.type){
-    capture.output(
+    utils::capture.output(
       sam.res <- switch(assay.type,
                      array = SAM.mod(x=x, y = y, censoring.status = censoring.status, resp.type = resp.type,
                                      geneid=geneid, genenames=genenames,
@@ -1348,7 +1348,7 @@ screening_by_ebayes <- function(
 #'@param alternative alternative hypotesis to use. Must be one of \code{"two.sided"} (default),
 #'\code{"greater"} or \code{"less"}.
 #'@param conf.level confidence levels used for the confidence intervals (where computed). A single number or a
-#'numeric vector with value for each observation. All values must be in the range of [0;1].
+#'numeric vector with value for each observation. All values must be in the range of \code{[0;1]}.
 #'@param ... further arguments
 #'@return the p-value of the selected test
 #'@keywords internal

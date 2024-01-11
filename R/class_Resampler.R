@@ -164,7 +164,7 @@ methods::setMethod(
   signature = methods::signature(object = "Resampler"),
   definition = function(object){
     #get sampler
-    sampler = get_sampler(resampler)
+    sampler = get_sampler(object)
     #get size
     out = get_train_set_size(object = sampler)
     #return

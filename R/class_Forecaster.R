@@ -662,12 +662,13 @@ forecast_by_xgboost <- function(
   return(out)
 }
 
+
 #'Forecaster for GBM Model Fits
 #'
 #'@description This function predicts values based on generalized
 #'boosted model objects.
 #'
-#'@param object an object of class \code{\link{gbm::gbm.object}}
+#'@param object an object of class \code{\link[gbm]{gbm.object}}
 #'@param newx the new values at which prediction are to be made
 #'@param newoffset the new offset, if provided it is added to the predicted value
 #'@param type the type of prediction. Three options are available

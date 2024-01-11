@@ -361,7 +361,7 @@ mark_gbm <- function(object, marking.system = c("presence", "influence", "normal
 #'Features Marker
 #'
 #'@description This function marks the features of an object of class
-#'\code{\link{xgb.Booster}}.
+#'\code{xgb.Booster}.
 #'
 #'@details The features in the \linkS4class{Trained} object in input
 #'are marked, i.e. a numerical value is assigned to each feature
@@ -443,7 +443,7 @@ mark_xgblinear <- function(object, marking.system = c("presence", "coefficient")
 #'Features Marker
 #'
 #'@description This function marks the features of an object of class
-#'\code{\link{xgb.Booster}}.
+#'\code{xgb.Booster}.
 #'
 #'@details The features in the \linkS4class{Trained} object in input
 #'are marked, i.e. a numerical value is assigned to each feature
