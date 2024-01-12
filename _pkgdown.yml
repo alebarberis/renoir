@@ -134,7 +134,11 @@ reference:
   - importance
 - title: Visualisation
   desc: These functions are used for visualisation
-  contents: plot.Renoir
+  contents:
+  - plot.Renoir
+  - plot.RenoirList
+  - plot.RenoirSummaryTable
+  - plot,Renoir,missing-method
 - title: Summary
   desc: These functions are used for summarising objects
   contents: summary_table
@@ -208,12 +212,10 @@ reference:
   - evaluate
   - features
   - nfeatures
-  - features_importance
   - resample
   - select
   - test
   - predict.relaxed
   - signature
   - multiresponse_error
-  - get_features_importance
 
