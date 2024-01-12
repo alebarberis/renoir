@@ -1262,3 +1262,52 @@ methods::setMethod(
     return(object)
   }
 )
+
+
+#'Compute Rank Product/Rank Sum
+#'@param data a matrix vars x obs
+#'@inheritParams RankProd::RankProducts
+#'@param ... further arguments to \code{\link[RankProd]{RankProducts}}
+#'@return a dataframe containing different elements
+#'\describe{
+#'   \item{code{pfp_}}{estimated percentage of false positive predictions for each feature
+#'   positively and negatively correlated with the outcome}
+#'   \item{code{p_val}}{estimated p-value for each feature
+#'   positively and negatively correlated with the outcome}
+#'   \item{code{Rank_Stat_}}{the rank-product/rank-sum statistics evaluated per each gene
+#'   positively and negatively correlated with the outcome}
+#'
+#'}
+#'@keywords internal
+compute_rank_product <- function(data,
+                                 cl = rep(1, times = ncol(data)),
+                                 logged = T,
+                                 gene.names = rownames(data),
+                                 ...){
+
+  #compute the rank product
+  rank.prod <- RankProd::RankProducts(data = data,
+                                      cl = cl,
+                                      # origin = rep(1, length(colnames(data))),
+                                      logged = logged,
+                                      gene.names = gene.names,
+                                      ...)
+
+  #create an output table
+  out <- cbind(rank.prod$pfp,
+               rank.prod$pval,
+               rank.prod$RPs)
+
+  #setup column names
+  colnames(out) <- c(paste0("pfp_",       colnames(rank.prod$pfp)),
+                     paste0("p_val_",     colnames(rank.prod$pval)),
+                     paste0("Rank_Stat_", colnames(rank.prod$RPs)))
+
+  #update names
+  colnames(out) = gsub(pattern = "class1 < class2", replacement = "neg", x = colnames(out), fixed = F)
+  colnames(out) = gsub(pattern = "class1 > class2", replacement = "pos", x = colnames(out), fixed = F)
+
+  #return
+  return(out)
+
+}
