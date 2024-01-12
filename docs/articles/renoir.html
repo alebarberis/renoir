@@ -703,6 +703,78 @@ screening was performed, and the model contains 9 features. Finally, the
 value of <code>lambda</code> resulted from the tuning and that was used
 to train the final model is reported.</p>
 </div>
+<div class="section level4">
+<h4 id="models">Models<a class="anchor" aria-label="anchor" href="#models"></a>
+</h4>
+<p>Now that we have identified a potential model of interest, we may
+want to extract from the <code>Renoir</code> object. We can easily do it
+by using the <code><a href="../reference/get_model.html">?get_model</a></code> command. It requires three
+arguments:</p>
+<ul>
+<li>object: an object of class <code>Renoir</code>
+</li>
+<li>n: the sample size to consider</li>
+<li>index: index of the model to select</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_model.html">get_model</a></span><span class="op">(</span></span>
+<span>  object <span class="op">=</span> <span class="va">renoirl</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="co"># Renoir object</span></span>
+<span>  n <span class="op">=</span> <span class="fl">681</span>,               <span class="co"># Training-set size</span></span>
+<span>  index <span class="op">=</span> <span class="fl">4</span>              <span class="co"># Model index</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The model can now be used for further analysis. For example, we may
+want to use it for prediction.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">newy</span> <span class="op">=</span> <span class="fu"><a href="../reference/forecast.html">forecast</a></span><span class="op">(</span></span>
+<span>  models <span class="op">=</span> <span class="va">m</span>,</span>
+<span>  newx <span class="op">=</span> <span class="va">x</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">'class'</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">newy</span><span class="op">)</span></span>
+<span><span class="co">#&gt; newy</span></span>
+<span><span class="co">#&gt;    benign malignant </span></span>
+<span><span class="co">#&gt;       446       237</span></span></code></pre></div>
+<p>We could also be interested in the non-zero features of the model.
+For this task, we can use the <code><a href="../reference/features.html">?features</a></code> command. The two
+main arguments are:</p>
+<ul>
+<li>object: an object of class <code>Trained</code> or
+<code>Tuned</code>
+</li>
+<li>type: a string indicating whether to return <code>all</code>
+features or just the ones with non-zero coefficients
+(<code>nonzero</code>).</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">feats</span> <span class="op">=</span> <span class="fu"><a href="../reference/features.html">features</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">m</span>, type <span class="op">=</span> <span class="st">"nonzero"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">feats</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Cl.thickness"    "Cell.size"       "Cell.shape"      "Marg.adhesion"  </span></span>
+<span><span class="co">#&gt; [5] "Epith.c.size"    "Bare.nuclei"     "Bl.cromatin"     "Normal.nucleoli"</span></span>
+<span><span class="co">#&gt; [9] "Mitoses"</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="global-features-importance">Global Features Importance<a class="anchor" aria-label="anchor" href="#global-features-importance"></a>
+</h4>
+<p>Finally, we might want to investigate the features importance across
+all the models. We easily extract this by using the
+<code><a href="../reference/signature.html">?signature</a></code> command and specifying the performance metric to
+consider and the set.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">featimp</span> <span class="op">=</span> <span class="fu">renoir</span><span class="fu">::</span><span class="fu"><a href="../reference/signature.html">signature</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">renoirl</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, measure <span class="op">=</span> <span class="st">"class"</span>, set <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span></span>
+<span><span class="va">featimp</span></span>
+<span><span class="co">#&gt;                         V1</span></span>
+<span><span class="co">#&gt; Cl.thickness    0.26128899</span></span>
+<span><span class="co">#&gt; Cell.size       0.29092229</span></span>
+<span><span class="co">#&gt; Cell.shape      0.31327881</span></span>
+<span><span class="co">#&gt; Marg.adhesion   0.13525482</span></span>
+<span><span class="co">#&gt; Epith.c.size    0.13296202</span></span>
+<span><span class="co">#&gt; Bare.nuclei     0.31922395</span></span>
+<span><span class="co">#&gt; Bl.cromatin     0.25066154</span></span>
+<span><span class="co">#&gt; Normal.nucleoli 0.22569934</span></span>
+<span><span class="co">#&gt; Mitoses         0.03448299</span></span></code></pre></div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
