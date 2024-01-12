@@ -654,7 +654,7 @@ htmltools::tagList(p2)
 
 ###### Plot for paper
 
-```{r plot_for_paper}
+```{r plot_for_paper, eval = FALSE}
 #set colors
 col.lasso = "rgba(255, 127,  14, 1)"
 col.ridge = "rgba(140,  86,  75, 1)"
@@ -666,46 +666,117 @@ col.list = list(lasso = col.lasso, ridge = col.ridge, elasticnet = col.elnet, ra
 #list to store data
 outl = list()
 
-#train set
-for(learning.method.id in learning.methods.ids){
+#lasso
+learning.method.id = 'lasso'
+for(set in c("train", "test", "full")){
+  title = switch(
+    set,
+    "train" = "Train set", 
+    "test" = "Test set", 
+    "full" = "Full set"
+  )
   #create and store
-  outl[['train']][[learning.method.id]] = renoir:::plot.RenoirSummaryTable(
-      x = summary.table[summary.table$config == "opt" & summary.table$learning == learning.method.id,,drop=F],
+  outl[[set]][[learning.method.id]] = renoir:::plot.RenoirSummaryTable(
+      x = resl[resl$config == "opt" & resl$learning == learning.method.id,,drop=F],
       measure = "mse",
+      name.ms = paste0("mean score\n", learning.method.id),
       set = "train",
       interactive = T,
       add.boxplot = T,
       add.scores = T,
       add.best = T,
       key = c("id", "config"),
-      colour = col.lasso
-    ) %>% layout(yaxis = list(title = 'Mean-squared Error\nTrain set'))
+      colour = col.list[[learning.method.id]]
+    ) %>% layout(yaxis = list(title = title))
 }
 
 
 for(set in c("train", "test", "full")){
-  for(learning.method.id in learning.methods.ids){
+  title = switch(
+    set,
+    "train" = "Train set", 
+    "test" = "Test set", 
+    "full" = "Full set"
+  )
+  for(learning.method.id in learning.methods.ids[2:4]){
     #create
     #store
     outl[[set]][[learning.method.id]] = renoir:::plot.RenoirSummaryTable(
-      x = summary.table[summary.table$config == "opt" & summary.table$learning == learning.method.id,,drop=F],
+      x = resl[resl$config == "opt" & resl$learning == learning.method.id,,drop=F],
       measure = "mse",
-      set = "full",
+      name.ms = paste0("mean score\n", learning.method.id),
+      set = set,
       interactive = T,
       add.boxplot = T,
       add.scores = T,
       add.best = T,
       key = c("id", "config"),
-      colour = col.lasso
-    ) %>% layout(yaxis = list(title = 'Mean-squared Error\nTrain set'))
+      colour = col.list[[learning.method.id]]
+    ) # %>% plotly::layout(yaxis = list(title = paste0('Mean-squared Error\n', title)))
   }
 }
-pp1 = 
+
+fig <- plotly::subplot(
+  unlist(outl, recursive = FALSE), 
+  nrows = 3, 
+  titleY = TRUE,
+  titleX = FALSE,
+  shareY = TRUE,
+  shareX = TRUE
+)
+
+#layout
+finalfig = fig %>% plotly::layout(margin = list(l = 75, r = 25, b = 50, t = 50))
+
+finalfig = finalfig %>% plotly::layout(
+  annotations = list(
+    list(
+      x = 0, 
+      y = 0.5, 
+      text = "Mean-squared Error",
+      xshift = -75,
+      font = list(color = "black",size = 14),
+      textangle = 270,
+      showarrow = F, 
+      xref='paper', 
+      yref='paper', 
+      size=48),
+    list(
+      x = 0.5, 
+      y = 0, 
+      text = "Trainig-set size",
+      yshift = -50,
+      font = list(color = "black",size = 14),
+      showarrow = F, 
+      xref='paper', 
+      yref='paper', 
+      size=48)
+  )
+)
+```
+
+
+```{r bortezomib_w_preproc_plot_for_paper, eval=TRUE, include=FALSE, echo = TRUE}
+#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
+
+fp = file.path(outdir, "plot_mse_for_paper.rda")
+
+if(file.exists(fp)){
+  #load objects
+  load(file = fp)
+} else {
+  #save objects
+  save(finalfig, file = fp)
+}
 
 ```
 
+```{r bortezomib_w_preproc_print_plot_mse_for_paper, eval=TRUE, results = 'asis', echo = FALSE}
+htmltools::tagList(finalfig)
+```
+
 ###### Mean-absolute error
-We consider the mae
+We consider the mae.
 
 ####### Test
 This is the accuracy. score for the `opt` configuration when considering the test set.
@@ -825,663 +896,58 @@ htmltools::tagList(p2)
 ```
 
 
-##### Validation on clinical
-Load clinical data.
-
-```{r load_bortezomib_validation_data, eval=TRUE, results = 'asis', echo = FALSE}
-#path
-fp = file.path("..", "..", "data-raw", "use_case", "cell_lines", "data")
-
-#load data
-newx = readRDS(file = file.path(fp, "bortezomib_clinical.rds"))
-clinical_samples_annotation  = readRDS(file = file.path(fp, "bortezomib_clinical_response_table.rds"))
-rownames(clinical_samples_annotation) = clinical_samples_annotation$patient_id
-
-#order as x
-newx = newx[,colnames(x.sub),drop=F]
-# y.new = tmp[rownames(x.new), "response"]
-```
-
-Select model to validate.
-
-```{r val, eval=TRUE, results = 'asis', echo = FALSE}
-#select best model
-bm = get_model(object = resl$lasso[[1]],        n = 342, index = 3)
-bm = get_model(object = resl$elasticnet[[1]],   n = 342, index = 4)
-bm = get_model(object = resl$ridge[[1]],        n = 342, index = 4)
-bm = get_model(object = resl$randomForest[[1]], n = 342, index = 10)
-
-#predict 
-yhat = renoir:::forecast(models = bm, newx = newx, type = "link", newoffset = NULL, check.newx = T)
-yhat = renoir:::forecast(models = bm, newx = newx, type = "response", newoffset = NULL, check.newx = T)
-
-#split
-ic50.resp = yhat[subset(x = clinical_samples_annotation, subset = response == "Responder", select = "patient_id", drop=T)]
-ic50.nrsp = yhat[subset(x = clinical_samples_annotation, subset = response == "Non-responder", select = "patient_id", drop=T)]
-
-#compute Wilcox test
-wt = stats::wilcox.test(
-  x           = ic50.resp,
-  y           = ic50.nrsp,
-  alternative = "greater",
-  paired      = F
-)
-
-wt
-
-wt$p.value
-mean(x = ic50.resp) - mean(x = ic50.nrsp)
-```
-
-###### Sensitivity
-We consider the sensitivity
-
-####### Test
-This is the sensitivity score for the `opt` configuration when considering the test set.
-
-```{r brca_w_preproc_plot_sensitivity_multi_opt_train_code_to_show, eval=FALSE}
-#plot
-renoir:::plot.RenoirSummaryTable(
-  x = resl[resl$config == "opt",,drop=F],
-  measure     = "sensitivity", 
-  set         = "test", 
-  interactive = T, 
-  add.boxplot = F,
-  add.scores  = F,
-  add.best    = F,
-  key         = c("id", "config")
-  )
-```
-
-```{r brca_w_preproc_plot_sensitivity_multi_opt_test, eval=TRUE, include=FALSE, echo = TRUE}
-#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
-
-fp = file.path(outdir, "plot_sensitivity_opt_test.rda")
-
-if(file.exists(fp)){
-  # p1 = readRDS(file = fp)
-  load(file = fp)
-} else {
-  #plot
-  p1 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "opt",,drop=F],
-    measure = "sensitivity",
-    set = "test",
-    interactive = F,
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #interactive plot
-  p2 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "opt",,drop=F], 
-    measure = "sensitivity", 
-    set = "test", 
-    interactive = T, 
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #save objects
-  save(p1, p2, file = fp)
-  
-}
-
-```
-
-```{r brca_w_preproc_print_plot_sensitivity_multi_opt_test, eval=TRUE, results = 'asis', echo = FALSE}
-htmltools::tagList(p2)
-```
-
-This is the sensitivity score for the `1se` configuration when considering the test set.
-
-```{r brca_w_preproc_plot_sensitivity_multi_1se_test_code_to_show, eval=FALSE}
-#plot
-renoir:::plot.RenoirSummaryTable(
-  x = resl[resl$config == "1se",,drop=F], #select 1se config 
-  measure     = "sensitivity", 
-  set         = "test", 
-  interactive = T, 
-  add.boxplot = F,
-  add.scores  = F,
-  add.best    = F,
-  key         = c("id", "config")
-  )
-```
-
-```{r brca_w_preproc_plot_sensitivity_multi_1se_test, eval=TRUE, include=FALSE, echo = TRUE}
-#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
-
-fp = file.path(outdir, "plot_sensitivity_1se_test.rda")
-
-if(file.exists(fp)){
-  # p1 = readRDS(file = fp)
-  load(file = fp)
-} else {
-  #plot
-  p1 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "1se",,drop=F],
-    measure = "sensitivity",
-    set = "test",
-    interactive = F,
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #interactive plot
-  p2 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "1se",,drop=F], 
-    measure = "sensitivity", 
-    set = "test", 
-    interactive = T, 
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #save objects
-  save(p1, p2, file = fp)
-  
-}
-
-```
-
-```{r brca_w_preproc_print_plot_sensitivity_multi_1se_test, eval=TRUE, results = 'asis', echo = FALSE}
-htmltools::tagList(p2)
-```
-
-
-
-### Analysis without Pre-processsing
-
-Let's create a directory to store the results.
-
-```{r setup_outdir_no_preproc}
-#define path
-outdir = file.path("..", "..", "data-raw", "use_case", "analysis", "all", "nofilter")
-
-#create if not existing
-if(!dir.exists(outdir)){dir.create(path = outdir, showWarnings = F, recursive = T)}
-```
-
-Now we can run the analysis.
-
-```{r renoir_brca_no_preproc, eval=FALSE}
-#container list
-resl = list()
-
-#loop
-# learning.method.id = learning.methods.ids[7]
-# for(learning.method.id in learning.methods.ids[c(15)]){
-for(learning.method.id in learning.methods.ids){
-  
-  #Each analysis can take hours, so we save data 
-  #for future faster load
-  
-  #path to file
-  fp.obj = file.path(outdir, learning.method.id, paste0(learning.method.id,".rds"))
-  fp.sum = file.path(outdir, paste0("st_",learning.method.id,".rds"))
-  
-  #check if exists
-  if(file.exists(fp.sum)){
-    #load
-    cat(paste("Reading", learning.method.id, "..."), sep = "")
-    resl[[learning.method.id]] = readRDS(file = fp.sum)
-    cat("DONE", sep = "\n")
-  } else {
-  
-    cat(paste("Learning method:", learning.method.id), sep = "\n")
-    
-    #Set a seed for RNG
-    set.seed(
-      #A seed
-      seed = 5381L,                   #a randomly chosen integer value
-      #The kind of RNG to use
-      kind = "Mersenne-Twister",      #we make explicit the current R default value
-      #The kind of Normal generation
-      normal.kind = "Inversion"       #we make explicit the current R default value
-    )
-    
-    resl[[learning.method.id]] = renoir(
-      #Unsupervised screening
-      # filter = filter,
-  
-      #Training set size
-      npoints = 3,
-      # ngrid,
-      nmin = round(nrow(x)/2),
-  
-      #Loop
-      looper = Looper(),
-  
-      #Store
-      filename = "renoir",
-      outdir   = file.path(outdir, learning.method.id),
-      restore  = TRUE,
-  
-      #Learn
-      learner   = learners[[learning.method.id]],
-  
-      #Evaluate
-      evaluator = evaluator,
-  
-      #Log
-      logger    = Logger(
-        path = file.path(outdir, learning.method.id, "log.txt"),
-        level = "ALL", 
-        verbose = T),
-  
-      #Data for training
-      hyperparameters = get_hp(id = learning.method.id, y = y),
-      x         = x,
-      y         = y,
-      weights   = NULL,
-      offset    = NULL,
-      resp.type = resp.type,
-  
-      #space
-      rm.call = T,
-      rm.fit  = T,
-  
-      #Group results
-      grouping = TRUE,
-  
-      #No screening
-      screening = c(600, 1200),
-      
-      #Remove call from trainer to reduce space
-      keep.call = F
-    )
-    
-    #save
-    saveRDS(object = resl[[learning.method.id]], file = fp.obj)
-    
-    #create summary table
-    resl[[learning.method.id]] = renoir:::summary_table.RenoirList(resl[[learning.method.id]], key = c("id", "config"))
-    
-    #save summary table
-    saveRDS(object = resl[[learning.method.id]], file = fp.sum)
-    
-    cat("\n\n", sep = "\n")
-  }
-}
-
-#create summary table
-resl = do.call(what = rbind, args = c(resl, make.row.names = F, stringsAsFactors = F))
-```
-
-#### Performance
-Let's now plot the performance metrics for the `opt` and `1se` configurations, considering the test set of data.
-
-```{r brca_no_preproc_plot_dir_setup, eval=T, include=FALSE}
-#define path
-outdir = file.path("..", "..", "data-raw", "use_case", "analysis", "all", "nofilter", "plots")
-
-#create if not existing
-if(!dir.exists(outdir)){dir.create(path = outdir, showWarnings = F, recursive = T)}
-```
-
-##### Precision
-We consider the precision.
-
-###### Test
-This is the precision score for the `opt` configuration when considering the test set.
-
-```{r brca_no_preproc_plot_precision_multi_opt_train_code_to_show, eval=FALSE}
-#plot
-renoir:::plot.RenoirSummaryTable(
-  x = resl[resl$config == "opt",,drop=F],
-  measure     = "precision", 
-  set         = "test", 
-  interactive = T, 
-  add.boxplot = F,
-  add.scores  = F,
-  add.best    = F,
-  key         = c("id", "config")
-  )
-```
-
-
-```{r brca_no_preproc_plot_precision_multi_opt_test, eval=TRUE, include=FALSE, echo = TRUE}
-#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
-
-fp = file.path(outdir, "plot_precision_opt_test.rda")
-
-if(file.exists(fp)){
-  #load objects
-  load(file = fp)
-} else {
-  #static plot
-  p1 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "opt",,drop=F],
-    measure = "precision",
-    set = "test",
-    interactive = F,
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  
-  #interactive plot
-  p2 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "opt",,drop=F], 
-    measure = "precision", 
-    set = "test", 
-    interactive = T, 
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #save objects
-  save(p1, p2, file = fp)
-  
-}
-```
-
-```{r brca_no_preproc_print_plot_precision_multi_opt_test, eval=TRUE, results = 'asis', echo = FALSE}
-htmltools::tagList(p2)
-```
-
-
-This is the precision score for the `1se` configuration when considering the test set.
-
-```{r brca_no_preproc_plot_precision_multi_1se_test_code_to_show, eval=FALSE}
-#plot
-renoir:::plot.RenoirSummaryTable(
-  x = resl[resl$config == "1se",,drop=F], #select 1se config 
-  measure     = "precision", 
-  set         = "test", 
-  interactive = T, 
-  add.boxplot = F,
-  add.scores  = F,
-  add.best    = F,
-  key         = c("id", "config")
-  )
-```
-
-```{r brca_no_preproc_plot_precision_multi_1se_test, eval=TRUE, include=FALSE, echo = TRUE}
-#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
-
-fp = file.path(outdir, "plot_precision_1se_test.rda")
-
-if(file.exists(fp)){
-  #load objects
-  load(file = fp)
-} else {
-  #static plot
-  p1 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "1se",,drop=F],
-    measure = "precision",
-    set = "test",
-    interactive = F,
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #interactive plot
-  p2 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "1se",,drop=F], 
-    measure = "precision", 
-    set = "test", 
-    interactive = T, 
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #save objects
-  save(p1, p2, file = fp)
-  
-}
-
-```
-
-```{r brca_no_preproc_print_plot_precision_multi_1se_test, eval=TRUE, results = 'asis', echo = FALSE}
-htmltools::tagList(p2)
-```
-
-##### Accuracy
-We consider the accuracy.
-
-###### Test
-This is the accuracy. score for the `opt` configuration when considering the test set.
-
-```{r brca_no_preproc_plot_accuracy_multi_opt_train_code_to_show, eval=FALSE}
-#plot
-renoir:::plot.RenoirSummaryTable(
-  x = resl[resl$config == "opt",,drop=F],
-  measure     = "acc", 
-  set         = "test", 
-  interactive = T, 
-  add.boxplot = F,
-  add.scores  = F,
-  add.best    = F,
-  key         = c("id", "config")
-  )
-```
-
-```{r brca_no_preproc_plot_accuracy_multi_opt_test, eval=TRUE, include=FALSE, echo = TRUE}
-#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
-
-fp = file.path(outdir, "plot_accuracy_opt_test.rda")
-
-if(file.exists(fp)){
-  # p1 = readRDS(file = fp)
-  load(file = fp)
-} else {
-  #plot
-  p1 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "opt",,drop=F],
-    measure = "acc",
-    set = "test",
-    interactive = F,
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #interactive plot
-  p2 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "opt",,drop=F], 
-    measure = "acc", 
-    set = "test", 
-    interactive = T, 
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #save objects
-  save(p1, p2, file = fp)
-  
-}
-
-```
-
-```{r brca_no_preproc_print_plot_accuracy_multi_opt_test, eval=TRUE, results = 'asis', echo = FALSE}
-htmltools::tagList(p2)
-```
-
-This is the accuracy score for the `1se` configuration when considering the test set.
-
-```{r brca_no_preproc_plot_accuracy_multi_1se_test_code_to_show, eval=FALSE}
-#plot
-renoir:::plot.RenoirSummaryTable(
-  x = resl[resl$config == "1se",,drop=F], #select 1se config 
-  measure     = "acc", 
-  set         = "test", 
-  interactive = T, 
-  add.boxplot = F,
-  add.scores  = F,
-  add.best    = F,
-  key         = c("id", "config")
-  )
-```
-
-```{r brca_no_preproc_plot_accuracy_multi_1se_test, eval=TRUE, include=FALSE, echo = TRUE}
-#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
-
-fp = file.path(outdir, "plot_accuracy_1se_test.rda")
-
-if(file.exists(fp)){
-  # p1 = readRDS(file = fp)
-  load(file = fp)
-} else {
-  #plot
-  p1 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "1se",,drop=F],
-    measure = "acc",
-    set = "test",
-    interactive = F,
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #interactive plot
-  p2 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "1se",,drop=F], 
-    measure = "acc", 
-    set = "test", 
-    interactive = T, 
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #save objects
-  save(p1, p2, file = fp)
-  
-}
-
-```
-
-```{r brca_no_preproc_print_plot_accuracy_multi_1se_test, eval=TRUE, results = 'asis', echo = FALSE}
-htmltools::tagList(p2)
-```
-
-##### Sensitivity
-We consider the sensitivity
-
-###### Test
-This is the sensitivity score for the `opt` configuration when considering the test set.
-
-```{r brca_no_preproc_plot_sensitivity_multi_opt_train_code_to_show, eval=FALSE}
-#plot
-renoir:::plot.RenoirSummaryTable(
-  x = resl[resl$config == "opt",,drop=F],
-  measure     = "sensitivity", 
-  set         = "test", 
-  interactive = T, 
-  add.boxplot = F,
-  add.scores  = F,
-  add.best    = F,
-  key         = c("id", "config")
-  )
-```
-
-```{r brca_no_preproc_plot_sensitivity_multi_opt_test, eval=TRUE, include=FALSE, echo = TRUE}
-#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
-
-fp = file.path(outdir, "plot_sensitivity_opt_test.rda")
-
-if(file.exists(fp)){
-  # p1 = readRDS(file = fp)
-  load(file = fp)
-} else {
-  #plot
-  p1 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "opt",,drop=F],
-    measure = "sensitivity",
-    set = "test",
-    interactive = F,
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #interactive plot
-  p2 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "opt",,drop=F], 
-    measure = "sensitivity", 
-    set = "test", 
-    interactive = T, 
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #save objects
-  save(p1, p2, file = fp)
-  
-}
-
-```
-
-```{r brca_no_preproc_print_plot_sensitivity_multi_opt_test, eval=TRUE, results = 'asis', echo = FALSE}
-htmltools::tagList(p2)
-```
-
-This is the sensitivity score for the `1se` configuration when considering the test set.
-
-```{r brca_no_preproc_plot_sensitivity_multi_1se_test_code_to_show, eval=FALSE}
-#plot
-renoir:::plot.RenoirSummaryTable(
-  x = resl[resl$config == "1se",,drop=F], #select 1se config 
-  measure     = "sensitivity", 
-  set         = "test", 
-  interactive = T, 
-  add.boxplot = F,
-  add.scores  = F,
-  add.best    = F,
-  key         = c("id", "config")
-  )
-```
-
-```{r brca_no_preproc_plot_sensitivity_multi_1se_test, eval=TRUE, include=FALSE, echo = TRUE}
-#As we had issues in loading the results with readRDS (probably because file was too big) we decided to store the plot object and load that
-
-fp = file.path(outdir, "plot_sensitivity_1se_test.rda")
-
-if(file.exists(fp)){
-  # p1 = readRDS(file = fp)
-  load(file = fp)
-} else {
-  #plot
-  p1 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "1se",,drop=F],
-    measure = "sensitivity",
-    set = "test",
-    interactive = F,
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #interactive plot
-  p2 = renoir:::plot.RenoirSummaryTable(
-    x = resl[resl$config == "1se",,drop=F], 
-    measure = "sensitivity", 
-    set = "test", 
-    interactive = T, 
-    add.boxplot = F,
-    add.scores = F,
-    add.best = F,
-    key = c("id", "config")
-  )
-  #save objects
-  save(p1, p2, file = fp)
-  
-}
-
-```
-
-```{r brca_no_preproc_print_plot_sensitivity_multi_1se_test, eval=TRUE, results = 'asis', echo = FALSE}
-htmltools::tagList(p2)
-```
+<!-- ##### Validation on clinical -->
+<!-- Load clinical data. -->
+
+<!-- ```{r load_bortezomib_validation_data, eval=TRUE, results = 'asis', echo = FALSE} -->
+<!-- #path -->
+<!-- fp = file.path("..", "..", "data-raw", "use_case", "cell_lines", "data") -->
+
+<!-- #load data -->
+<!-- newx = readRDS(file = file.path(fp, "bortezomib_clinical.rds")) -->
+<!-- clinical_samples_annotation  = readRDS(file = file.path(fp, "bortezomib_clinical_response_table.rds")) -->
+<!-- rownames(clinical_samples_annotation) = clinical_samples_annotation$patient_id -->
+
+<!-- #order as x -->
+<!-- newx = newx[,colnames(x.sub),drop=F] -->
+<!-- # y.new = tmp[rownames(x.new), "response"] -->
+<!-- ``` -->
+
+<!-- Select model to validate. -->
+
+<!-- ```{r val, eval=TRUE, results = 'asis', echo = FALSE} -->
+<!-- outdir = file.path("..", "..", "data-raw", "use_case", "cell_lines", "analysis", "bortezomib", paste0("top",top.genes*100)) -->
+<!-- learning.method.id = learning.methods.ids[4] -->
+<!-- fp.obj = file.path(outdir, paste0(learning.method.id,".rds")) -->
+<!-- #load the model -->
+<!-- modelsl = list() -->
+<!-- modelsl[[learning.method.id]] = readRDS(file = fp.obj) -->
+
+
+<!-- #select best model -->
+<!-- bm = get_model(object = modelsl$lasso[[1]],        n = 342, index = 3) -->
+<!-- bm = get_model(object = modelsl$elasticnet[[1]],   n = 342, index = 4) -->
+<!-- bm = get_model(object = modelsl$ridge[[1]],        n = 342, index = 4) -->
+<!-- bm = get_model(object = modelsl$randomForest[[1]], n = 342, index = 10) -->
+
+<!-- #predict  -->
+<!-- yhat = renoir:::forecast(models = bm, newx = newx, type = "link", newoffset = NULL, check.newx = T) -->
+<!-- yhat = renoir:::forecast(models = bm, newx = newx, type = "response", newoffset = NULL, check.newx = T) -->
+
+<!-- #split -->
+<!-- ic50.resp = yhat[subset(x = clinical_samples_annotation, subset = response == "Responder", select = "patient_id", drop=T)] -->
+<!-- ic50.nrsp = yhat[subset(x = clinical_samples_annotation, subset = response == "Non-responder", select = "patient_id", drop=T)] -->
+
+<!-- #compute Wilcox test -->
+<!-- wt = stats::wilcox.test( -->
+<!--   x           = ic50.resp, -->
+<!--   y           = ic50.nrsp, -->
+<!--   alternative = "greater", -->
+<!--   paired      = F -->
+<!-- ) -->
+
+<!-- wt -->
+
+<!-- wt$p.value -->
+<!-- mean(x = ic50.resp) - mean(x = ic50.nrsp) -->
+<!-- ``` -->

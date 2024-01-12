@@ -6,8 +6,7 @@ articles:
   regression: benchmark/regression.html
   renoir: renoir.html
   use_case: usecase/use_case.html
-  use_case_breast: usecase/use_case_breast.html
-last_built: 2024-01-09T14:34Z
+last_built: 2024-01-12T10:36Z
 urls:
   reference: https://alebarberis.github.io/renoir/reference
   article: https://alebarberis.github.io/renoir/articles
