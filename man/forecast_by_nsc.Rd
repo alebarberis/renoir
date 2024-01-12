@@ -53,4 +53,3 @@ Centroid model objects.
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

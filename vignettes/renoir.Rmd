@@ -326,3 +326,50 @@ knitr::include_graphics(path = '../man/figures/renoir_gs_binomial_opt_full_hoove
 
 The top row indicates the position on the x and y axes: the selected model has a training-set size of 681 and a misclassification error of 0.029. Please, note that the circles are slightly jittered from their position for a clearer plot, but the values reported while hoovering are correct. The second row is reporting the iteration index corresponding to the model: in this case, the 4th model trained during the repeated sampling procedure was selected as the best model. No supervised screening was performed, and the model contains 9 features. Finally, the value of `lambda` resulted from the tuning and that was used to train the final model is reported.
 
+#### Models
+Now that we have identified a potential model of interest, we may want to extract from the `Renoir` object. We can easily do it by using the `?get_model` command. It requires three arguments:
+
+* object: an object of class `Renoir`
+* n: the sample size to consider
+* index: index of the model to select
+
+
+```{r get_model, eval=TRUE}
+m = get_model(
+  object = renoirl[[1]], # Renoir object
+  n = 681,               # Training-set size
+  index = 4              # Model index
+)
+```
+
+The model can now be used for further analysis. For example, we may want to use it for prediction.
+
+```{r bm_prediction, eval=TRUE}
+newy = forecast(
+  models = m,
+  newx = x,
+  type = 'class'
+)
+
+table(newy)
+```
+
+We could also be interested in the non-zero features of the model. For this task, we can use the `?features` command. 
+The two main arguments are:
+
+* object: an object of class `Trained` or `Tuned`
+* type: a string indicating whether to return `all` features or just the ones with non-zero coefficients (`nonzero`).
+
+```{r bm_features, eval=TRUE}
+feats = features(object = m, type = "nonzero")
+
+unlist(feats)
+```
+
+#### Global Features Importance
+Finally, we might want to investigate the features importance across all the models. We easily extract this by using the `?signature` command and specifying the performance metric to consider and the set.
+
+```{r bm_signature, eval=TRUE}
+featimp = renoir::signature(object = renoirl[[1]], measure = "class", set = "test")
+featimp
+```

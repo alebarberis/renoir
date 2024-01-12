@@ -48,4 +48,3 @@ probabilities
 \author{
 Alessandro Barberis
 }
-\keyword{internal}

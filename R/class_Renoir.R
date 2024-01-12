@@ -1094,9 +1094,11 @@ methods::setMethod(
 #'to obtain a single set of features
 #'
 #'@rdname signature
+#'
+#'@export
 methods::setMethod(
   f = "signature",
-  signature = c("Renoir", "numeric", "numeric", "missing", "missing", "missing"),
+  signature = methods::signature(object = "Renoir", index = "numeric", n = "numeric", cutoff = "missing", measure = "missing", set = "missing"),
   definition = function(object, index, n, cutoff, measure, set, grouped = F){
     #get evaluated list
     object = get_evaluation(object = object)
@@ -1113,9 +1115,11 @@ methods::setMethod(
 
 
 #'@rdname signature
+#'
+#'@export
 methods::setMethod(
   f = "signature",
-  signature = c("Renoir", "missing", "missing", "numeric", "character", "character"),
+  signature = methods::signature(object = "Renoir", index = "missing", n = "missing", cutoff = "numeric", measure = "character", set = "character"),
   definition = function(object, index, n, cutoff, measure, set = c("train", "test", "full"), ...){
     #get signature
     out = signature(object = object, measure = measure, set = set, ...)
@@ -1153,10 +1157,13 @@ methods::setMethod(
 
 
 #'@rdname signature
+#'
+#'@export
 methods::setMethod(
   f = "signature",
-  signature = c("Renoir", "missing", "missing", "missing", "character", "character"),
+  signature = methods::signature(object = "Renoir", index = "missing", n = "missing", cutoff = "missing", measure = "character", set = "character"),
   definition = function(object, index, n, cutoff, measure, set = c("train", "test", "full"), ...){
+    set = match.arg(set)
     #get marked list
     object = get_marks(object = object)
     #subset
@@ -1165,12 +1172,14 @@ methods::setMethod(
     if(length(object)>1){use.rankstat = T}else{use.rankstat = F}
     #get marks
     object = get_mark(object = object)
-    #get names
-    feats = rownames(object[[1]])
-    #reshape
-    object = do.call(what = Map, args = c(f = cbind, object))
-    #set names
-    object = lapply(X = object, FUN = function(x, feats){row.names(x)=feats; x}, feats = feats)
+    if(isTRUE(!is.data.frame(object) && is.list(object))){
+      #get names
+      feats = rownames(object[[1]])
+      #reshape
+      object = do.call(what = Map, args = c(f = cbind, object))
+      #set names
+      object = lapply(X = object, FUN = function(x, feats){row.names(x)=feats; x}, feats = feats)
+    }
 
     if(use.rankstat){
       #compute
@@ -1191,16 +1200,18 @@ methods::setMethod(
 
 
 #'@rdname signature
+#'
+#'@export
 methods::setMethod(
   f = "signature",
-  signature = c("Renoir", "missing", "missing", "numeric", "missing", "missing"),
+  signature = methods::signature(object = "Renoir", index = "missing", n = "missing", cutoff = "numeric", measure = "missing", set = "missing"),
   definition = function(object, index, n, cutoff, measure, set = c("train", "test", "full"), ...){
     #get signature
     out = signature(object = object, ...)
     #cutoff on pfp
     out = lapply(X = out, FUN = function(x, cutoff){
       #keep
-      keep = x$pfp_pos < cutoff | x$pfp_neg < cutoff
+      keep = x[,'pfp_pos'] < cutoff | x[,'pfp_neg'] < cutoff
       #update
       x = x[keep,,drop=F]
       #return
@@ -1214,9 +1225,11 @@ methods::setMethod(
 #Measures are merged via RankProd
 
 #'@rdname signature
+#'
+#'@export
 methods::setMethod(
   f = "signature",
-  signature = c("Renoir", "missing", "missing", "missing", "missing", "missing"),
+  signature = methods::signature(object = "Renoir", index = "missing", n = "missing", cutoff = "missing", measure = "missing", set = "missing"),
   definition = function(object, index, n, cutoff, measure, set = c("train", "test", "full")){
     #get marked list
     object = get_marks(object = object)
@@ -1245,9 +1258,11 @@ methods::setMethod(
 #If model was tuned, then the features of the model
 #are filtered for the stability
 #'@rdname signature
+#'
+#'@export
 methods::setMethod(
   f = "signature",
-  signature = c("Renoir", "numeric", "numeric", "numeric"),
+  signature = methods::signature(object = "Renoir", index = "numeric", n = "numeric", cutoff = "numeric", measure = "missing", set = "missing"),
   definition = function(object, index, n, cutoff, grouped = F){
     #get evaluated list
     object = get_evaluation(object = object)

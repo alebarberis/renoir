@@ -7,7 +7,7 @@
 \alias{signature,Renoir,missing,missing,missing,character,character-method}
 \alias{signature,Renoir,missing,missing,numeric,missing,missing-method}
 \alias{signature,Renoir,missing,missing,missing,missing,missing-method}
-\alias{signature,Renoir,numeric,numeric,numeric,ANY,ANY-method}
+\alias{signature,Renoir,numeric,numeric,numeric,missing,missing-method}
 \title{Extract a signature}
 \usage{
 signature(object, index, n, cutoff, measure, set, ...)
@@ -46,7 +46,7 @@ signature(object, index, n, cutoff, measure, set, ...)
 
 \S4method{signature}{Renoir,missing,missing,missing,missing,missing}(object, index, n, cutoff, measure, set = c("train", "test", "full"))
 
-\S4method{signature}{Renoir,numeric,numeric,numeric,ANY,ANY}(object, index, n, cutoff, grouped = F)
+\S4method{signature}{Renoir,numeric,numeric,numeric,missing,missing}(object, index, n, cutoff, grouped = F)
 }
 \arguments{
 \item{grouped}{logical, whether to merge results from a multi-response

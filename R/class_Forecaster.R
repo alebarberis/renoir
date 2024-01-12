@@ -229,6 +229,8 @@ check_provided_prediction_type_selector_function <- function(selector){
 #'@return The prediction
 #'
 #'@rdname forecast
+#'
+#'@export
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "Forecaster", models = "Trained"),
@@ -264,6 +266,8 @@ methods::setMethod(
 )
 
 #'@rdname forecast
+#'
+#'@export
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "missing", models = "Trained"),
@@ -283,6 +287,8 @@ methods::setMethod(
 )
 
 #'@rdname forecast
+#'
+#'@export
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "Forecaster", models = "TrainedList"),
@@ -298,6 +304,8 @@ methods::setMethod(
 )
 
 #'@rdname forecast
+#'
+#'@export
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "Forecaster", models = "Tuned"),
@@ -331,6 +339,8 @@ methods::setMethod(
 )
 
 #'@rdname forecast
+#'
+#'@export
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "missing", models = "Tuned"),
@@ -351,6 +361,8 @@ methods::setMethod(
 )
 
 #'@rdname forecast
+#'
+#'@export
 methods::setMethod(
   f = "forecast",
   signature = methods::signature(forecaster = "Forecaster", models = "TunedList"),
@@ -387,7 +399,25 @@ methods::setMethod(
 #   return(out)
 # }
 
-#'@keywords internal
+#'Forecaster for GLM Elastic-Net Fits
+#'
+#'@description This function predicts values based on glmnet
+#'model objects.
+#'
+#'@param object an object of class \code{\link{Trained}}
+#'@inheritParams glmnet::predict.glmnet
+#'@param lambda (optional) value of the penalty parameter. Used if \code{s} is
+#'not provided
+#'@param ... further arguments to \code{\link[glmnet]{predict.glmnet}}
+#'
+#'@return A vector containing the predictions.
+#'
+#'@seealso
+#'\code{\link[glmnet]{predict.glmnet}}
+#'
+#'@author Alessandro Barberis
+#'
+#'@export
 forecast_by_glmnet <- function(
     object,
     newx,
@@ -512,8 +542,9 @@ forecast_by_glmnet <- function(
 #'@seealso
 #'\code{\link[randomForest]{predict.randomForest}}
 #'
-#'@keywords internal
 #'@author Alessandro Barberis
+#'
+#'@export
 forecast_by_randomForest <- function(
   object,
   newx,
@@ -685,8 +716,9 @@ forecast_by_xgboost <- function(
 #'
 #'@return A vector containing the predictions.
 #'
-#'@keywords internal
 #'@author Alessandro Barberis
+#'
+#'@export
 forecast_by_gbm <- function(
   object, newx, type = c("response", "class", "link"), newoffset,
   pthr = 0.5,
@@ -784,8 +816,9 @@ forecast_by_gbm <- function(
 #'@seealso
 #'\code{\link[e1071]{predict.svm}}
 #'
-#'@keywords internal
 #'@author Alessandro Barberis
+#'
+#'@export
 forecast_by_svm <- function(
   object, newx, type = c("response", "class"), newoffset,
   pthr = 0.5,
@@ -871,8 +904,9 @@ forecast_by_svm <- function(
 #'@seealso
 #'\code{\link[e1071]{predict.gknn}}
 #'
-#'@keywords internal
 #'@author Alessandro Barberis
+#'
+#'@export
 forecast_by_gknn <- function(
   object, newx, type = c("response", "class", "prob", "votes"), newoffset,
   ...,

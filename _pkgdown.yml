@@ -112,6 +112,12 @@ reference:
   desc: These functions are used for predictions
   contents:
   - forecast
+  - forecast_by_gbm
+  - forecast_by_gknn
+  - forecast_by_randomForest
+  - forecast_by_svm
+  - forecast_by_glmnet
+  - forecast_by_nsc
 - title: Scoring
   desc: These functions are used for scoring
   contents:

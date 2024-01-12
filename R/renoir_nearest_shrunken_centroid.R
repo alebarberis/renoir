@@ -348,8 +348,9 @@ mark_nsc <- function(object, marking.system = c("presence")){
 #'@seealso
 #'\code{\link[pamr]{pamr.predict}}
 #'
-#'@keywords internal
 #'@author Alessandro Barberis
+#'
+#'@export
 forecast_by_nsc <- function(
   object, newx, type = c("response", "class", "posterior", "centroid", "nonzero"), newoffset,
   ...,

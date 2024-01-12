@@ -520,6 +520,8 @@ methods::setMethod(
 
 #'Get features in the model
 #'@rdname features
+#'
+#'@export
 methods::setMethod(
   f = "features",
   signature = methods::signature(object ="Trained", recorder = "Recorder"),
@@ -553,6 +555,8 @@ methods::setMethod(
 )
 
 #'@rdname features
+#'
+#'@export
 methods::setMethod(
   f = "features",
   signature = methods::signature(object ="Trained", recorder = "missing"),
@@ -642,6 +646,8 @@ methods::setMethod(
 
 
 #'@rdname features
+#'
+#'@export
 methods::setMethod(
   f = "features",
   signature = methods::signature(object ="Tuned", recorder = "Recorder"),
@@ -659,6 +665,8 @@ methods::setMethod(
 )
 
 #'@rdname features
+#'
+#'@export
 methods::setMethod(
   f = "features",
   signature = methods::signature(object ="Tuned", recorder = "missing"),
