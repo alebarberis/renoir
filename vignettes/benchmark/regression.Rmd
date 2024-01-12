@@ -166,10 +166,14 @@ The relative CPU Performance data was retrieved from the [UC Irvine Machine Lear
 #### Load data
 We load the data.
 
-```{r load_cpu}
+```{r load_cpu, eval=FALSE}
 #load data
 load(file = file.path("..", "..", "data-raw", "benchmark", "regression", "gaussian", "cpu", "data", "cpu_data.rda"))
+```
 
+We need to set the response type.
+
+```{r setup_resp_type}
 #set response type
 resp.type = "gaussian"
 ```
@@ -219,7 +223,7 @@ for(learning.method.id in learning.methods.ids){
 ##### Evaluator
 Finally, we need to set up the `?Evaluator`.
 
-```{r setup_evaluator_cpu}
+```{r setup_evaluator_cpu, eval=FALSE}
 #Evaluator
 evaluator = Evaluator(
   #Sampling strategy: random sampling without replacement

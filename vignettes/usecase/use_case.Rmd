@@ -203,7 +203,7 @@ We can now run our analyses.
 
 #### Load data
 
-```{r load_data_bortezomib}
+```{r load_data_bortezomib, eval=FALSE}
 #path
 fp = file.path("..", "..", "data-raw", "use_case", "cell_lines", "data")
 
@@ -218,18 +218,17 @@ x = as.matrix(x[,-1])
 y = y[!is.na(y)]
 x = x[names(y),]
 
-#set response type
-resp.type = "gaussian"
-```
-
-Let's inspect the data.
-
-```{r inspection_bortezomib}
 #inspect predictors matrix
 cat(paste("Number of features:", ncol(x)), sep = "\n")
 cat(paste("Number of observations:", nrow(x)), sep = "\n")
 ```
 
+We need to set the response type.
+
+```{r setup_resp_type}
+#set response type
+resp.type = "gaussian"
+```
 
 #### Setup
 
@@ -256,7 +255,7 @@ uscreener = Filter(
 
 We could provide the Filter object to the `?renoir` function call, or we can perform an unsupervised screening separately by using the `?filter` function.
 
-```{r filter_data}
+```{r filter_data, eval=FALSE}
 #unsupervised screening
 filtered = renoir::filter(
   filter = uscreener,
@@ -337,7 +336,7 @@ for(learning.method.id in learning.methods.ids){
 ##### Evaluator
 Finally, we need to set up the `?Evaluator`.
 
-```{r setup_evaluator}
+```{r setup_evaluator, eval=FALSE}
 #Evaluator
 evaluator = Evaluator(
   #Sampling strategy: stratified random sampling without replacement
@@ -361,7 +360,7 @@ evaluator = Evaluator(
 
 Let's create a directory to store the results.
 
-```{r setup_outdir_bortezomib}
+```{r setup_outdir_bortezomib, eval=FALSE}
 #define path
 outdir = file.path("E:", "Personal", "My Software", "R packages", "renoir", "data-raw", "use_case", "cell_lines", "analysis", "bortezomib", paste0("top",top.genes*100))
 outdir = file.path("..", "..", "data-raw", "use_case", "cell_lines", "analysis", "bortezomib", paste0("top",top.genes*100))

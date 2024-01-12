@@ -46,7 +46,7 @@ Now we retrieve the ids of all the supported learners. A list of supported metho
 
 ```{r learning_methods}
 #list methods
-learning.methods = list_supported_learning_methods()
+learning.methods = list_supported_learning_methods(x = "classification")
 
 #print in table
 knitr::kable(x = learning.methods)
@@ -176,10 +176,14 @@ The Breast Cancer database from the University of Wisconsin Hospitals was retrie
 #### Load data
 We load the data.
 
-```{r load_bcwo}
+```{r load_bcwo, eval=FALSE}
 #load data
 load(file = file.path("..", "..", "data-raw", "benchmark", "classification", "bcwo", "data", "bcwo_data.rda"))
+```
 
+We need to set the response type.
+
+```{r setup_resp_type}
 #set response type
 resp.type = "binomial"
 ```
@@ -230,7 +234,7 @@ for(learning.method.id in learning.methods.ids){
 ##### Evaluator
 Finally, we need to set up the `?Evaluator`.
 
-```{r setup_evaluator}
+```{r setup_evaluator, eval=FALSE}
 #Evaluator
 evaluator = Evaluator(
   #Sampling strategy: stratified random sampling without replacement
